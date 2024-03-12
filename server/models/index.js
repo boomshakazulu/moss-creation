@@ -1,5 +1,6 @@
-const User = require("./user");
-const Review = require("./review");
-const Item = require("./item");
+const User = require("./User");
+const Review = require("./Review");
+const Product = require("./Product");
+const Order = require("./Order");
 
-module.exports = { User, Review, Item };
+module.exports = { User, Review, Product, Order };

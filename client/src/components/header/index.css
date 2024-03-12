@@ -1,0 +1,123 @@
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.header {
+  background: url("../../assets/images/MossyCreate.png") left center no-repeat;
+  background-size: auto 100%; /* Stretch horizontally, maintain aspect ratio */
+  height: 120px;
+  display: flex;
+  justify-content: flex-end !important;
+  align-items: center;
+  padding: 0;
+  width: 100% !important;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end !important;
+  width: 100%;
+  padding-right: 30px;
+}
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end !important;
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin: 0 !important;
+}
+
+.nav-links a {
+  color: rgb(238, 13, 13); /* Set the color as needed */
+  font-size: larger;
+  font-weight: 700;
+  margin-left: 10px; /* Add margin between the links */
+}
+
+.nav-links a:hover {
+  color: #c2c518;
+}
+
+.link-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.link-box {
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background: linear-gradient(45deg, #333, #555);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: calc(50%);
+  height: 100px;
+  transition: transform 0.3s ease, z-index 0s ease 0.3s; /* Added z-index transition */
+  position: relative;
+  z-index: 2;
+}
+
+.link-box:hover {
+  transform: scale(1.1);
+  z-index: 3; /* Set a higher z-index on hover */
+}
+
+.link-box a {
+  color: white;
+  text-decoration: none;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  position: relative;
+  z-index: 4;
+}
+
+.navbar-collapse {
+  padding-top: 60px;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .navbar-toggler {
+    display: block !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .header {
+    background: url("../../assets//images/mossymedium.png") center center
+      no-repeat;
+    background-size: cover;
+  }
+}
+
+@media (max-width: 550px) {
+  .header {
+    background: url("../../assets//images/mossysmall.png") center center
+      no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
+@media (min-width: 2000px) {
+  .nav-links {
+    padding-right: 30px;
+    max-width: 70%;
+  }
+}
