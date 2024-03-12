@@ -25,6 +25,7 @@ body {
 
 /* Provide a maximum width and center the content */
 .container {
+  max-width: 100%;
   margin: 0 auto;
   padding: 20px;
 }
