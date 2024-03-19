@@ -1,18 +1,33 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
+import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./index.css";
 
 const Carousel = ({ items }) => {
-  const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  const handleClick = () => {
-    const itemId = items[currentSlide]._id;
-    navigate(itemId);
-  };
+  // Preload images before rendering
+  useEffect(() => {
+    const preloadImages = () => {
+      const imagePromises = items.map((item) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = item.carousel;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+
+      // Set state when all images are loaded
+      Promise.all(imagePromises)
+        .then(() => setImagesLoaded(true))
+        .catch((error) => console.error("Error preloading images:", error));
+    };
+
+    preloadImages();
+  }, [items]);
 
   const settings = {
     dots: true,
@@ -21,25 +36,22 @@ const Carousel = ({ items }) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    beforeChange: (oldIndex, newIndex) => setCurrentSlide(newIndex),
   };
 
   return (
-    <div className="carousel-container">
-      <Slider {...settings} className="carousel">
-        {items.map((item) => (
-          <div key={item._id} onClick={handleClick}>
-            <img
-              src={item.carousel}
-              alt={item._id}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = "fallback-image-url"; // Provide a fallback image URL
-              }}
-            />
-          </div>
-        ))}
-      </Slider>
+    <div className={`carousel-container ${imagesLoaded ? "loaded" : ""}`}>
+      {imagesLoaded && (
+        <Slider {...settings} className="carousel">
+          {items.map((item) => (
+            <div key={item._id}>
+              <Link to={`/item/${item._id}`}>
+                <img src={item.carousel} alt={item._id} />
+              </Link>
+            </div>
+          ))}
+        </Slider>
+      )}
+      {!imagesLoaded && <p>Loading...</p>}
     </div>
   );
 };

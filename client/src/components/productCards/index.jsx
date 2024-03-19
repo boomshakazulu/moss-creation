@@ -14,7 +14,7 @@ const productCards = ({ items, currentPage }) => {
 
   return (
     <section className="product-cards">
-      <Row xs={2} md={3} lg={4} xl={5} className="g-4 row-max-width">
+      <Row xs={2} md={3} lg={4} xl={4} className="g-4 row-max-width">
         {items.products.map((product) => (
           <Col key={product._id} className="mb-4 d-flex col-no-padding">
             <Card className="h-100 w-100">

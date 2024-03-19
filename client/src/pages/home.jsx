@@ -8,10 +8,10 @@ const Home = () => {
   const { loading, error, data } = useQuery(QUERY_ALL_PRODUCTS);
   const [items, setItems] = useState([]);
 
-  console.log(data);
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+
+  console.log(data);
 
   const productsWithCarousel = data.products.filter(
     (product) => product.carousel
