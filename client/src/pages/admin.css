@@ -1,0 +1,11 @@
+.fixed-button {
+  position: fixed;
+  top: 20px; /* Adjust the top value as needed */
+  left: 20px; /* Adjust the left value as needed */
+  z-index: 1000; /* Ensure it's above other content */
+}
+
+.addbtn {
+  margin-left: 10px;
+  margin-bottom: 20px;
+}

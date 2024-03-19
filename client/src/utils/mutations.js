@@ -6,6 +6,9 @@ export const LOGIN = gql`
       token
       user {
         _id
+        username
+        email
+        role
       }
     }
   }
@@ -61,6 +64,48 @@ export const UPDATE_ORDER = gql`
       purchaseDate
       products
       stripePaymentIntentId
+    }
+  }
+`;
+
+export const UPDATE_PRODUCT = gql`
+  mutation updateProduct($itemId: ID!, $input: ProductInput) {
+    updateProduct(itemId: $itemId, input: $input) {
+      _id
+      name
+      description
+      price
+      photo
+      stock
+      video
+      carousel
+      reviews {
+        text
+        author
+        itemId
+        createdAt
+      }
+    }
+  }
+`;
+
+export const ADD_PRODUCT = gql`
+  mutation addProduct($input: ProductInput) {
+    addProduct(input: $input) {
+      _id
+      name
+      description
+      price
+      photo
+      stock
+      video
+      carousel
+      reviews {
+        text
+        author
+        itemId
+        createdAt
+      }
     }
   }
 `;

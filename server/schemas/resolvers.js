@@ -3,29 +3,16 @@ const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   Query: {
-    products: async (parent, { category, name }) => {
-      const params = {};
-
-      if (category) {
-        params.category = category;
-      }
-
-      if (name) {
-        params.name = {
-          $regex: name,
-        };
-      }
-
-      return await Product.find(params).populate("category");
+    products: async (parent) => {
+      return await Product.find();
     },
-    product: async (parent, { _id }) => {
-      return await Product.findById(_id).populate("category");
+    product: async (parent, { itemId }) => {
+      return await Product.findById(itemId);
     },
     user: async (parent, args, context) => {
       if (context.user) {
         const user = await User.findById(context.user._id).populate({
           path: "orders.products",
-          populate: "category",
         });
 
         user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
@@ -103,6 +90,12 @@ const resolvers = {
 
       throw AuthenticationError;
     },
+    addProduct: async (parent, { input }, context) => {
+      if (context.user && context.user.role === "admin") {
+        return await Product.create(input);
+      }
+      throw AuthenticationError;
+    },
     updateUser: async (parent, args, context) => {
       if (context.user) {
         return await User.findByIdAndUpdate(context.user._id, args, {
@@ -110,20 +103,23 @@ const resolvers = {
         });
       }
 
-      throw AuthenticationError;
+      throw new AuthenticationError("You must be an admin to add a product.");
     },
-    updateProduct: async (parent, { _id, quantity }) => {
-      const decrement = Math.abs(quantity) * -1;
-
-      return await Product.findByIdAndUpdate(
-        _id,
-        { $inc: { quantity: decrement } },
-        { new: true }
-      );
+    updateProduct: async (parent, { itemId, input }, context) => {
+      // Check if the user making the request has the 'admin' role
+      if (context.user && context.user.role === "admin") {
+        // If the user has the 'admin' role, proceed with updating the product
+        const updatedProduct = await Product.findByIdAndUpdate(itemId, input, {
+          new: true,
+        });
+        return updatedProduct;
+      } else {
+        // If the user doesn't have the 'admin' role, throw an error
+        throw new Error("Unauthorized: Only admin users can update products");
+      }
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
-
       if (!user) {
         throw AuthenticationError;
       }
@@ -134,8 +130,12 @@ const resolvers = {
         throw AuthenticationError;
       }
 
-      const token = signToken(user);
-
+      const token = signToken({
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      });
       return { token, user };
     },
     addReview: async (parent, { text, itemId }, context) => {

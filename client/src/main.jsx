@@ -3,9 +3,14 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
+import $ from "jquery";
+window.jQuery = $;
 
 import Home from "./pages/home";
-
+import Signup from "./pages/Signup.jsx";
+import Login from "./pages/Login.jsx";
+import AdminAdd from "./pages/AdminAdd.jsx";
+import Admin from "./pages/admin.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -16,21 +21,29 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
       // {
-      //   path: "/login",
-      //   element: <Login />,
+      //   path: "/item/:itemId",
+      //   element: <Item />,
       // },
+      {
+        path: "/admin",
+        element: <Admin />,
+      },
+      {
+        path: "/admin/add",
+        element: <AdminAdd />,
+      },
       // {
-      //   path: "/signup",
-      //   element: <Signup />,
-      // },
-      // {
-      //   path: "/item/:itemID",
-      //   element: <Match />,
-      // },
-      // {
-      //   path: "/admin",
-      //   element: <Admin />,
+      //   path: "/admin/:itemId",
+      //   element: <AdminUpdate />,
       // },
     ],
   },

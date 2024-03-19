@@ -13,9 +13,11 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  photo: {
-    type: String,
-  },
+  photo: [
+    {
+      type: String,
+    },
+  ],
   stock: {
     type: Number,
     required: true,
@@ -29,6 +31,9 @@ const productSchema = new mongoose.Schema({
       ref: "Review",
     },
   ],
+  carousel: {
+    type: String,
+  },
 });
 
 const Item = mongoose.model("Product", productSchema);

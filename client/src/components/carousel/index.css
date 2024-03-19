@@ -1,0 +1,27 @@
+.carousel img {
+  max-width: 90vw;
+  max-height: 80vh;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 70px;
+}
+
+.carousel {
+  max-width: 90vw;
+  max-height: 80vh;
+}
+
+.slick-slide div div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

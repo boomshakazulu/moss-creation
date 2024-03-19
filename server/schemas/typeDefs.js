@@ -9,6 +9,7 @@ const typeDefs = `
     stock: Int
     video: String
     reviews:[Review]
+    carousel: String
   }
 
   type Order {
@@ -51,14 +52,27 @@ const typeDefs = `
     reviews(itemId: String): [Review]
     review(reviewId: ID!): Review
     product(itemId: String): Product
+    order(_id: ID!): Order
+    checkout(products: [ID]!): Checkout
+  }
+
+  input ProductInput {
+    name: String
+    description: String
+    price: Float
+    photo: [String]
+    stock: Int
+    video: String
+    carousel: String
   }
 
   type Mutation {
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User
+    addProduct(input: ProductInput): Product
     addOrder(products: [ID]!): Order
     updateOrder(orderId: ID!, stripePaymentIntentId: String): Order
-    updateProduct(itemId: ID!, quantity: Int!): Product
+    updateProduct(itemId: ID!, input: ProductInput): Product
     login(email: String!, password: String!): Auth
     addReview(text: String, itemId: String, author: String!): Review
   }

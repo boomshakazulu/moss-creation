@@ -18,6 +18,7 @@ export const QUERY_ALL_PRODUCTS = gql`
       photo
       stock
       video
+      carousel
     }
   }
 `;
@@ -25,8 +26,9 @@ export const QUERY_ALL_PRODUCTS = gql`
 export const QUERY_USER = gql`
   {
     user {
-      firstName
-      lastName
+      username
+      email
+      role
       orders {
         _id
         purchaseDate

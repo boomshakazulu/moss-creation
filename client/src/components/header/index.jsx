@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Auth from "../../utils/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
@@ -10,6 +11,12 @@ const Header = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    if (isMenuOpen) {
+      toggleMenu();
+    }
   };
 
   useEffect(() => {
@@ -29,7 +36,6 @@ const Header = () => {
       expand="lg"
       variant="dark"
       bg="dark"
-      fixed="top"
       expanded={isMenuOpen}
       onToggle={toggleMenu}
       className={`header ${isMenuOpen ? "expanded" : ""}`}
@@ -43,38 +49,64 @@ const Header = () => {
           {isSmallScreen ? (
             <>
               <div className="link-row">
-                <Link to="/" className="link-box">
+                <Link to="/" className="link-box" onClick={closeMenu}>
                   Home
                 </Link>
-                <Link to="/about" className="link-box">
+                <Link to="/about" className="link-box" onClick={closeMenu}>
                   About
                 </Link>
               </div>
               <div className="link-row">
-                <Link to="/signup" className="link-box">
-                  Signup
-                </Link>
-                <Link to="/login" className="link-box">
-                  Login
-                </Link>
-              </div>
-              <div className="link-row">
-                <Link to="/cart" className="link-box">
+                <Link to="/cart" className="link-box" onClick={closeMenu}>
                   Cart
                 </Link>
-                <Link to="/checkout" className="link-box">
+                <Link to="/checkout" className="link-box" onClick={closeMenu}>
                   Checkout
                 </Link>
               </div>
+              {!Auth.loggedIn() ? (
+                <div className="link-row">
+                  <Link to="/signup" className="link-box" onClick={closeMenu}>
+                    Signup
+                  </Link>
+                  <Link to="/login" className="link-box" onClick={closeMenu}>
+                    Login
+                  </Link>
+                </div>
+              ) : (
+                <div className="link-row">
+                  {Auth.isAdmin() && (
+                    <Link to="/admin" className="link-box" onClick={closeMenu}>
+                      Admin
+                    </Link>
+                  )}
+                  <Link
+                    onClick={() => Auth.logout()}
+                    to="/"
+                    className="link-box"
+                  >
+                    Logout
+                  </Link>
+                </div>
+              )}
             </>
           ) : (
             <div className="nav-links">
               <Link to="/">Home</Link>
               <Link to="/about">About</Link>
-              <Link to="/signup">Signup</Link>
-              <Link to="/login">Login</Link>
+              {!Auth.loggedIn() ? (
+                <>
+                  <Link to="/signup">Signup</Link>
+                  <Link to="/login">Login</Link>
+                </>
+              ) : (
+                <Link onClick={() => Auth.logout()} to="/">
+                  Logout
+                </Link>
+              )}
               <Link to="/cart">Cart</Link>
               <Link to="/checkout">Checkout</Link>
+              {Auth.isAdmin() && <Link to="/admin">Admin</Link>}
             </div>
           )}
         </Navbar.Collapse>
