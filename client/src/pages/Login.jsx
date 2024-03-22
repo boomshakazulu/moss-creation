@@ -8,6 +8,7 @@ function Login(props) {
   const [formState, setFormState] = useState({ email: "", password: "" });
   const [login, { error }] = useMutation(LOGIN);
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (Auth.loggedIn()) {
       navigate("/");

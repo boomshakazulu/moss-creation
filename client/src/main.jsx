@@ -9,8 +9,11 @@ window.jQuery = $;
 import Home from "./pages/home";
 import Signup from "./pages/Signup.jsx";
 import Login from "./pages/Login.jsx";
-import AdminAdd from "./pages/AdminAdd.jsx";
+import AdminAdd from "./pages/adminAdd.jsx";
 import Admin from "./pages/admin.jsx";
+import AdminUpdate from "./pages/adminUpdate.jsx";
+import Item from "./pages/product.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,10 +32,10 @@ const router = createBrowserRouter([
         path: "/signup",
         element: <Signup />,
       },
-      // {
-      //   path: "/item/:itemId",
-      //   element: <Item />,
-      // },
+      {
+        path: "/item/:itemId",
+        element: <Item />,
+      },
       {
         path: "/admin",
         element: <Admin />,
@@ -41,10 +44,10 @@ const router = createBrowserRouter([
         path: "/admin/add",
         element: <AdminAdd />,
       },
-      // {
-      //   path: "/admin/:itemId",
-      //   element: <AdminUpdate />,
-      // },
+      {
+        path: "/admin/:itemId",
+        element: <AdminUpdate />,
+      },
     ],
   },
 ]);

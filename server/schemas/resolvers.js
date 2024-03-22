@@ -7,7 +7,11 @@ const resolvers = {
       return await Product.find();
     },
     product: async (parent, { itemId }) => {
-      return await Product.findById(itemId);
+      try {
+        return await Product.findById(itemId);
+      } catch (err) {
+        throw new Error("Failed to fetch product");
+      }
     },
     user: async (parent, args, context) => {
       if (context.user) {

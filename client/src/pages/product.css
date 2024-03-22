@@ -1,0 +1,71 @@
+.carousel-column {
+  width: 35% !important; /* Adjust the width of the column containing the carousel */
+}
+
+.product-info-container {
+  height: 100%;
+  width: 100%;
+  padding-left: 20px;
+  padding-top: 20px;
+  position: relative; /* Position relative for absolute positioning of children */
+  display: flex; /* Use flex layout */
+  flex-direction: column; /* Stack children vertically */
+}
+
+.product-stock {
+  padding-top: 20px; /* Adjusted padding */
+  text-align: center;
+}
+
+.product-price {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.info-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Align items with space between */
+  min-height: 100%; /* Ensure the container takes up the full height */
+}
+
+.product-btn-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%; /* Ensure the buttons span the width of their container */
+  margin-top: auto;
+}
+
+.product-btn-container button {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+.product-carousel {
+  max-width: 100%; /* Ensure the container doesn't exceed the width of the carousel */
+}
+
+.product-description {
+  min-height: 60%;
+}
+
+.product-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 576px) {
+  .product-btn-container button {
+    margin-top: 20px; /* Adjust the margin top as needed */
+  }
+  .carousel-column {
+    width: 100% !important; /* Full width on small screens */
+    margin-bottom: 20px; /* Add some bottom margin */
+    display: flex;
+    justify-content: center;
+  }
+
+  .carousel-row {
+    display: flex;
+    justify-content: center; /* Center the carousel horizontally */
+  }
+}

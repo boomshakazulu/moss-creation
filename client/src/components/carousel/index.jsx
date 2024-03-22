@@ -5,16 +5,22 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./index.css";
 
-const Carousel = ({ items }) => {
+const Carousel = ({ items, isHomePage }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const imagesToShow = isHomePage
+    ? items.map((item) => item.carousel)
+    : items.photo;
+
+  // Conditionally apply CSS classes
+  const containerClass = isHomePage ? "homepage-carousel" : "product-carousel";
 
   // Preload images before rendering
   useEffect(() => {
     const preloadImages = () => {
-      const imagePromises = items.map((item) => {
+      const imagePromises = imagesToShow.map((image) => {
         return new Promise((resolve, reject) => {
           const img = new Image();
-          img.src = item.carousel;
+          img.src = image;
           img.onload = resolve;
           img.onerror = reject;
         });
@@ -27,7 +33,7 @@ const Carousel = ({ items }) => {
     };
 
     preloadImages();
-  }, [items]);
+  }, [imagesToShow]);
 
   const settings = {
     dots: true,
@@ -35,18 +41,22 @@ const Carousel = ({ items }) => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: isHomePage,
   };
 
   return (
-    <div className={`carousel-container ${imagesLoaded ? "loaded" : ""}`}>
+    <div className={`${containerClass} ${imagesLoaded ? "loaded" : ""}`}>
       {imagesLoaded && (
         <Slider {...settings} className="carousel">
-          {items.map((item) => (
-            <div key={item._id}>
-              <Link to={`/item/${item._id}`}>
-                <img src={item.carousel} alt={item._id} />
-              </Link>
+          {imagesToShow.map((image, index) => (
+            <div key={index}>
+              {isHomePage ? (
+                <Link to={`/item/${items[index]._id}`}>
+                  <img src={image} alt={items[index].name} />
+                </Link>
+              ) : (
+                <img src={image} alt={items.name} />
+              )}
             </div>
           ))}
         </Slider>

@@ -22,7 +22,7 @@ const Home = () => {
   return (
     <div>
       <section>
-        <Carousel items={productsWithCarousel} />
+        <Carousel items={productsWithCarousel} isHomePage />
       </section>
       <ProductCards items={data} currentPage="home" />
     </div>

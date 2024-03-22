@@ -45,7 +45,7 @@ const Header = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
         {/* Navigation links */}
-        <Navbar.Collapse id="responsive-navbar-nav">
+        <Navbar.Collapse className="links-location" id="responsive-navbar-nav">
           {isSmallScreen ? (
             <>
               <div className="link-row">
@@ -94,6 +94,7 @@ const Header = () => {
             <div className="nav-links">
               <Link to="/">Home</Link>
               <Link to="/about">About</Link>
+              <Link to="/cart">Cart</Link>
               {!Auth.loggedIn() ? (
                 <>
                   <Link to="/signup">Signup</Link>
@@ -104,8 +105,6 @@ const Header = () => {
                   Logout
                 </Link>
               )}
-              <Link to="/cart">Cart</Link>
-              <Link to="/checkout">Checkout</Link>
               {Auth.isAdmin() && <Link to="/admin">Admin</Link>}
             </div>
           )}

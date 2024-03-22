@@ -46,7 +46,6 @@ class AuthService {
     const token = this.getToken();
     if (token) {
       const decodedToken = decode(token);
-      console.log(decodedToken);
       return true;
     }
     return false; // Return false if token is not present or role is not "admin"

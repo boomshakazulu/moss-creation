@@ -58,7 +58,7 @@ export const QUERY_REVIEWS = gql`
 `;
 
 export const QUERY_PRODUCT = gql`
-  query getProduct($itemId: String!) {
+  query product($itemId: String!) {
     product(itemId: $itemId) {
       _id
       name

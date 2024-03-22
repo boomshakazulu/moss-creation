@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { useNavigate, useParams } from "react-router-dom";
 import Auth from "../utils/auth";
-import { ADD_PRODUCT } from "../utils/mutations";
+import { UPDATE_PRODUCT } from "../utils/mutations";
+import { QUERY_PRODUCT } from "../utils/queries";
 import "./adminAdd.css";
 
-function AdminAdd() {
+function AdminUpdate() {
+  const { itemId } = useParams(); // Assuming you're using React Router for getting itemId from URL params
   const navigate = useNavigate();
   const [formState, setFormState] = useState({
     name: "",
@@ -23,31 +25,63 @@ function AdminAdd() {
     }
   }, []);
 
-  const [addProduct] = useMutation(ADD_PRODUCT);
+  const { loading, error, data } = useQuery(QUERY_PRODUCT, {
+    variables: { itemId },
+  });
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+  console.log(data);
+
+  useEffect(() => {
+    if (data && data.product) {
+      const { name, description, price, photo, stock, video, carousel } =
+        data.product;
+
+      // Ensure that photo is always an array
+      const formattedPhoto = Array.isArray(photo) ? photo : [];
+
+      // Populate form fields with fetched data
+      setFormState((prevState) => ({
+        ...prevState,
+        name: name || "", // Ensure name is not undefined
+        description: description || "", // Ensure description is not undefined
+        price: price || "", // Ensure price is not undefined
+        photo: formattedPhoto, // Use formattedPhoto instead of photo directly
+        stock: stock || "", // Ensure stock is not undefined
+        video: video || "", // Ensure video is not undefined
+        carousel: carousel || "", // Ensure carousel is not undefined
+      }));
+    }
+  }, [data]);
+
+  const [updateProduct] = useMutation(UPDATE_PRODUCT);
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
     try {
+      // Convert line breaks in description field
       const descriptionWithLineBreaks = formState.description.replace(
         /\n/g,
         "<br>"
       );
-      await addProduct({
+      await updateProduct({
         variables: {
+          itemId,
           input: {
             name: formState.name,
-            description: descriptionWithLineBreaks,
-            price: parseFloat(formState.price),
+            description: descriptionWithLineBreaks, // Use modified description
+            price: formState.price,
             photo: formState.photo,
-            stock: parseInt(formState.stock),
+            stock: formState.stock,
             video: formState.video,
             carousel: formState.carousel,
           },
         },
       });
+      // Handle successful submission
       navigate("/admin");
-    } catch (error) {
-      console.error("Error adding product:", error);
+    } catch (err) {
+      // Handle error
+      console.error(err);
     }
   };
 
@@ -73,7 +107,7 @@ function AdminAdd() {
   const handleAddPhotoField = () => {
     setFormState({
       ...formState,
-      photo: [...formState.photo, ""],
+      photo: [...formState.photo, ""], // Add an empty string to photo array
     });
   };
 
@@ -97,7 +131,7 @@ function AdminAdd() {
 
   return (
     <form onSubmit={handleFormSubmit} className="form-container">
-      <h1 className="add-title">Add a Product</h1>
+      <h1 className="add-title">Product Update</h1>
       <p className="description">
         At minimum add a name, 1 photo, price and stock.<br></br>You can leave
         unwanted boxes blank.<br></br>This can be edited later!<br></br> keep
@@ -186,4 +220,4 @@ function AdminAdd() {
   );
 }
 
-export default AdminAdd;
+export default AdminUpdate;

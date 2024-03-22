@@ -138,3 +138,7 @@
     height: calc(30vw - 2px);
   }
 }
+
+.links-location {
+  justify-content: end;
+}
