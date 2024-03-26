@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useLazyQuery } from "@apollo/client";
 import { QUERY_CHECKOUT } from "../../utils/queries";
@@ -14,6 +14,8 @@ const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
 const Cart = () => {
   const [state, dispatch] = useStoreContext();
   const [getCheckout, { data }] = useLazyQuery(QUERY_CHECKOUT);
+
+  const cartRef = useRef();
 
   useEffect(() => {
     if (data) {
@@ -60,6 +62,19 @@ const Cart = () => {
     });
   }
 
+  function handleClickOutside(event) {
+    if (cartRef.current && !cartRef.current.contains(event.target)) {
+      toggleCart();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (!state.cartOpen) {
     return (
       <div className="cart-closed" onClick={toggleCart}>
@@ -71,7 +86,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="cart">
+    <div className="cart" ref={cartRef}>
       <div className="close" onClick={toggleCart}>
         [close]
       </div>

@@ -132,6 +132,14 @@
   .header {
     justify-content: flex-end !important;
   }
+  .brand-name {
+    position: fixed; /* Keep the brand fixed */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    text-align: center; /* Center the text */
+    color: #72b787;
+    z-index: 10000; /* Ensure the brand remains on top */
+  }
 }
 
 @media (min-width: 768px) {
