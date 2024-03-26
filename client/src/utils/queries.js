@@ -67,6 +67,7 @@ export const QUERY_PRODUCT = gql`
       photo
       stock
       video
+      carousel
       reviews {
         _id
         text

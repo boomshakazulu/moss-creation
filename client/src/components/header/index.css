@@ -59,6 +59,10 @@
   width: 100%;
 }
 
+.link-row1 {
+  /* margin-top: 160px; */
+}
+
 .links-location {
   padding-top: 10px;
   justify-content: end;
@@ -133,12 +137,14 @@
     justify-content: flex-end !important;
   }
   .brand-name {
-    position: fixed; /* Keep the brand fixed */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center horizontally */
+    position: absolute;
+    padding-top: 20px;
+    padding-bottom: 20px;
     text-align: center; /* Center the text */
     color: #72b787;
-    z-index: 10000; /* Ensure the brand remains on top */
+    top: 0; /* Position it at the top */
+    left: 50%; /* Position it in the center horizontally */
+    transform: translateX(-50%); /* Adjust to center it precisely */
   }
 }
 
