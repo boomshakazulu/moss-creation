@@ -1,6 +1,6 @@
 .homepage-carousel .carousel img {
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 60vh;
   width: auto;
   height: auto;
   display: block;
@@ -17,7 +17,7 @@
 
 .homepage-carousel .carousel {
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 60vh;
 }
 
 .homepage-carousel .slick-slide div div {

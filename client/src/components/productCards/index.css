@@ -6,7 +6,6 @@
 }
 
 .card {
-  margin: 10px;
   width: 250px; /* Set a fixed width for the card */
   display: flex;
   flex-direction: column;
@@ -74,4 +73,19 @@
 
 .card-text {
   color: #feffff;
+}
+
+.product-cards .row-max-width .col {
+  display: flex;
+  justify-content: center;
+}
+
+.product-cards .row-max-width .col .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-footer {
+  background: #ceead6;
 }

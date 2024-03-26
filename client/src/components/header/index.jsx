@@ -45,7 +45,9 @@ const Header = () => {
     >
       <Container>
         {/* Hamburger menu button */}
-        <MenuBtn isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        {isSmallScreen ? (
+          <MenuBtn isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        ) : null}
         {/* Brand name */}
         <Navbar.Brand className="brand-name">
           <Link to="/">Mossy Creations</Link>

@@ -14,25 +14,37 @@ const productCards = ({ items, currentPage }) => {
 
   return (
     <section className="product-cards">
-      <Row xs={2} md={3} lg={4} xl={5} className="g-4 row-max-width">
+      <Row
+        xs={1}
+        sm={2}
+        md={3}
+        lg={3}
+        xl={4}
+        xxl={6}
+        className="g-4 row-max-width"
+      >
         {items.products.map((product) => (
-          <Col key={product._id} className="mb-4 d-flex col-no-padding">
-            <Card className="w-100">
+          <Col key={product._id} className="mb-4">
+            <Card className="h-100">
               <Link to={getProductLink(product)} className="card-link">
-                <Card.Img
-                  variant="top"
-                  src={product.photo[0]}
-                  className="card-image"
-                />
-                <Card.Body className="d-flex flex-column">
+                <div className="card-image-container">
+                  <Card.Img
+                    variant="top"
+                    src={product.photo[0]}
+                    className="card-image"
+                  />
+                </div>
+                <Card.Body>
                   <Card.Title>{product.name}</Card.Title>
                   <Card.Text>Price: ${product.price}</Card.Text>
                 </Card.Body>
               </Link>
               {currentPage !== "admin" && (
-                <Button variant="primary" className="mt-auto">
-                  Add to Cart
-                </Button>
+                <Card.Footer>
+                  <Button variant="primary" className="w-100">
+                    Add to Cart
+                  </Button>
+                </Card.Footer>
               )}
             </Card>
           </Col>
