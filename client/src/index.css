@@ -16,6 +16,7 @@ body {
   margin: 0;
   font-family: "Arial", sans-serif;
   width: 100%;
+  background: #eef8f1 !important;
 }
 
 /* Box-sizing border-box for all elements */
@@ -24,14 +25,20 @@ body {
 }
 
 /* Provide a maximum width and center the content */
-.container {
+/* .container {
   max-width: 100%;
   margin: 0 auto;
   padding: 20px;
-}
+} */
 
 /* Reset anchor text decoration and set color */
 a {
   text-decoration: none;
   color: inherit;
+}
+
+@media (max-width: 992px) {
+  body {
+    background: #ceead6 !important;
+  }
 }

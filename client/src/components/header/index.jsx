@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Navbar, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Auth from "../../utils/auth";
+import Cart from "../Cart";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
+
+import MenuBtn from "../menuBtn";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,10 +43,14 @@ const Header = () => {
       onToggle={toggleMenu}
       className={`header ${isMenuOpen ? "expanded" : ""}`}
     >
-      <Container className="menu-button">
+      <Container>
         {/* Hamburger menu button */}
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-
+        <MenuBtn isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        {/* Brand name */}
+        <Navbar.Brand className="brand-name">
+          <Link to="/">Mossy Creations</Link>
+        </Navbar.Brand>
+        <Cart />
         {/* Navigation links */}
         <Navbar.Collapse className="links-location" id="responsive-navbar-nav">
           {isSmallScreen ? (
@@ -57,11 +64,11 @@ const Header = () => {
                 </Link>
               </div>
               <div className="link-row">
-                <Link to="/cart" className="link-box" onClick={closeMenu}>
-                  Cart
-                </Link>
                 <Link to="/checkout" className="link-box" onClick={closeMenu}>
                   Checkout
+                </Link>
+                <Link to="/contact" className="link-box" onClick={closeMenu}>
+                  Contact Me
                 </Link>
               </div>
               {!Auth.loggedIn() ? (
@@ -94,7 +101,7 @@ const Header = () => {
             <div className="nav-links">
               <Link to="/">Home</Link>
               <Link to="/about">About</Link>
-              <Link to="/cart">Cart</Link>
+              {/* <Cart /> */}
               {!Auth.loggedIn() ? (
                 <>
                   <Link to="/signup">Signup</Link>
@@ -109,7 +116,6 @@ const Header = () => {
             </div>
           )}
         </Navbar.Collapse>
-
         {/* Responsive menu overlay */}
         {isMenuOpen && (
           <div className="menu-overlay" onClick={toggleMenu}></div>

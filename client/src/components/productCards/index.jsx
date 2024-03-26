@@ -17,7 +17,7 @@ const productCards = ({ items, currentPage }) => {
       <Row xs={2} md={3} lg={4} xl={5} className="g-4 row-max-width">
         {items.products.map((product) => (
           <Col key={product._id} className="mb-4 d-flex col-no-padding">
-            <Card className="h-100 w-100">
+            <Card className="w-100">
               <Link to={getProductLink(product)} className="card-link">
                 <Card.Img
                   variant="top"

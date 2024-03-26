@@ -36,10 +36,10 @@ function Product() {
               className="product-description"
               dangerouslySetInnerHTML={{ __html: data.product.description }}
             ></p>
+            <h2 className="product-price">${data.product.price}</h2>
             <p className="product-stock">
               {data.product.stock > 0 ? "In Stock" : "Out of Stock"}
             </p>
-            <h2 className="product-price">{data.product.price}</h2>
           </div>
           <Row>
             <div className="product-btn-container">

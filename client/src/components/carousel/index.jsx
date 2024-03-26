@@ -42,6 +42,7 @@ const Carousel = ({ items, isHomePage }) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: isHomePage,
+    arrows: false,
   };
 
   return (

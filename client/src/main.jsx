@@ -13,12 +13,13 @@ import AdminAdd from "./pages/adminAdd.jsx";
 import Admin from "./pages/admin.jsx";
 import AdminUpdate from "./pages/adminUpdate.jsx";
 import Item from "./pages/product.jsx";
+import Error from "./pages/Error.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    // errorElement: <Error />,
+    errorElement: <Error />,
     children: [
       {
         index: true,

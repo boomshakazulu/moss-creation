@@ -6,9 +6,11 @@ import {
   ApolloProvider,
   createHttpLink,
 } from "@apollo/client";
+import { StoreProvider } from "./utils/GlobalState";
 import { setContext } from "@apollo/client/link/context";
 import "./App.css";
 
+import Footer from "./components/footer";
 import Header from "./components/header";
 import Auth from "./utils/auth";
 
@@ -35,6 +37,19 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem("id_token") !== null
   );
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 992);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth > 992);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const checkTokenExpiration = () => {
@@ -54,10 +69,13 @@ function App() {
       client={client}
       style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-      <Header isAuthenticated={isAuthenticated} />
-      <main>
-        <Outlet />
-      </main>
+      <StoreProvider>
+        <Header isAuthenticated={isAuthenticated} />
+        <main>
+          <Outlet />
+        </main>
+        {isLargeScreen && <Footer />}
+      </StoreProvider>
     </ApolloProvider>
   );
 }

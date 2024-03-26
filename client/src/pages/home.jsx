@@ -3,6 +3,7 @@ import Carousel from "../components/carousel/index.jsx";
 import ProductCards from "../components/productCards/index.jsx";
 import { QUERY_ALL_PRODUCTS } from "../utils/queries.js";
 import { useQuery } from "@apollo/client";
+import Cart from "../components/Cart";
 
 const Home = () => {
   const { loading, error, data } = useQuery(QUERY_ALL_PRODUCTS);
