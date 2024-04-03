@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Carousel from "../components/carousel/index.jsx";
+import { Card, Button, Row, Col } from "react-bootstrap";
 import ProductCards from "../components/productCards/index.jsx";
 import { QUERY_ALL_PRODUCTS } from "../utils/queries.js";
 import { useQuery } from "@apollo/client";
-import Cart from "../components/Cart";
 
 const Home = () => {
   const { loading, error, data } = useQuery(QUERY_ALL_PRODUCTS);
@@ -25,7 +25,31 @@ const Home = () => {
       <section>
         <Carousel items={productsWithCarousel} isHomePage />
       </section>
-      <ProductCards items={data} currentPage="home" />
+      <section className="product-cards">
+        <Row
+          xs={1}
+          sm={2}
+          md={3}
+          lg={3}
+          xl={4}
+          xxl={6}
+          className="g-4 row-max-width"
+        >
+          {data.products.map((product) => (
+            <ProductCards
+              key={product._id}
+              _id={product._id}
+              photo={product.photo}
+              name={product.name}
+              price={product.price}
+              priceId={product.priceId}
+              stripeProductId={product.stripeProductId}
+              stock={product.stock}
+              currentPage="home"
+            />
+          ))}
+        </Row>
+      </section>
     </div>
   );
 };

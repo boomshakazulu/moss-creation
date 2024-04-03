@@ -1,8 +1,12 @@
 .product-cards {
   display: flex;
-  flex-wrap: wrap;
+  text-align: center; /* Center the content horizontally */
+  align-items: center;
   justify-content: center;
-  align-items: flex-start;
+}
+
+.row {
+  justify-content: center;
 }
 
 .card {
@@ -12,6 +16,10 @@
   background: #ceead6;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 0px;
 }
 
 .card-body {
@@ -88,4 +96,17 @@
 
 .card-footer {
   background: #ceead6;
+}
+
+.product-cardDiv {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (min-width: 992px) {
+  .column-size {
+    width: 100% !important;
+  }
 }

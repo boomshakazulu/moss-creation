@@ -69,9 +69,9 @@ function AdminUpdate() {
           input: {
             name: formState.name,
             description: descriptionWithLineBreaks, // Use modified description
-            price: formState.price,
+            price: parseFloat(formState.price),
             photo: formState.photo,
-            stock: formState.stock,
+            stock: parseInt(formState.stock),
             video: formState.video,
             carousel: formState.carousel,
           },

@@ -13,6 +13,12 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  priceId: {
+    type: String,
+  },
+  stripeProductId: {
+    type: String,
+  },
   photo: [
     {
       type: String,

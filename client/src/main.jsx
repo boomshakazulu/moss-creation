@@ -14,6 +14,8 @@ import Admin from "./pages/admin.jsx";
 import AdminUpdate from "./pages/adminUpdate.jsx";
 import Item from "./pages/product.jsx";
 import Error from "./pages/Error.jsx";
+import CheckoutForm from "./pages/checkout.jsx";
+import Return from "./pages/return.jsx";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
       {
         path: "/admin/:itemId",
         element: <AdminUpdate />,
+      },
+      {
+        path: "/checkout",
+        element: <CheckoutForm />,
+      },
+      {
+        path: "/return",
+        element: <Return />,
       },
     ],
   },

@@ -23,10 +23,9 @@ export const ADD_ORDER = gql`
         name
         description
         price
-        quantity
-        category {
-          name
-        }
+        prideId
+        stripeProductId
+        stock
       }
     }
   }
@@ -75,6 +74,8 @@ export const UPDATE_PRODUCT = gql`
       name
       description
       price
+      priceId
+      stripeProductId
       photo
       stock
       video
@@ -96,6 +97,8 @@ export const ADD_PRODUCT = gql`
       name
       description
       price
+      priceId
+      stripeProductId
       photo
       stock
       video

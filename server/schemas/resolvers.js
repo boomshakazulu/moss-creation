@@ -1,5 +1,7 @@
 const { User, Product, Review, Order } = require("../models");
-const { signToken, AuthenticationError } = require("../utils/auth");
+const { AuthenticationError, ApolloError } = require("apollo-server-express");
+const { signToken } = require("../utils/auth");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const resolvers = {
   Query: {
@@ -96,9 +98,45 @@ const resolvers = {
     },
     addProduct: async (parent, { input }, context) => {
       if (context.user && context.user.role === "admin") {
-        return await Product.create(input);
+        try {
+          // Step 1: Save product details in MongoDB
+          const newProduct = await Product.create(input);
+
+          // Step 2: Create product in Stripe
+          const stripeProduct = await stripe.products.create({
+            name: input.name,
+            description: input.description,
+            // Add other product details as needed
+          });
+
+          // Step 3: Update MongoDB with Stripe Product ID
+          newProduct.stripeProductId = stripeProduct.id;
+          await newProduct.save();
+
+          // If price is included in the input, create price in Stripe
+          if (input.price) {
+            // Step 4: Create price in Stripe
+            const stripePrice = await stripe.prices.create({
+              product: stripeProduct.id,
+              unit_amount: input.price * 100, // Price in cents
+              currency: "usd", // Change currency as needed
+              // Add other price details as needed
+            });
+
+            // Step 5: Update MongoDB with Stripe Price ID
+            newProduct.priceId = stripePrice.id;
+            await newProduct.save();
+          }
+
+          return newProduct;
+        } catch (error) {
+          // Handle errors
+          console.error("Error creating product:", error);
+          throw new Error("Failed to create product");
+        }
+      } else {
+        throw new AuthenticationError("Unauthorized");
       }
-      throw AuthenticationError;
     },
     updateUser: async (parent, args, context) => {
       if (context.user) {
@@ -110,13 +148,66 @@ const resolvers = {
       throw new AuthenticationError("You must be an admin to add a product.");
     },
     updateProduct: async (parent, { itemId, input }, context) => {
-      // Check if the user making the request has the 'admin' role
       if (context.user && context.user.role === "admin") {
-        // If the user has the 'admin' role, proceed with updating the product
-        const updatedProduct = await Product.findByIdAndUpdate(itemId, input, {
-          new: true,
-        });
-        return updatedProduct;
+        try {
+          // Step 1: Update product details in MongoDB
+          const updatedProduct = await Product.findByIdAndUpdate(
+            itemId,
+            input,
+            {
+              new: true,
+            }
+          );
+
+          // Step 2: Check if the updated fields include name, description, or price
+          if (input.name || input.description || input.price) {
+            // Step 3: If any of these fields are updated, update corresponding details in Stripe
+            const stripeProduct = await stripe.products.update(
+              updatedProduct.stripeProductId, // Use the stripeProductId saved in MongoDB
+              {
+                name: input.name,
+                description: input.description,
+                // Update other product details as needed
+              }
+            );
+
+            // Step 4: Update MongoDB with updated Stripe Product ID
+            updatedProduct.stripeProductId = stripeProduct.id;
+          }
+
+          // Step 5: If price is updated, create a new price in Stripe and update MongoDB
+          if (input.price) {
+            // Retrieve the existing price details from Stripe
+            const existingPrice = await stripe.prices.retrieve(
+              updatedProduct.priceId
+            );
+
+            // Deactivate the existing price
+            await stripe.prices.update(updatedProduct.priceId, {
+              active: false,
+            });
+
+            // Create a new price with the updated amount
+            const newPrice = await stripe.prices.create({
+              product: updatedProduct.stripeProductId,
+              unit_amount: input.price * 100, // Price in cents
+              currency: "usd", // Change currency as needed
+              // Add other price details as needed
+            });
+
+            // Update MongoDB with the ID of the new price
+            updatedProduct.priceId = newPrice.id;
+          }
+
+          // Step 6: Save the updated product details in MongoDB
+          await updatedProduct.save();
+
+          return updatedProduct;
+        } catch (error) {
+          // Handle errors
+          console.error("Error updating product:", error);
+          throw new Error("Failed to update product");
+        }
       } else {
         // If the user doesn't have the 'admin' role, throw an error
         throw new Error("Unauthorized: Only admin users can update products");

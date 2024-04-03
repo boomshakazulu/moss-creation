@@ -26,7 +26,17 @@ function Admin() {
           <span className="plus-sign">+</span> Add Product
         </Link>
       </div>
-      <ProductCards items={data} currentPage="admin" />
+      {data.products.map((product) => (
+        <ProductCards
+          key={product._id}
+          _id={product._id}
+          photo={product.photo}
+          name={product.name}
+          price={product.price}
+          stock={product.stock}
+          currentPage="admin"
+        />
+      ))}
     </div>
   );
 }

@@ -1,56 +1,65 @@
 import React, { useState } from "react";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useStoreContext } from "../../utils/GlobalState";
+import { ADD_TO_CART, UPDATE_CART_QUANTITY } from "../../utils/actions";
+import { idbPromise } from "../../utils/helpers";
 import "./index.css";
 
-const productCards = ({ items, currentPage }) => {
-  const getProductLink = (product) => {
-    if (currentPage === "admin") {
-      return `/admin/${product._id}`;
+const productCards = (item) => {
+  const [state, dispatch] = useStoreContext();
+  const { photo, name, _id, price, stock, currentPage, priceId } = item;
+
+  const { cart } = state;
+  console.log(item);
+  const getProductLink = (item) => {
+    if (item.currentPage === "admin") {
+      return `/admin/${item._id}`;
     } else {
-      return `/item/${product._id}`;
+      return `/item/${item._id}`;
+    }
+  };
+
+  const addToCart = () => {
+    const itemInCart = cart.find((cartItem) => cartItem._id === _id);
+    if (itemInCart) {
+      dispatch({
+        type: UPDATE_CART_QUANTITY,
+        _id: _id,
+        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1,
+      });
+      idbPromise("cart", "put", {
+        ...itemInCart,
+        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1,
+      });
+    } else {
+      dispatch({
+        type: ADD_TO_CART,
+        product: { ...item, purchaseQuantity: 1 },
+      });
+      idbPromise("cart", "put", { ...item, purchaseQuantity: 1 });
     }
   };
 
   return (
-    <section className="product-cards">
-      <Row
-        xs={1}
-        sm={2}
-        md={3}
-        lg={3}
-        xl={4}
-        xxl={6}
-        className="g-4 row-max-width"
-      >
-        {items.products.map((product) => (
-          <Col key={product._id} className="mb-4">
-            <Card className="h-100">
-              <Link to={getProductLink(product)} className="card-link">
-                <div className="card-image-container">
-                  <Card.Img
-                    variant="top"
-                    src={product.photo[0]}
-                    className="card-image"
-                  />
-                </div>
-                <Card.Body>
-                  <Card.Title>{product.name}</Card.Title>
-                  <Card.Text>Price: ${product.price}</Card.Text>
-                </Card.Body>
-              </Link>
-              {currentPage !== "admin" && (
-                <Card.Footer>
-                  <Button variant="primary" className="w-100">
-                    Add to Cart
-                  </Button>
-                </Card.Footer>
-              )}
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </section>
+    <Card className="h-100">
+      <Link to={getProductLink(item)} className="card-link">
+        <div className="card-image-container">
+          <Card.Img variant="top" src={photo[0]} className="card-image" />
+        </div>
+        <Card.Body>
+          <Card.Title>{name}</Card.Title>
+          <Card.Text>Price: ${price}</Card.Text>
+        </Card.Body>
+      </Link>
+      {currentPage !== "admin" && (
+        <Card.Footer>
+          <Button variant="primary" className="w-100" onClick={addToCart}>
+            Add to Cart
+          </Button>
+        </Card.Footer>
+      )}
+    </Card>
   );
 };
 

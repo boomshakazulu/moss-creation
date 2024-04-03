@@ -5,6 +5,8 @@ const typeDefs = `
     name: String!
     description: String
     price: Float!
+    priceId: String
+    stripeProductId: String
     photo: [String]
     stock: Int
     video: String
@@ -60,6 +62,8 @@ const typeDefs = `
     name: String
     description: String
     price: Float
+    priceId: String
+    stripeProductId: String
     photo: [String]
     stock: Int
     video: String
