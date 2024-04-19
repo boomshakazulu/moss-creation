@@ -9,6 +9,8 @@ const cors = require("cors");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
+const endpointSecret =
+  "whsec_402bb1d3a4683b032b8da55a1985df12b6111a219a5263535531798492305adb";
 
 const PORT = process.env.PORT || 3001;
 const MY_DOMAIN = `http://localhost:3000`;
@@ -24,7 +26,13 @@ const startApolloServer = async () => {
   await server.start();
 
   app.use(express.urlencoded({ extended: false }));
-  app.use(express.json());
+  app.use((req, res, next) => {
+    if (req.originalUrl === "/webhook") {
+      next(); // Do nothing with the body because I need it in a raw state.
+    } else {
+      express.json()(req, res, next); // ONLY do express.json() if the received request is NOT a WebHook from Stripe.
+    }
+  });
 
   // Serve up static assets
   app.use("/images", express.static(path.join(__dirname, "../client/images")));
@@ -37,16 +45,23 @@ const startApolloServer = async () => {
   );
 
   app.post("/create-checkout-session", async (req, res) => {
-    const { line_items } = req.body;
-    console.log("line items", line_items);
+    const { line_items, metadata } = req.body;
     try {
       const session = await stripe.checkout.sessions.create({
         ui_mode: "embedded",
         line_items: line_items,
+        shipping_address_collection: {
+          allowed_countries: ["US"],
+        },
         mode: "payment",
         return_url: `${MY_DOMAIN}/return?session_id={CHECKOUT_SESSION_ID}`,
+        payment_intent_data: {
+          metadata: {
+            products: metadata.products,
+            userId: metadata.userId,
+          },
+        },
       });
-      console.log("sessiontoken ", session);
       res.send({ clientSecret: session.client_secret });
     } catch (err) {
       console.error("Error creating checkout session:", err);
@@ -55,6 +70,69 @@ const startApolloServer = async () => {
         .json({ error: "An error occurred while processing your request" });
     }
   });
+
+  app.post(
+    "/webhook",
+    express.raw({ type: "application/json" }),
+    async (req, res) => {
+      const sig = req.headers["stripe-signature"];
+
+      let event;
+
+      try {
+        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+      } catch (err) {
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        console.error(err.message);
+        return;
+      }
+
+      // Handle the event
+      switch (event.type) {
+        case "payment_intent.succeeded":
+          const paymentIntentId = event.data.object.id.toString();
+          const paymentIntent = await stripe.paymentIntents.retrieve(
+            paymentIntentId
+          );
+
+          const eventData = event.data.object;
+          const metadata = eventData.metadata || {};
+          const products = JSON.parse(metadata.products || "[]");
+          const userId = metadata.userId || null;
+          const cart = metadata.cart;
+          const shipInfo = paymentIntent.shipping.address;
+          const address = `${shipInfo.line1} ${
+            shipInfo.line2 ? shipInfo.line2 : null
+          }
+            ${shipInfo.city}
+            ${shipInfo.state}
+            ${shipInfo.postal_code}`;
+          const price = paymentIntent.amount / 100;
+          const name = paymentIntent.name;
+          console.log(address, price);
+          // Handle the successful payment intent, e.g., create an order in the database
+          try {
+            // Use the extracted products to create the order
+            const order = await resolvers.Mutation.addOrder(
+              null,
+              { products, paymentIntentId, userId, address, price, name },
+              null
+            );
+            console.log("Order created:", order);
+            res.json({ success: true });
+          } catch (error) {
+            console.error("Error creating order:", error);
+          }
+          break;
+        // Add other event types you want to handle
+        default:
+          console.log("Unhandled event type:", event.type);
+      }
+
+      // Respond to Stripe with a 200 status to acknowledge receipt of the event
+      res.sendStatus(200);
+    }
+  );
 
   app.get("/session-status", async (req, res) => {
     const session = await stripe.checkout.sessions.retrieve(

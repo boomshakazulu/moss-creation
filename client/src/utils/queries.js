@@ -25,6 +25,26 @@ export const QUERY_ALL_PRODUCTS = gql`
   }
 `;
 
+export const QUERY_ME = gql`
+  {
+    user {
+      username
+      email
+      role
+      orders {
+        _id
+        stripePaymentIntentId
+        purchaseDate
+        products
+        address
+        price
+        trackingNum
+        fulfilled
+      }
+    }
+  }
+`;
+
 export const QUERY_USER = gql`
   {
     user {
@@ -33,15 +53,7 @@ export const QUERY_USER = gql`
       role
       orders {
         _id
-        purchaseDate
-        products {
-          _id
-          name
-          description
-          price
-          quantity
-          image
-        }
+        products
       }
     }
   }
@@ -77,6 +89,26 @@ export const QUERY_PRODUCT = gql`
         itemId
         createdAt
       }
+    }
+  }
+`;
+
+export const QUERY_ORDERS = gql`
+  query {
+    orders {
+      _id
+      purchaseDate
+      products {
+        _id
+        name
+        price
+      }
+      stripePaymentIntentId
+      address
+      price
+      trackingNum
+      fulfilled
+      name
     }
   }
 `;

@@ -23,15 +23,20 @@ const productCards = (item) => {
   const addToCart = () => {
     const itemInCart = cart.find((cartItem) => cartItem._id === _id);
     if (itemInCart) {
-      dispatch({
-        type: UPDATE_CART_QUANTITY,
-        _id: _id,
-        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1,
-      });
-      idbPromise("cart", "put", {
-        ...itemInCart,
-        purchaseQuantity: parseInt(itemInCart.purchaseQuantity) + 1,
-      });
+      const newQuantity = parseInt(itemInCart.purchaseQuantity) + 1;
+      if (newQuantity <= itemInCart.stock) {
+        dispatch({
+          type: UPDATE_CART_QUANTITY,
+          _id: _id,
+          purchaseQuantity: newQuantity,
+        });
+        idbPromise("cart", "put", {
+          ...itemInCart,
+          purchaseQuantity: newQuantity,
+        });
+      } else {
+        console.log("Cannot add more than available stock");
+      }
     } else {
       dispatch({
         type: ADD_TO_CART,
@@ -42,24 +47,26 @@ const productCards = (item) => {
   };
 
   return (
-    <Card className="h-100">
-      <Link to={getProductLink(item)} className="card-link">
-        <div className="card-image-container">
-          <Card.Img variant="top" src={photo[0]} className="card-image" />
-        </div>
-        <Card.Body>
-          <Card.Title>{name}</Card.Title>
-          <Card.Text>Price: ${price}</Card.Text>
-        </Card.Body>
-      </Link>
-      {currentPage !== "admin" && (
-        <Card.Footer>
-          <Button variant="primary" className="w-100" onClick={addToCart}>
-            Add to Cart
-          </Button>
-        </Card.Footer>
-      )}
-    </Card>
+    <Col xs={6} sm={6} md={4} lg={4} xl={3} xxl={2}>
+      <Card className="h-100">
+        <Link to={getProductLink(item)} className="card-link">
+          <div className="card-image-container">
+            <Card.Img variant="top" src={photo[0]} className="card-image" />
+          </div>
+          <Card.Body>
+            <Card.Title>{name}</Card.Title>
+            <Card.Text>Price: ${price}</Card.Text>
+          </Card.Body>
+        </Link>
+        {currentPage !== "admin" && (
+          <Card.Footer>
+            <Button variant="primary" className="w-100" onClick={addToCart}>
+              Add to Cart
+            </Button>
+          </Card.Footer>
+        )}
+      </Card>
+    </Col>
   );
 };
 

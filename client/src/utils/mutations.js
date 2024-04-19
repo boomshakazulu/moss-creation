@@ -15,18 +15,19 @@ export const LOGIN = gql`
 `;
 
 export const ADD_ORDER = gql`
-  mutation addOrder($products: [ID]!) {
-    addOrder(products: $products) {
+  mutation addOrder($products: [ID]!, $stripePaymentIntentId: String) {
+    addOrder(
+      products: $products
+      stripePaymentIntentId: $stripePaymentIntentId
+    ) {
       purchaseDate
-      products {
-        _id
-        name
-        description
-        price
-        prideId
-        stripeProductId
-        stock
-      }
+      stripePaymentIntentId
+      products
+      address
+      price
+      trackingNum
+      fulfilled
+      name
     }
   }
 `;
@@ -86,6 +87,23 @@ export const UPDATE_PRODUCT = gql`
         itemId
         createdAt
       }
+    }
+  }
+`;
+
+export const UPDATE_STOCK = gql`
+  mutation updateStock($itemId: ID, $quantity: Int) {
+    updateStock(itemId: $itemId, quantity: $quantity) {
+      _id
+      name
+      description
+      price
+      priceId
+      stripeProductId
+      photo
+      stock
+      video
+      carousel
     }
   }
 `;

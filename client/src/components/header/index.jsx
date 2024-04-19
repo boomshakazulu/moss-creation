@@ -6,6 +6,14 @@ import Cart from "../Cart";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
 
+import signupImg from "../../assets/images/menuBtns/signup.png";
+import loginImg from "../../assets/images/menuBtns/login.png";
+import contactmeImg from "../../assets/images/menuBtns/contactme.png";
+import logoutImg from "../../assets/images/menuBtns/logout (2).png";
+import homeImg from "../../assets/images/menuBtns/home.png";
+import aboutmeImg from "../../assets/images/menuBtns/aboutme(2).png";
+import checkoutImg from "../../assets/images/menuBtns/checkout.png";
+
 import MenuBtn from "../menuBtn";
 
 const Header = () => {
@@ -59,27 +67,27 @@ const Header = () => {
             <>
               <div className="link-row">
                 <Link to="/" className="link-box" onClick={closeMenu}>
-                  Home
+                  <img src={homeImg} alt="Home" />
                 </Link>
                 <Link to="/about" className="link-box" onClick={closeMenu}>
-                  About
+                  <img src={aboutmeImg} alt="About me" />
                 </Link>
               </div>
               <div className="link-row">
                 <Link to="/checkout" className="link-box" onClick={closeMenu}>
-                  Checkout
+                  <img src={checkoutImg} alt="Checkout" />
                 </Link>
                 <Link to="/contact" className="link-box" onClick={closeMenu}>
-                  Contact Me
+                  <img src={contactmeImg} alt="Contact me" />
                 </Link>
               </div>
               {!Auth.loggedIn() ? (
                 <div className="link-row">
-                  <Link to="/signup" className="link-box" onClick={closeMenu}>
-                    Signup
-                  </Link>
                   <Link to="/login" className="link-box" onClick={closeMenu}>
-                    Login
+                    <img src={loginImg} alt="Login" />
+                  </Link>
+                  <Link to="/signup" className="link-box" onClick={closeMenu}>
+                    <img src={signupImg} alt="Signup" />
                   </Link>
                 </div>
               ) : (
@@ -94,7 +102,7 @@ const Header = () => {
                     to="/"
                     className="link-box"
                   >
-                    Logout
+                    <img src={logoutImg} alt="Logout" />
                   </Link>
                 </div>
               )}

@@ -15,7 +15,7 @@ body {
   min-height: 100vh;
   margin: 0;
   font-family: "Arial", sans-serif;
-  width: 100%;
+  width: 100vw;
   background: #eef8f1 !important;
 }
 

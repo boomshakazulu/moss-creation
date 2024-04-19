@@ -15,11 +15,9 @@ const resolvers = {
         throw new Error("Failed to fetch product");
       }
     },
-    user: async (parent, args, context) => {
+    me: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user._id).populate({
-          path: "orders.products",
-        });
+        const user = await User.findById(context.user._id).populate("orders");
 
         user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
 
@@ -28,16 +26,33 @@ const resolvers = {
 
       throw AuthenticationError;
     },
-    order: async (parent, { _id }, context) => {
-      if (context.user) {
-        const user = await User.findById(context.user._id).populate({
-          path: "orders.products",
-        });
-
-        return user.orders.id(_id);
+    user: async (parent, { _id }, context) => {
+      try {
+        const user = await User.findById(_id);
+        return user;
+      } catch (err) {
+        throw new Error("Failed to fetch user");
       }
+    },
+    order: async (parent, { _id }, context) => {
+      try {
+        if (context.user) {
+          const user = await User.findById(context.user._id).populate({
+            path: "orders.products",
+          });
 
-      throw AuthenticationError;
+          return user.orders.id(_id);
+        }
+      } catch (err) {
+        throw AuthenticationError;
+      }
+    },
+    orders: async (parent) => {
+      try {
+        return await Order.find();
+      } catch (error) {
+        throw new Error("Failed to fetch orders");
+      }
     },
     checkout: async (parent, args, context) => {
       const url = new URL(context.headers.referer).origin;
@@ -83,18 +98,37 @@ const resolvers = {
 
       return { token, user };
     },
-    addOrder: async (parent, { products }, context) => {
-      if (context.user) {
-        const order = new Order({ products });
-
-        await User.findByIdAndUpdate(context.user._id, {
-          $push: { orders: order },
+    addOrder: async (
+      parent,
+      { products, paymentIntentId, userId, address, price, name },
+      context
+    ) => {
+      try {
+        console.log(paymentIntentId);
+        // Create a new order instance with the provided information
+        const order = new Order({
+          products,
+          stripePaymentIntentId: paymentIntentId,
+          purchaseDate: new Date(),
+          address,
+          price,
+          name,
         });
 
-        return order;
-      }
+        // Save the order to the database
+        const savedOrder = await order.save();
+        console.log("savedorder", savedOrder);
 
-      throw AuthenticationError;
+        // Associate the order with the user who made the purchase
+        await User.findByIdAndUpdate(userId, {
+          $push: { orders: savedOrder._id },
+        });
+
+        return savedOrder;
+      } catch (error) {
+        console.error("Error adding order:", error);
+        throw new Error("Failed to add order");
+      }
     },
     addProduct: async (parent, { input }, context) => {
       if (context.user && context.user.role === "admin") {
@@ -213,6 +247,30 @@ const resolvers = {
         throw new Error("Unauthorized: Only admin users can update products");
       }
     },
+    updateStock: async (parent, { itemId, quantity }) => {
+      console.log(itemId, quantity);
+      try {
+        // Find the product by its ID
+        const product = await Product.findById(itemId);
+
+        // Calculate the new stock
+        let newStock = product.stock - quantity;
+
+        // Ensure the new stock is not negative
+        if (newStock < 0) {
+          newStock = 0;
+        }
+
+        // Use findByIdAndUpdate to update the stock
+        await Product.findByIdAndUpdate(itemId, { stock: newStock });
+
+        // Return the updated product
+        return Product.findById(itemId);
+      } catch (err) {
+        console.error("Error updating stock:", err);
+        throw new Error("Unable to update stock");
+      }
+    },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -265,18 +323,33 @@ const resolvers = {
       }
       throw AuthenticationError;
     },
-    updateOrder: async (_, { orderId, stripePaymentIntentId }) => {
+    updateOrder: async (_, { orderId, stripePaymentIntentId }, context) => {
       try {
+        // Check if the user is authenticated
+        if (!context.user) {
+          throw new AuthenticationError(
+            "You must be logged in to update an order."
+          );
+        }
+
+        // Update the order with the provided stripePaymentIntentId
         const order = await Order.findByIdAndUpdate(
           orderId,
           { $set: { stripePaymentIntentId } },
           { new: true }
         );
 
+        // If the order doesn't exist, throw an error
+        if (!order) {
+          throw new ApolloError("Order not found.");
+        }
+
+        // Return the updated order
         return order;
       } catch (error) {
+        // Handle errors
         console.error("Error updating order:", error.message);
-        throw new Error("Unable to update order.");
+        throw new ApolloError("Unable to update order.");
       }
     },
   },

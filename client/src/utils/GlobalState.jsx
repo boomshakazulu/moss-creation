@@ -9,6 +9,7 @@ const StoreProvider = ({ value = [], ...props }) => {
     products: [],
     cart: [],
     cartOpen: false,
+    stripePaymentIntentId: null,
   });
 
   return <Provider value={[state, dispatch]} {...props} />;

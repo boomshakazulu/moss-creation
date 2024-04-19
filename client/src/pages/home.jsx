@@ -21,20 +21,12 @@ const Home = () => {
   console.log(data, productsWithCarousel);
 
   return (
-    <div>
+    <div className="product-div">
       <section>
         <Carousel items={productsWithCarousel} isHomePage />
       </section>
       <section className="product-cards">
-        <Row
-          xs={1}
-          sm={2}
-          md={3}
-          lg={3}
-          xl={4}
-          xxl={6}
-          className="g-4 row-max-width"
-        >
+        <Row className="g-4 row-max-width">
           {data.products.map((product) => (
             <ProductCards
               key={product._id}

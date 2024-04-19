@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { loadStripe } from "@stripe/stripe-js";
 import { useLazyQuery } from "@apollo/client";
 import { QUERY_CHECKOUT } from "../../utils/queries";
 import { idbPromise } from "../../utils/helpers";
@@ -9,10 +8,7 @@ import Auth from "../../utils/auth";
 import { useStoreContext } from "../../utils/GlobalState";
 import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from "../../utils/actions";
 import "./index.css";
-
-const stripePromise = loadStripe(
-  "pk_test_51OepiODs30DMhvSh8ixbeX0chGCZQ4Mkkr2xgdlOyvIR4yJLyJW0TBdYcCpZ22yrnvBv0seEoO4YDdwtV3864sBf00TM8vwKgQ"
-);
+import cartImg from "../../assets/images/menuBtns/cart.png";
 
 const Cart = () => {
   const [state, dispatch] = useStoreContext();
@@ -20,14 +16,6 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const cartRef = useRef();
-
-  useEffect(() => {
-    if (data) {
-      stripePromise.then((res) => {
-        res.redirectToCheckout({ sessionId: data.checkout.session });
-      });
-    }
-  }, [data]);
 
   useEffect(() => {
     async function getCart() {
@@ -73,7 +61,7 @@ const Cart = () => {
     return (
       <div className="cart-closed" onClick={toggleCart}>
         <span role="img" aria-label="trash">
-          🛒
+          <img className="cartImg" src={cartImg} alt="Cart" />
         </span>
       </div>
     );
@@ -82,7 +70,7 @@ const Cart = () => {
   return (
     <div className="cart" ref={cartRef}>
       <div className="close" onClick={toggleCart}>
-        [close]
+        <img src={cartImg} alt="Cart" />
       </div>
       <h2>Shopping Cart</h2>
       {state.cart.length ? (

@@ -1,9 +1,11 @@
 import { useStoreContext } from "../../utils/GlobalState";
 import { REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from "../../utils/actions";
 import { idbPromise } from "../../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
 const CartItem = ({ item }) => {
   const [, dispatch] = useStoreContext();
+  const navigate = useNavigate();
 
   const removeFromCart = (item) => {
     dispatch({
@@ -15,31 +17,45 @@ const CartItem = ({ item }) => {
 
   const onChange = (e) => {
     const value = e.target.value;
-    if (value === "0") {
-      dispatch({
-        type: REMOVE_FROM_CART,
-        _id: item._id,
-      });
-      idbPromise("cart", "delete", { ...item });
-    } else {
-      dispatch({
-        type: UPDATE_CART_QUANTITY,
-        _id: item._id,
-        purchaseQuantity: parseInt(value),
-      });
-      idbPromise("cart", "put", { ...item, purchaseQuantity: parseInt(value) });
+    const availableStock = item.stock;
+    if (!isNaN(value) && value >= 0 && value <= availableStock) {
+      if (value === "0") {
+        dispatch({
+          type: REMOVE_FROM_CART,
+          _id: item._id,
+        });
+        idbPromise("cart", "delete", { ...item });
+      } else {
+        dispatch({
+          type: UPDATE_CART_QUANTITY,
+          _id: item._id,
+          purchaseQuantity: parseInt(value),
+        });
+        idbPromise("cart", "put", {
+          ...item,
+          purchaseQuantity: parseInt(value),
+        });
+      }
     }
+  };
+
+  const itemNavigation = () => {
+    navigate(`/item/${item._id}`);
   };
 
   return (
     <div className="flex-row">
-      <div>
-        <img src={`/images/${item.image}`} alt="" />
-      </div>
-      <div>
+      <a onClick={() => itemNavigation()}>
         <div>
-          {item.name}, ${item.price}
+          <img src={`${item.photo[0]}`} alt="" />
         </div>
+      </a>
+      <div>
+        <a onClick={() => itemNavigation()}>
+          <div>
+            {item.name}, ${item.price}
+          </div>
+        </a>
         <div>
           <span>Qty:</span>
           <input

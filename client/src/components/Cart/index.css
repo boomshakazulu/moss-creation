@@ -5,7 +5,7 @@
   min-width: 50%;
   max-width: 80%;
   max-height: 70%;
-  background-color: white;
+  background-color: #a3d5b2;
   overflow: auto;
   padding: 0.5rem;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
@@ -17,14 +17,17 @@
   font-size: 1.5rem;
   border-bottom: 1px solid var(black);
   padding-bottom: 0.5rem;
-  margin: 1rem 0;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-right: 4rem;
 }
 
 .cart .close {
   position: absolute;
   top: 0.5rem;
-  right: 0.5rem;
+  right: -1rem;
   cursor: pointer;
+  transform: rotate(45deg);
 }
 
 .cart .close:hover {
@@ -52,6 +55,12 @@
   margin-right: 1rem;
 }
 
+.cartImg {
+  max-width: 70px !important;
+  max-height: 70px !important;
+  padding-right: 10px;
+}
+
 .cart input {
   width: 50px;
   padding: 0;
@@ -60,6 +69,10 @@
 
 .total {
   padding-top: 10px;
+}
+
+.total button {
+  margin-left: 20px;
 }
 
 .trash {

@@ -73,12 +73,16 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  width: calc(50% - 2px); /* Adjusted width to consider border */
-  height: calc(50vw - 2px); /* Set height based on viewport width */
+  width: calc(50%); /* Adjusted width to consider border */
+  height: calc(50vw -5px); /* Set height based on viewport width */
   margin: 2px;
   transition: transform 0.3s ease, z-index 0s ease 0.3s;
   position: relative;
   z-index: 2;
+}
+
+.link-box img {
+  max-width: 100%;
 }
 
 .link-box:hover {

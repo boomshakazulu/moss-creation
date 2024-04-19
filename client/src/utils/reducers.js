@@ -8,7 +8,9 @@ import {
   UPDATE_CURRENT_CATEGORY,
   CLEAR_CART,
   TOGGLE_CART,
+  SET_STRIPE_PAYMENT_INTENT_ID,
 } from "./actions";
+import { idbPromise } from "./helpers";
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -23,6 +25,12 @@ export const reducer = (state, action) => {
         ...state,
         cartOpen: true,
         cart: [...state.cart, action.product],
+      };
+
+    case SET_STRIPE_PAYMENT_INTENT_ID:
+      return {
+        ...state,
+        stripePaymentIntentId: action.payload,
       };
 
     case ADD_MULTIPLE_TO_CART:
@@ -55,11 +63,15 @@ export const reducer = (state, action) => {
       };
 
     case CLEAR_CART:
-      return {
+      console.log("Before clearing cart:", state);
+      idbPromise("cart", "clear");
+      const newestState = {
         ...state,
         cartOpen: false,
         cart: [],
       };
+      console.log("After clearing cart:", newestState);
+      return newestState;
 
     case TOGGLE_CART:
       return {
