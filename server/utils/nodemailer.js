@@ -19,18 +19,18 @@ module.exports = {
         to: email, // list of receivers
         subject: "Mossy-Creations Password Reset", // Subject line
         html: `
-          <!DOCTYPE html>
-          <html lang="en">
-          <body style="font-family: Arial, sans-serif;">
-            <h2>Password Reset</h2>
-            <p>We received a request to reset your password. If you did not make this request, you can ignore this email.</p>
-            <p>To reset your password, please click on the link below:</p>
-            <p><a href="http://localhost:3000/password-reset/${token}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
-            <p>If you're having trouble clicking the "Reset Password" button, you can copy and paste the following URL into your web browser:</p>
-            <p>http://localhost:3000/password-reset/${token}</p>
-          </body>
-          </html>
-        `, // html body
+        <!DOCTYPE html>
+        <html lang="en">
+        <body style="font-family: Arial, sans-serif; text-align: center;">
+          <h2 style="text-align: center;">Password Reset</h2>
+          <p style="text-align: center;">We received a request to reset your password. If you did not make this request, you can ignore this email.</p>
+          <p style="text-align: center;">To reset your password, please click on the link below:</p>
+          <p style="text-align: center;"><a href="http://localhost:3000/password-reset/${token}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
+          <p style="text-align: center;">If you're having trouble clicking the "Reset Password" button, you can copy and paste the following URL into your web browser:</p>
+          <p style="text-align: center;">http://localhost:3000/password-reset/${token}</p>
+        </body>
+        </html>
+        `,
       });
     } catch (error) {
       console.error("Error sending password reset email:", error);
@@ -45,16 +45,16 @@ module.exports = {
         to: email, // list of receivers
         subject: "Password Reset Successful", // Subject line
         html: `
-          <!DOCTYPE html>
-          <html lang="en">
-          <body style="font-family: Arial, sans-serif;">
-            <h2>Password Reset Successful</h2>
-            <p>Your password has been successfully reset.</p>
-            <p>If you did not perform this action, please change your password immediately.</p>
-            <p>Thank you!</p>
-          </body>
-          </html>
-        `, // html body
+        <!DOCTYPE html>
+        <html lang="en">
+        <body style="font-family: Arial, sans-serif; text-align: center;">
+          <h2 style="text-align: center;">Password Reset Successful</h2>
+          <p style="text-align: center;">Your password has been successfully reset.</p>
+          <p style="text-align: center;">If you did not perform this action, please change your password immediately.</p>
+          <p style="text-align: center;">Thank you!</p>
+        </body>
+        </html>
+        `,
       });
     } catch (error) {
       console.error("Error sending password reset success email:", error);
@@ -87,13 +87,14 @@ module.exports = {
         html: `
         <!DOCTYPE html>
         <html lang="en">
-        <body style="font-family: Arial, sans-serif;">
-          <h2>Order Shipped!</h2>
-          <p>Your order has been shipped!</p>
-          <p>To track your order please click on the link below</p>
-          <p><a href="${trackingWebsite}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Track my package</a></p>
-          <p>If you're having trouble clicking the "Reset Password" button, you can copy and paste the following URL into your web browser:</p>
-          <p>${trackingWebsite}</p>
+        <body style="font-family: Arial, sans-serif; text-align: center;">
+          <h2 style="text-align: center;">Order Shipped!</h2>
+          <p style="text-align: center;">Your ${carrier} tracking number is</p>
+          <p style="text-align: center;">${trackingNum}</p>
+          <p style="text-align: center;">To track your order please click on the link below</p>
+          <p style="text-align: center;"><a href="${trackingWebsite}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Track my package</a></p>
+          <p style="text-align: center;">If you're having trouble clicking the "Reset Password" button, you can copy and paste the following URL into your web browser:</p>
+          <p style="text-align: center;">${trackingWebsite}</p>
         </body>
         </html>
       `,

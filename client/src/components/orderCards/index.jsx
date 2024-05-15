@@ -4,11 +4,12 @@ import { useMutation } from "@apollo/client";
 import { COMPLETE_ORDER } from "../../utils/mutations";
 
 import "./style.css";
+import Product from "../../pages/product";
 
 const OrderCards = ({ order }) => {
   const [orderData, setOrderData] = useState(order);
   const [completeOrder, { error }] = useMutation(COMPLETE_ORDER);
-
+  console.log(orderData);
   const handleCarrierChange = (e) => {
     setOrderData((prevOrder) => ({
       ...prevOrder,
@@ -69,8 +70,10 @@ const OrderCards = ({ order }) => {
           </Form.Label>
           <Col sm={8}>
             <ul className="list-unstyled mb-0">
-              {orderData.products.map((product) => (
-                <li key={product._id}>{product.name}</li>
+              {orderData.products.map((product, index) => (
+                <li key={index}>
+                  {product.product.name}({product.quantity})
+                </li>
               ))}
             </ul>
           </Col>

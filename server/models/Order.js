@@ -9,8 +9,14 @@ const orderSchema = new Schema({
   },
   products: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
+      product: {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+      },
+      quantity: {
+        type: Number,
+        default: 1,
+      },
     },
   ],
   stripePaymentIntentId: {
@@ -42,4 +48,4 @@ const orderSchema = new Schema({
 
 const Order = mongoose.model("Order", orderSchema);
 
-(module.exports = Order), { orderSchema };
+module.exports = { Order, orderSchema };

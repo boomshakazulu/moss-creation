@@ -17,7 +17,7 @@ const typeDefs = `
   type Order {
     _id: ID
     purchaseDate: String
-    products: [Product]
+    products: [OrderProduct]
     stripePaymentIntentId: String
     address: String
     price: Float
@@ -26,6 +26,11 @@ const typeDefs = `
     email: String
     customerName: String
     carrier: String
+  }
+
+  type OrderProduct {
+    product: Product
+    quantity: Int
   }
 
   type Review {

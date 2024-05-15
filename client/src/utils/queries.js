@@ -94,22 +94,24 @@ export const QUERY_PRODUCT = gql`
 `;
 
 export const QUERY_ORDERS = gql`
-  query {
+  query Orders {
     orders {
-      _id
-      purchaseDate
-      email
       products {
-        _id
-        name
+        quantity
+        product {
+          name
+        }
       }
-      stripePaymentIntentId
       address
-      price
-      trackingNum
-      fulfilled
-      customerName
       carrier
+      customerName
+      email
+      fulfilled
+      price
+      purchaseDate
+      stripePaymentIntentId
+      trackingNum
+      _id
     }
   }
 `;

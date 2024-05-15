@@ -158,20 +158,22 @@ export const COMPLETE_ORDER = gql`
       fulfilled: $fulfilled
       email: $email
     ) {
-      _id
-      purchaseDate
-      email
       products {
-        _id
-        name
+        quantity
+        product {
+          name
+        }
       }
-      stripePaymentIntentId
       address
-      price
-      trackingNum
-      fulfilled
-      customerName
       carrier
+      customerName
+      email
+      fulfilled
+      price
+      purchaseDate
+      stripePaymentIntentId
+      trackingNum
+      _id
     }
   }
 `;

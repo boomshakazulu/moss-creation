@@ -4,6 +4,7 @@ const { signToken } = require("../utils/auth");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 const {
   passResetEmail,
   passResetSuccessEmail,
@@ -26,7 +27,16 @@ const resolvers = {
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user._id).populate("orders");
+        const user = await User.findById(context.user._id).populate({
+          path: "orders",
+          populate: {
+            path: "products",
+            populate: {
+              path: "product",
+              model: "Product",
+            },
+          },
+        });
 
         user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
 
@@ -46,9 +56,13 @@ const resolvers = {
     order: async (parent, { _id }, context) => {
       try {
         if (context.user) {
-          const user = await User.findById(context.user._id).populate(
-            "products"
-          );
+          const user = await User.findById(context.user._id).populate({
+            path: "products",
+            populate: {
+              path: "product",
+              model: "Product",
+            },
+          });
 
           return user.orders.id(_id);
         }
@@ -58,7 +72,13 @@ const resolvers = {
     },
     orders: async (parent) => {
       try {
-        return await Order.find().populate("products");
+        return await Order.find().populate({
+          path: "products",
+          populate: {
+            path: "product",
+            model: "Product",
+          },
+        });
       } catch (error) {
         throw new Error("Failed to fetch orders");
       }
@@ -122,9 +142,15 @@ const resolvers = {
       context
     ) => {
       try {
+        const mappedProducts = products.map(({ product, quantity }) => ({
+          product,
+          quantity,
+        }));
+
+        console.log(products, mappedProducts);
         // Create a new order instance with the provided information
         const order = new Order({
-          products,
+          products: mappedProducts,
           stripePaymentIntentId: paymentIntentId,
           purchaseDate: new Date(),
           address,
@@ -163,7 +189,13 @@ const resolvers = {
               fulfilled: fulfilled,
             },
             { new: true }
-          ).populate("products");
+          ).populate({
+            path: "products",
+            populate: {
+              path: "product",
+              model: "Product",
+            },
+          });
           if (fulfilled) {
             await trackingNumberEmail(carrier, trackingNum, email);
           }
