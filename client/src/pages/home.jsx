@@ -12,13 +12,9 @@ const Home = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  console.log(data);
-
   const productsWithCarousel = data.products.filter(
     (product) => product.carousel
   );
-
-  console.log(data, productsWithCarousel);
 
   return (
     <div className="product-div">

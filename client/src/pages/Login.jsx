@@ -38,7 +38,7 @@ function Login(props) {
   };
 
   return (
-    <div className="container my-1">
+    <div className="container-login my-1">
       <Link to="/signup" className="back-link">
         ← Go to Signup
       </Link>
@@ -76,6 +76,9 @@ function Login(props) {
           </button>
         </div>
       </form>
+      <Link to="/forgotpassword" className="forgot-password-link">
+        Forgot Password?
+      </Link>
     </div>
   );
 }

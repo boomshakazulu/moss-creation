@@ -2,6 +2,14 @@ const { User, Product, Review, Order } = require("../models");
 const { AuthenticationError, ApolloError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const {
+  passResetEmail,
+  passResetSuccessEmail,
+} = require("../utils/nodemailer");
+
+const { UrlEncode, UrlDecode } = require("../utils/helper");
 
 const resolvers = {
   Query: {
@@ -100,7 +108,15 @@ const resolvers = {
     },
     addOrder: async (
       parent,
-      { products, paymentIntentId, userId, address, price, name },
+      {
+        products,
+        paymentIntentId,
+        userId,
+        address,
+        price,
+        name,
+        customerEmail,
+      },
       context
     ) => {
       try {
@@ -113,6 +129,7 @@ const resolvers = {
           address,
           price,
           name,
+          email: customerEmail,
         });
 
         // Save the order to the database
@@ -133,31 +150,30 @@ const resolvers = {
     addProduct: async (parent, { input }, context) => {
       if (context.user && context.user.role === "admin") {
         try {
-          // Step 1: Save product details in MongoDB
+          //Save product details in MongoDB
           const newProduct = await Product.create(input);
 
-          // Step 2: Create product in Stripe
+          //Create product in Stripe
           const stripeProduct = await stripe.products.create({
             name: input.name,
             description: input.description,
             // Add other product details as needed
           });
 
-          // Step 3: Update MongoDB with Stripe Product ID
+          //Update MongoDB with Stripe Product ID
           newProduct.stripeProductId = stripeProduct.id;
           await newProduct.save();
 
           // If price is included in the input, create price in Stripe
           if (input.price) {
-            // Step 4: Create price in Stripe
+            //Create price in Stripe
             const stripePrice = await stripe.prices.create({
               product: stripeProduct.id,
               unit_amount: input.price * 100, // Price in cents
-              currency: "usd", // Change currency as needed
-              // Add other price details as needed
+              currency: "usd",
             });
 
-            // Step 5: Update MongoDB with Stripe Price ID
+            //Update MongoDB with Stripe Price ID
             newProduct.priceId = stripePrice.id;
             await newProduct.save();
           }
@@ -184,7 +200,7 @@ const resolvers = {
     updateProduct: async (parent, { itemId, input }, context) => {
       if (context.user && context.user.role === "admin") {
         try {
-          // Step 1: Update product details in MongoDB
+          //Update product details in MongoDB
           const updatedProduct = await Product.findByIdAndUpdate(
             itemId,
             input,
@@ -193,9 +209,9 @@ const resolvers = {
             }
           );
 
-          // Step 2: Check if the updated fields include name, description, or price
+          //Check if the updated fields include name, description, or price
           if (input.name || input.description || input.price) {
-            // Step 3: If any of these fields are updated, update corresponding details in Stripe
+            //If any of these fields are updated, update corresponding details in Stripe
             const stripeProduct = await stripe.products.update(
               updatedProduct.stripeProductId, // Use the stripeProductId saved in MongoDB
               {
@@ -205,35 +221,35 @@ const resolvers = {
               }
             );
 
-            // Step 4: Update MongoDB with updated Stripe Product ID
+            //Update MongoDB with updated Stripe Product ID
             updatedProduct.stripeProductId = stripeProduct.id;
           }
 
-          // Step 5: If price is updated, create a new price in Stripe and update MongoDB
+          //If price is updated, create a new price in Stripe and update MongoDB
           if (input.price) {
             // Retrieve the existing price details from Stripe
             const existingPrice = await stripe.prices.retrieve(
               updatedProduct.priceId
             );
-
-            // Deactivate the existing price
-            await stripe.prices.update(updatedProduct.priceId, {
-              active: false,
-            });
+            if (existingPrice) {
+              // Deactivate the existing price
+              await stripe.prices.update(updatedProduct.priceId, {
+                active: false,
+              });
+            }
 
             // Create a new price with the updated amount
             const newPrice = await stripe.prices.create({
               product: updatedProduct.stripeProductId,
               unit_amount: input.price * 100, // Price in cents
-              currency: "usd", // Change currency as needed
-              // Add other price details as needed
+              currency: "usd",
             });
 
-            // Update MongoDB with the ID of the new price
+            //Update MongoDB with the ID of the new price
             updatedProduct.priceId = newPrice.id;
           }
 
-          // Step 6: Save the updated product details in MongoDB
+          //Save the updated product details in MongoDB
           await updatedProduct.save();
 
           return updatedProduct;
@@ -350,6 +366,66 @@ const resolvers = {
         // Handle errors
         console.error("Error updating order:", error.message);
         throw new ApolloError("Unable to update order.");
+      }
+    },
+    forgotPassword: async (_, { email }) => {
+      try {
+        const user = await User.findOne({ email });
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        const payload = {
+          userId: user._id,
+          timestamp: Date.now() / 1000,
+        };
+
+        const token = jwt.sign(payload, process.env.SECRET_JWT, {
+          expiresIn: "1h",
+        });
+
+        const encodedToken = UrlEncode(token);
+
+        await User.findByIdAndUpdate(
+          user.id,
+          { $set: { resetToken: token } },
+          { new: true }
+        );
+
+        await passResetEmail(user.email, encodedToken);
+
+        return null;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to initiate password reset");
+      }
+    },
+    resetPassword: async (_, { token, newPassword }) => {
+      try {
+        const decodedToken = UrlDecode(token);
+        const decoded = jwt.verify(decodedToken, process.env.SECRET_JWT);
+
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        const user = await User.findByIdAndUpdate(
+          decoded.userId,
+          { $set: { password: hashedPassword, resetToken: null } },
+          { new: true }
+        );
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        await passResetSuccessEmail(user.email);
+
+        return "Password reset successfully";
+      } catch (error) {
+        if (error.name === "TokenExpiredError") {
+          throw new Error("Token expired");
+        }
+        console.error(error);
+        throw new Error("Failed to reset password");
       }
     },
   },

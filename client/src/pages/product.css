@@ -2,6 +2,9 @@
   width: 35% !important; /* Adjust the width of the column containing the carousel */
 }
 
+.product-section {
+  max-width: 100%;
+}
 .product-info-container {
   height: 100%;
   width: 100%;
@@ -13,7 +16,7 @@
 }
 
 .product-stock {
-  padding-top: 20px; /* Adjusted padding */
+  padding-top: 10px; /* Adjusted padding */
   text-align: center;
 }
 
@@ -34,11 +37,13 @@
   justify-content: space-between;
   width: 100%; /* Ensure the buttons span the width of their container */
   margin-top: auto;
+  padding-top: 30px;
 }
 
 .product-btn-container button {
   margin-left: 10%;
   margin-right: 10%;
+  width: 50%;
 }
 .product-carousel {
   max-width: 100%; /* Ensure the container doesn't exceed the width of the carousel */

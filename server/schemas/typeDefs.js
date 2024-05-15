@@ -24,6 +24,7 @@ const typeDefs = `
     trackingNum: String
     fulfilled: Boolean
     name: String
+    email: String
   }
 
   type Review {
@@ -39,6 +40,7 @@ const typeDefs = `
     username: String
     email: String
     role: String
+    resetToken: String
     reviews: [Review]
     orders: [Order]
   }
@@ -81,12 +83,14 @@ const typeDefs = `
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User
     addProduct(input: ProductInput): Product
-    addOrder(products: [ID]! stripePaymentIntentId: String, price: Float, address: String, trackingNum: String, name: String): Order
+    addOrder(products: [ID]! stripePaymentIntentId: String, price: Float, address: String, trackingNum: String, name: String, email: String): Order
     updateOrder(orderId: ID!, stripePaymentIntentId: String, price: Float, address: String, trackingNum: String fulfilled: Boolean): Order
     updateProduct(itemId: ID!, input: ProductInput): Product
     updateStock(itemId: ID, quantity: Int): Product
     login(email: String!, password: String!): Auth
     addReview(text: String, itemId: String, author: String!): Review
+    forgotPassword(email: String!): String 
+    resetPassword(token: String!, newPassword: String!): String
   }
 `;
 module.exports = typeDefs;

@@ -29,6 +29,11 @@ const userSchema = new Schema({
     default: "user",
   },
 
+  resetToken: {
+    type: String,
+    default: null,
+  },
+
   reviews: [
     {
       type: Schema.Types.ObjectId,

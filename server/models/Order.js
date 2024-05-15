@@ -32,6 +32,9 @@ const orderSchema = new Schema({
   name: {
     type: String,
   },
+  email: {
+    type: String,
+  },
 });
 
 const Order = mongoose.model("Order", orderSchema);

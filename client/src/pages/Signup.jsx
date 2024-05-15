@@ -68,7 +68,7 @@ function Signup(props) {
   };
 
   return (
-    <div className="container my-1">
+    <div className="container-signup my-1">
       <Link to="/login" className="back-link">
         ← Go to Login
       </Link>

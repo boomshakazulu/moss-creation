@@ -11,7 +11,6 @@ const productCards = (item) => {
   const { photo, name, _id, price, stock, currentPage, priceId } = item;
 
   const { cart } = state;
-  console.log(item);
   const getProductLink = (item) => {
     if (item.currentPage === "admin") {
       return `/admin/${item._id}`;

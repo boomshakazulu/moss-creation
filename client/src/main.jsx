@@ -16,6 +16,9 @@ import Item from "./pages/product.jsx";
 import Error from "./pages/Error.jsx";
 import CheckoutForm from "./pages/checkout.jsx";
 import Return from "./pages/return.jsx";
+import ForgotPassword from "./pages/forgotPassword.jsx";
+import ForgotPasswordConfirmation from "./pages/forgotPasswordConfirm.jsx";
+import PasswordReset from "./pages/passwordReset.jsx";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +61,18 @@ const router = createBrowserRouter([
       {
         path: "/return",
         element: <Return />,
+      },
+      {
+        path: "/forgotpassword",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "/forgotpassword-confirmation",
+        element: <ForgotPasswordConfirmation />,
+      },
+      {
+        path: "/password-reset/:token",
+        element: <PasswordReset />,
       },
     ],
   },

@@ -4,14 +4,19 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import Carousel from "../components/carousel/index.jsx";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { useStoreContext } from "../utils/GlobalState.jsx";
+import { ADD_TO_CART, UPDATE_CART_QUANTITY } from "../utils/actions";
+import { idbPromise } from "../utils/helpers";
 import "./product.css";
 
 function Product() {
   const { itemId } = useParams();
   const navigate = useNavigate();
+  const [state, dispatch] = useStoreContext();
   const { loading, error, data } = useQuery(QUERY_PRODUCT, {
     variables: { itemId },
   });
+  const { cart } = state;
 
   // Show loading indicator while data is being fetched
   if (loading) return <p>Loading...</p>;
@@ -20,6 +25,39 @@ function Product() {
   if (error) return <p>Error: {error.message}</p>;
 
   console.log(data);
+
+  const addToCart = () => {
+    const itemInCart = cart.find(
+      (cartItem) => cartItem._id === data.product._id
+    );
+    if (itemInCart) {
+      const newQuantity = parseInt(itemInCart.purchaseQuantity) + 1;
+      if (newQuantity <= itemInCart.stock) {
+        dispatch({
+          type: UPDATE_CART_QUANTITY,
+          _id: _id,
+          purchaseQuantity: newQuantity,
+        });
+        idbPromise("cart", "put", {
+          ...itemInCart,
+          purchaseQuantity: newQuantity,
+        });
+      } else {
+        console.log("Cannot add more than available stock");
+      }
+    } else {
+      dispatch({
+        type: ADD_TO_CART,
+        product: { ...data.product, purchaseQuantity: 1 },
+      });
+      idbPromise("cart", "put", { ...data.product, purchaseQuantity: 1 });
+    }
+  };
+
+  const buyNow = () => {
+    addToCart();
+    navigate("/checkout");
+  };
 
   return (
     <Container className="product-section">
@@ -38,15 +76,25 @@ function Product() {
             ></p>
             <h2 className="product-price">${data.product.price}</h2>
             <p className="product-stock">
-              {data.product.stock > 0 ? "In Stock" : "Out of Stock"}
+              {data.product.stock > 0
+                ? `${data.product.stock} In Stock`
+                : "Out of Stock"}
             </p>
           </div>
           <Row>
             <div className="product-btn-container">
-              <Button variant="primary" className="produce-btn-atc">
+              <Button
+                variant="success"
+                className="product-btn-atc"
+                onClick={addToCart}
+              >
                 Add to Cart
               </Button>{" "}
-              <Button variant="success" className="product-btn-buyNow">
+              <Button
+                variant="success"
+                className="product-btn-buyNow"
+                onClick={buyNow}
+              >
                 Buy Now
               </Button>
             </div>

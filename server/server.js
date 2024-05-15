@@ -6,6 +6,7 @@ const { expressMiddleware } = require("@apollo/server/express4");
 const path = require("path");
 const { authMiddleware } = require("./utils/auth");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
@@ -58,7 +59,7 @@ const startApolloServer = async () => {
         payment_intent_data: {
           metadata: {
             products: metadata.products,
-            userId: metadata.userId,
+            customerEmail: metadata.customerEmail,
           },
         },
       });
@@ -94,7 +95,6 @@ const startApolloServer = async () => {
           const paymentIntent = await stripe.paymentIntents.retrieve(
             paymentIntentId
           );
-
           const eventData = event.data.object;
           const metadata = eventData.metadata || {};
           const products = JSON.parse(metadata.products || "[]");
@@ -109,17 +109,29 @@ const startApolloServer = async () => {
             ${shipInfo.postal_code}`;
           const price = paymentIntent.amount / 100;
           const name = paymentIntent.name;
-          console.log(address, price);
+          const customerEmail = metadata.customerEmail;
+
           // Handle the successful payment intent, e.g., create an order in the database
           try {
+            const productIds = products.map((product) =>
+              mongoose.Types.ObjectId.createFromHexString(product.productId)
+            );
             // Use the extracted products to create the order
             const order = await resolvers.Mutation.addOrder(
               null,
-              { products, paymentIntentId, userId, address, price, name },
+              {
+                products: productIds,
+                paymentIntentId,
+                userId,
+                address,
+                price,
+                name,
+                customerEmail,
+              },
               null
             );
             console.log("Order created:", order);
-            res.json({ success: true });
+            res.status(200).json({ success: true });
           } catch (error) {
             console.error("Error creating order:", error);
           }
@@ -128,9 +140,6 @@ const startApolloServer = async () => {
         default:
           console.log("Unhandled event type:", event.type);
       }
-
-      // Respond to Stripe with a 200 status to acknowledge receipt of the event
-      res.sendStatus(200);
     }
   );
 
