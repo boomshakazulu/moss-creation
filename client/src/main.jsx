@@ -19,6 +19,7 @@ import Return from "./pages/return.jsx";
 import ForgotPassword from "./pages/forgotPassword.jsx";
 import ForgotPasswordConfirmation from "./pages/forgotPasswordConfirm.jsx";
 import PasswordReset from "./pages/passwordReset.jsx";
+import AdminOrders from "./pages/adminOrders.jsx";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/:itemId",
         element: <AdminUpdate />,
+      },
+      {
+        path: "/admin/orders",
+        element: <AdminOrders />,
       },
       {
         path: "/checkout",

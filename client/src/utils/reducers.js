@@ -63,14 +63,12 @@ export const reducer = (state, action) => {
       };
 
     case CLEAR_CART:
-      console.log("Before clearing cart:", state);
       idbPromise("cart", "clear");
       const newestState = {
         ...state,
         cartOpen: false,
         cart: [],
       };
-      console.log("After clearing cart:", newestState);
       return newestState;
 
     case TOGGLE_CART:

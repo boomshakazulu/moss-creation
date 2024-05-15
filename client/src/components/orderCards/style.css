@@ -1,0 +1,67 @@
+.fulfilled,
+.unfulfilled {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.fulfilled h2,
+.unfulfilled h2 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.order-card {
+  max-width: 100%;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 0;
+  display: inline-block; /* Display as an inline block to fit content width */
+  width: auto; /* Allow the container to adjust its width based on content */
+  margin: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.order-card-row:nth-child(odd) {
+  background-color: #f8f9fa;
+}
+
+.order-card-row:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+.order-card-row {
+  width: 100%;
+  margin: auto;
+  align-items: center;
+}
+
+.order-card form {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%; /* Ensure the form fills the container */
+  overflow: hidden;
+  text-align: center;
+  align-items: center;
+}
+
+.order-card input {
+  text-align: center;
+  align-items: center;
+}
+
+.order-card .form-group {
+  margin-bottom: 0; /* Remove bottom margin to reduce space between rows */
+}
+
+.order-card h5 {
+  width: 100%;
+  background-color: #e9ecef;
+  margin: 0px !important;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

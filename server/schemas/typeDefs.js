@@ -23,8 +23,9 @@ const typeDefs = `
     price: Float
     trackingNum: String
     fulfilled: Boolean
-    name: String
     email: String
+    customerName: String
+    carrier: String
   }
 
   type Review {
@@ -83,10 +84,11 @@ const typeDefs = `
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User
     addProduct(input: ProductInput): Product
-    addOrder(products: [ID]! stripePaymentIntentId: String, price: Float, address: String, trackingNum: String, name: String, email: String): Order
+    addOrder(products: [ID]! stripePaymentIntentId: String, price: Float, address: String, trackingNum: String, name: String, email: String, customerName: String): Order
     updateOrder(orderId: ID!, stripePaymentIntentId: String, price: Float, address: String, trackingNum: String fulfilled: Boolean): Order
     updateProduct(itemId: ID!, input: ProductInput): Product
     updateStock(itemId: ID, quantity: Int): Product
+    completeOrder(orderId: ID!, carrier: String, trackingNum: String, fulfilled: Boolean, email: String): Order
     login(email: String!, password: String!): Auth
     addReview(text: String, itemId: String, author: String!): Review
     forgotPassword(email: String!): String 

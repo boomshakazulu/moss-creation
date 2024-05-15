@@ -102,14 +102,15 @@ const startApolloServer = async () => {
           const cart = metadata.cart;
           const shipInfo = paymentIntent.shipping.address;
           const address = `${shipInfo.line1} ${
-            shipInfo.line2 ? shipInfo.line2 : null
-          }
-            ${shipInfo.city}
-            ${shipInfo.state}
+            shipInfo.line2 ? shipInfo.line2 : ""
+          },
+            ${shipInfo.city},
+            ${shipInfo.state},
             ${shipInfo.postal_code}`;
           const price = paymentIntent.amount / 100;
           const name = paymentIntent.name;
           const customerEmail = metadata.customerEmail;
+          const customerName = paymentIntent.shipping.name;
 
           // Handle the successful payment intent, e.g., create an order in the database
           try {
@@ -127,6 +128,7 @@ const startApolloServer = async () => {
                 price,
                 name,
                 customerEmail,
+                customerName,
               },
               null
             );

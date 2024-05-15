@@ -26,7 +26,7 @@ function Admin() {
         <Link to="/admin/add" className="btn btn-primary addbtn adminbtn">
           <span className="plus-sign">+</span> Add Product
         </Link>
-        <Link to="/admin/order" className="btn btn-primary orderbtn adminbtn">
+        <Link to="/admin/orders" className="btn btn-primary orderbtn adminbtn">
           View Orders
         </Link>
       </div>

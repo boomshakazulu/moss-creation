@@ -22,6 +22,9 @@ const orderSchema = new Schema({
   trackingNum: {
     type: String,
   },
+  carrier: {
+    type: String,
+  },
   price: {
     type: Number,
   },
@@ -29,10 +32,10 @@ const orderSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  name: {
+  email: {
     type: String,
   },
-  email: {
+  customerName: {
     type: String,
   },
 });

@@ -142,3 +142,36 @@ export const RESET_PASSWORD = gql`
     resetPassword(token: $token, newPassword: $newPassword)
   }
 `;
+
+export const COMPLETE_ORDER = gql`
+  mutation completeOrder(
+    $orderId: ID!
+    $carrier: String
+    $trackingNum: String
+    $fulfilled: Boolean
+    $email: String
+  ) {
+    completeOrder(
+      orderId: $orderId
+      carrier: $carrier
+      trackingNum: $trackingNum
+      fulfilled: $fulfilled
+      email: $email
+    ) {
+      _id
+      purchaseDate
+      email
+      products {
+        _id
+        name
+      }
+      stripePaymentIntentId
+      address
+      price
+      trackingNum
+      fulfilled
+      customerName
+      carrier
+    }
+  }
+`;

@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const {
   passResetEmail,
   passResetSuccessEmail,
+  trackingNumberEmail,
 } = require("../utils/nodemailer");
 
 const { UrlEncode, UrlDecode } = require("../utils/helper");
@@ -45,9 +46,9 @@ const resolvers = {
     order: async (parent, { _id }, context) => {
       try {
         if (context.user) {
-          const user = await User.findById(context.user._id).populate({
-            path: "orders.products",
-          });
+          const user = await User.findById(context.user._id).populate(
+            "products"
+          );
 
           return user.orders.id(_id);
         }
@@ -57,7 +58,7 @@ const resolvers = {
     },
     orders: async (parent) => {
       try {
-        return await Order.find();
+        return await Order.find().populate("products");
       } catch (error) {
         throw new Error("Failed to fetch orders");
       }
@@ -116,11 +117,11 @@ const resolvers = {
         price,
         name,
         customerEmail,
+        customerName,
       },
       context
     ) => {
       try {
-        console.log(paymentIntentId);
         // Create a new order instance with the provided information
         const order = new Order({
           products,
@@ -130,11 +131,11 @@ const resolvers = {
           price,
           name,
           email: customerEmail,
+          customerName,
         });
 
         // Save the order to the database
         const savedOrder = await order.save();
-        console.log("savedorder", savedOrder);
 
         // Associate the order with the user who made the purchase
         await User.findByIdAndUpdate(userId, {
@@ -145,6 +146,34 @@ const resolvers = {
       } catch (error) {
         console.error("Error adding order:", error);
         throw new Error("Failed to add order");
+      }
+    },
+    completeOrder: async (
+      parent,
+      { orderId, carrier, trackingNum, fulfilled, email },
+      context
+    ) => {
+      if (context.user && context.user.role === "admin") {
+        try {
+          const updatedOrder = await Order.findByIdAndUpdate(
+            orderId,
+            {
+              carrier: carrier,
+              trackingNum: trackingNum,
+              fulfilled: fulfilled,
+            },
+            { new: true }
+          ).populate("products");
+          if (fulfilled) {
+            await trackingNumberEmail(carrier, trackingNum, email);
+          }
+          return updatedOrder;
+        } catch (err) {
+          console.error("Error fulfilling order", err);
+          throw new Error("Failed to fulfill order");
+        }
+      } else {
+        throw new AuthenticationError("Unauthorized");
       }
     },
     addProduct: async (parent, { input }, context) => {
@@ -264,7 +293,6 @@ const resolvers = {
       }
     },
     updateStock: async (parent, { itemId, quantity }) => {
-      console.log(itemId, quantity);
       try {
         // Find the product by its ID
         const product = await Product.findById(itemId);

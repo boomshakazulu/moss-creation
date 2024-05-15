@@ -98,17 +98,18 @@ export const QUERY_ORDERS = gql`
     orders {
       _id
       purchaseDate
+      email
       products {
         _id
         name
-        price
       }
       stripePaymentIntentId
       address
       price
       trackingNum
       fulfilled
-      name
+      customerName
+      carrier
     }
   }
 `;

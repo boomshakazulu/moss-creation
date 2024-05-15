@@ -30,7 +30,6 @@ const Return = () => {
     fetch(`http://localhost:3001/session-status?session_id=${sessionId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setStatus(data.status);
         setCustomerEmail(data.customer_email);
       });
@@ -49,8 +48,6 @@ const Return = () => {
           for (const cart of state.cart) {
             // Validate that cart._id is a valid ID and cart.purchaseQuantity is a valid integer
             if (isValidId(cart._id) && isValidInteger(cart.purchaseQuantity)) {
-              console.log(cart._id);
-              console.log(cart.purchaseQuantity);
               await updateStock({
                 variables: {
                   itemId: cart._id,
