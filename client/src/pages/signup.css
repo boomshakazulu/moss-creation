@@ -40,6 +40,11 @@
   margin-top: 5px;
 }
 
+.loading-message {
+  color: blue;
+  font-size: 0.8rem;
+}
+
 .submit-button {
   background-color: #a3d5b2;
   color: #fff;

@@ -40,6 +40,14 @@ const productSchema = new mongoose.Schema({
   carousel: {
     type: String,
   },
+  averageRating: {
+    type: Number,
+    default: 0,
+  },
+  totalRatings: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Item = mongoose.model("Product", productSchema);

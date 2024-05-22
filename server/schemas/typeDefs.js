@@ -12,6 +12,8 @@ const typeDefs = `
     video: String
     reviews:[Review]
     carousel: String
+    averageRating: Int
+    totalRatings: Int
   }
 
   type Order {
@@ -37,7 +39,8 @@ const typeDefs = `
     _id: ID
     text: String
     author: String
-    itemId: String!
+    itemID: [Product]
+    rating: Int
     createdAt: String
   }
 
@@ -65,12 +68,14 @@ const typeDefs = `
     user: User
     me: User
     products(name: String): [Product]
-    reviews(itemId: String): [Review]
-    review(reviewId: ID!): Review
+    reviews(itemID: ID!): [Review]
+    review(reviewID: ID!): Review
     product(itemId: String): Product
     order(_id: ID!): Order
     orders:[Order]
     checkout(products: [ID]!): Checkout
+    checkEmailUniqueness(email: String!): Boolean!
+    checkUsernameUniqueness(username: String!): Boolean!
   }
 
   input ProductInput {
@@ -95,7 +100,7 @@ const typeDefs = `
     updateStock(itemId: ID, quantity: Int): Product
     completeOrder(orderId: ID!, carrier: String, trackingNum: String, fulfilled: Boolean, email: String): Order
     login(email: String!, password: String!): Auth
-    addReview(text: String, itemId: String, author: String!): Review
+    addReview(text: String, itemId: ID, author: String!): Review
     forgotPassword(email: String!): String 
     resetPassword(token: String!, newPassword: String!): String
   }

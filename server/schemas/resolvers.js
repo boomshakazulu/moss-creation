@@ -27,16 +27,22 @@ const resolvers = {
     },
     me: async (parent, args, context) => {
       if (context.user) {
-        const user = await User.findById(context.user._id).populate({
-          path: "orders",
-          populate: {
-            path: "products",
+        const user = await User.findById(context.user.id)
+          .populate({
+            path: "orders",
             populate: {
-              path: "product",
+              path: "products.product",
               model: "Product",
             },
-          },
-        });
+          })
+          .populate({
+            path: "reviews",
+            populate: {
+              path: "itemId",
+              model: "Product",
+            },
+          });
+        console.log(user);
 
         user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
 
@@ -51,6 +57,34 @@ const resolvers = {
         return user;
       } catch (err) {
         throw new Error("Failed to fetch user");
+      }
+    },
+    reviews: async (parent, { itemId }, context) => {
+      try {
+        return await Review.find(itemId);
+      } catch (err) {
+        throw new Error("Failed to get reviews");
+      }
+    },
+    checkEmailUniqueness: async (_, { email }) => {
+      try {
+        // Query the database to check if the email already exists
+        const existingUser = await User.findOne({ email });
+        return !existingUser; // Return true if email is unique, false otherwise
+      } catch (error) {
+        console.error("Error checking email uniqueness:", error);
+        throw new Error("Failed to check email uniqueness");
+      }
+    },
+
+    checkUsernameUniqueness: async (_, { username }) => {
+      try {
+        // Query the database to check if the username already exists
+        const existingUser = await User.findOne({ username });
+        return !existingUser; // Return true if username is unique, false otherwise
+      } catch (error) {
+        console.error("Error checking username uniqueness:", error);
+        throw new Error("Failed to check username uniqueness");
       }
     },
     order: async (parent, { _id }, context) => {
@@ -164,6 +198,7 @@ const resolvers = {
         const savedOrder = await order.save();
 
         // Associate the order with the user who made the purchase
+        console.log("user: ", userId, "savedOrder: ", savedOrder);
         await User.findByIdAndUpdate(userId, {
           $push: { orders: savedOrder._id },
         });
@@ -369,35 +404,54 @@ const resolvers = {
     },
     addReview: async (parent, { text, itemId }, context) => {
       if (context.user) {
-        const review = await Review.create({
-          text,
-          author: context.user.username,
-          itemId,
-        });
-        await User.findOneAndUpdate(
-          { _id: context.user._id },
-          {
-            $addToSet: { reviews: review._id },
-          },
-          {
-            new: true,
-            runValidators: true,
-          }
-        );
+        try {
+          // Create the new review
+          const review = await Review.create({
+            text,
+            author: context.user.username,
+            itemId,
+            rating,
+          });
 
-        await Product.findByIdAndUpdate(
-          itemId,
-          {
-            $addToSet: { reviews: review._id },
-          },
-          {
-            new: true,
-            runValidators: true,
+          // Update the user's reviews
+          await User.findOneAndUpdate(
+            { _id: context.user._id },
+            { $addToSet: { reviews: review._id } },
+            { new: true, runValidators: true }
+          );
+
+          // Update the product's reviews and calculate new average rating
+          const product = await Product.findById(itemId);
+          product.reviews.push(review._id);
+
+          // Calculate the new average rating
+          const totalRatings = product.reviews.length;
+          const sumRatings = await Review.aggregate([
+            { $match: { _id: { $in: product.reviews } } },
+            { $group: { _id: null, sum: { $sum: "$rating" } } },
+          ]);
+
+          const averageRating = sumRatings[0].sum / totalRatings;
+
+          // Update the product's rating fields
+          product.averageRating = averageRating;
+          product.totalRatings = totalRatings;
+
+          await product.save();
+
+          return review;
+        } catch (error) {
+          // Handle validation errors
+          if (error.name === "ValidationError") {
+            // You can format the validation error messages as needed
+            throw new Error("Validation failed. Please check your input.");
           }
-        );
-        return review;
+          // Handle other errors
+          throw error;
+        }
       }
-      throw AuthenticationError;
+      // Throw authentication error with a message
+      throw new AuthenticationError("You must be logged in to add a review.");
     },
     updateOrder: async (_, { orderId, stripePaymentIntentId }, context) => {
       try {

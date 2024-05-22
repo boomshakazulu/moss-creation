@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { QUERY_PRODUCT } from "../utils/queries";
+import { QUERY_PRODUCT, QUERY_ME } from "../utils/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import Carousel from "../components/carousel/index.jsx";
+import StarRating from "../components/starRating/index.jsx";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useStoreContext } from "../utils/GlobalState.jsx";
 import { ADD_TO_CART, UPDATE_CART_QUANTITY } from "../utils/actions";
+import Auth from "../utils/auth.js";
 import { idbPromise } from "../utils/helpers";
+import ReviewInput from "../components/reviewInput/index";
 import "./product.css";
 
 function Product() {
@@ -18,13 +21,35 @@ function Product() {
   });
   const { cart } = state;
 
+  let loadMe = false;
+  let errMe = null;
+  let dataMe = null;
+  let purchasedProduct = false;
+
+  let queryResult = {};
+  if (Auth.loggedIn) {
+    queryResult = useQuery(QUERY_ME);
+  }
+
+  // Destructure the query result
+  ({ loading: loadMe, error: errMe, data: dataMe } = queryResult);
+
+  // Check if the data is loaded and contains the necessary information
+  if (!loadMe && !errMe && dataMe) {
+    purchasedProduct = dataMe.me.orders.some((order) =>
+      order.products.some((product) => product.product._id === itemId)
+    );
+  }
+
   // Show loading indicator while data is being fetched
-  if (loading) return <p>Loading...</p>;
+  if (loading || loadMe) return <p>Loading...</p>;
 
   // Show error message if there's an error fetching data
   if (error) return <p>Error: {error.message}</p>;
 
   console.log(data);
+
+  console.log(purchasedProduct);
 
   const addToCart = () => {
     const itemInCart = cart.find(
@@ -60,48 +85,58 @@ function Product() {
   };
 
   return (
-    <Container className="product-section">
-      <h1 className="product-title">{data.product.name}</h1>
-      <Row>
-        <Col xs={12} md={6} className="carousel-column">
-          <div className="carousel-container">
-            <Carousel items={data.product} />
-          </div>
-        </Col>
-        <Col className="info-col">
-          <div className="product-info-container">
-            <p
-              className="product-description"
-              dangerouslySetInnerHTML={{ __html: data.product.description }}
-            ></p>
-            <h2 className="product-price">${data.product.price}</h2>
-            <p className="product-stock">
-              {data.product.stock > 0
-                ? `${data.product.stock} In Stock`
-                : "Out of Stock"}
-            </p>
-          </div>
-          <Row>
-            <div className="product-btn-container">
-              <Button
-                variant="success"
-                className="product-btn-atc"
-                onClick={addToCart}
-              >
-                Add to Cart
-              </Button>{" "}
-              <Button
-                variant="success"
-                className="product-btn-buyNow"
-                onClick={buyNow}
-              >
-                Buy Now
-              </Button>
+    <div>
+      <Container className="product-section">
+        <h1 className="product-title">{data.product.name}</h1>
+        <Row>
+          <Col xs={12} md={6} className="carousel-column">
+            <div className="carousel-container">
+              <Carousel items={data.product} />
             </div>
-          </Row>
-        </Col>
-      </Row>
-    </Container>
+          </Col>
+          <Col className="info-col">
+            <div className="product-info-container">
+              <p
+                className="product-description"
+                dangerouslySetInnerHTML={{ __html: data.product.description }}
+              ></p>
+              <h2 className="product-price">${data.product.price}</h2>
+              <p className="product-stock">
+                {data.product.stock > 0
+                  ? `${data.product.stock} In Stock`
+                  : "Out of Stock"}
+              </p>
+            </div>
+            <Row>
+              <div className="product-btn-container">
+                <Button
+                  variant="success"
+                  className="product-btn-atc"
+                  onClick={addToCart}
+                >
+                  Add to Cart
+                </Button>{" "}
+                <Button
+                  variant="success"
+                  className="product-btn-buyNow"
+                  onClick={buyNow}
+                >
+                  Buy Now
+                </Button>
+              </div>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+      <div className="prod-rating-cont">
+        {data.product.averageRating ? (
+          <StarRating averageRating={data.product.averageRating} />
+        ) : (
+          <h4>This product has not been reviewed.</h4>
+        )}
+      </div>
+      <div>{purchasedProduct ? <ReviewInput /> : ""}</div>
+    </div>
   );
 }
 

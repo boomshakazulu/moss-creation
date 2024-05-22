@@ -60,6 +60,7 @@ const startApolloServer = async () => {
           metadata: {
             products: metadata.products,
             customerEmail: metadata.customerEmail,
+            userId: metadata.userId,
           },
         },
       });
@@ -98,7 +99,7 @@ const startApolloServer = async () => {
           const eventData = event.data.object;
           const metadata = eventData.metadata || {};
           const products = JSON.parse(metadata.products || "[]");
-          const userId = metadata.userId || null;
+          const userId = metadata.userId;
           const cart = metadata.cart;
           const shipInfo = paymentIntent.shipping.address;
           const address = `${shipInfo.line1} ${
@@ -114,7 +115,7 @@ const startApolloServer = async () => {
 
           // Handle the successful payment intent, e.g., create an order in the database
           try {
-            console.log(products);
+            console.log(metadata);
             const mappedProducts = products.map((product) => ({
               product: mongoose.Types.ObjectId.createFromHexString(
                 product.productId

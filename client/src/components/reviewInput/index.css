@@ -1,0 +1,52 @@
+.review-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  border-color: black;
+  border-style: solid;
+  margin: auto;
+  max-width: 600px;
+}
+
+.input-stars {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.input-stars label {
+  padding-right: 20px;
+  font-size: x-large;
+}
+.review-title {
+  margin-top: 10px;
+}
+
+.input-review {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.review-submit {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.stars {
+  margin-left: 5px;
+  background-color: #ceead6;
+  border-style: none;
+  font-size: xx-large;
+}
+
+@media (max-width: 600px) {
+  .review-form {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}

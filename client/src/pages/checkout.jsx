@@ -18,12 +18,31 @@ const CheckoutForm = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
-  const user = Auth.getProfile();
-  console.log(user.data.email);
+
+  useEffect(() => {
+    // Redirect logic with messages
+    if (!Auth.loggedIn() || errorMessage) {
+      const redirectTimer = setTimeout(() => {
+        navigate("/signup");
+      }, 5000);
+
+      return () => clearTimeout(redirectTimer); // Cleanup timer on unmount
+    }
+
+    if (!state.cart || state.cart.length === 0) {
+      const redirectTimer = setTimeout(() => {
+        navigate("/");
+      }, 5000);
+
+      return () => clearTimeout(redirectTimer);
+    }
+  }, []);
 
   const fetchClientSecret = useCallback(
     async (userId) => {
+      const user = Auth.getProfile();
       try {
+        console.log(user.data.id);
         const cartItems = state.cart.map((item) => ({
           price: item.priceId,
           quantity: item.purchaseQuantity,
@@ -50,6 +69,7 @@ const CheckoutForm = () => {
               metadata: {
                 products: JSON.stringify(productIds),
                 customerEmail: user.data.email,
+                userId: user.data.id,
               },
             }),
           }
@@ -90,34 +110,6 @@ const CheckoutForm = () => {
     fetchDecodedToken();
   }, [fetchClientSecret, state.cart]);
 
-  useEffect(() => {
-    if (!initialFetchComplete) {
-      return; // Don't proceed if still loading
-    }
-
-    // Redirect logic with messages
-    if (!Auth.loggedIn() || errorMessage) {
-      const redirectTimer = setTimeout(() => {
-        navigate("/signup");
-      }, 5000);
-
-      return () => clearTimeout(redirectTimer); // Cleanup timer on unmount
-    }
-
-    if (!state.cart || state.cart.length === 0) {
-      const redirectTimer = setTimeout(() => {
-        navigate("/");
-      }, 5000);
-
-      return () => clearTimeout(redirectTimer);
-    }
-  }, [initialFetchComplete, errorMessage, state.cart, navigate]);
-
-  // Render and return JSX with messages
-  if (!initialFetchComplete) {
-    return <div>Loading...</div>;
-  }
-
   if (!Auth.loggedIn()) {
     return (
       <div>
@@ -131,15 +123,8 @@ const CheckoutForm = () => {
     );
   }
 
-  if (!state.cart || state.cart.length === 0) {
-    return (
-      <div>
-        <h3 style={{ textAlign: "center" }}>
-          Your cart is currently empty! You will be redirected to the homepage
-          in 5 seconds.
-        </h3>
-      </div>
-    );
+  if (!initialFetchComplete) {
+    return <div>Loading...</div>;
   }
 
   if (errorMessage) {
@@ -152,6 +137,17 @@ const CheckoutForm = () => {
           <a href="mailto:support@mossy-creations.com">
             support@mossy-creations.com
           </a>
+        </h3>
+      </div>
+    );
+  }
+
+  if (!state.cart || state.cart.length === 0) {
+    return (
+      <div>
+        <h3 style={{ textAlign: "center" }}>
+          Your cart is currently empty! You will be redirected to the homepage
+          in 5 seconds.
         </h3>
       </div>
     );

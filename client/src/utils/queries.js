@@ -21,25 +21,54 @@ export const QUERY_ALL_PRODUCTS = gql`
       stock
       video
       carousel
+      averageRating
+      reviews {
+        _id
+        text
+        author
+        itemID {
+          _id
+        }
+        rating
+        createdAt
+      }
     }
   }
 `;
 
 export const QUERY_ME = gql`
   {
-    user {
+    me {
       username
       email
       role
       orders {
         _id
+        purchaseDate
         stripePaymentIntentId
         purchaseDate
-        products
         address
         price
         trackingNum
         fulfilled
+        products {
+          quantity
+          product {
+            _id
+            name
+            photo
+          }
+        }
+      }
+      reviews {
+        _id
+        text
+        author
+        itemID {
+          _id
+        }
+        rating
+        createdAt
       }
     }
   }
@@ -86,7 +115,10 @@ export const QUERY_PRODUCT = gql`
         _id
         text
         author
-        itemId
+        itemID {
+          _id
+        }
+        rating
         createdAt
       }
     }
@@ -113,5 +145,17 @@ export const QUERY_ORDERS = gql`
       trackingNum
       _id
     }
+  }
+`;
+
+export const CHECK_EMAIL_UNIQUENESS = gql`
+  query CheckEmailUniqueness($email: String!) {
+    checkEmailUniqueness(email: $email)
+  }
+`;
+
+export const CHECK_USERNAME_UNIQUENESS = gql`
+  query CheckUsernameUniqueness($username: String!) {
+    checkUsernameUniqueness(username: $username)
   }
 `;

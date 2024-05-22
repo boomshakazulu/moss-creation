@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import Auth from "../utils/auth";
 import { ADD_USER } from "../utils/mutations";
+import {
+  CHECK_EMAIL_UNIQUENESS,
+  CHECK_USERNAME_UNIQUENESS,
+} from "../utils/queries";
 import "./signup.css"; // Import the CSS file
 
 function Signup(props) {
@@ -13,6 +17,37 @@ function Signup(props) {
   });
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailUnique, setEmailUnique] = useState(true);
+  const [usernameUnique, setUsernameUnique] = useState(true);
+
+  const [
+    checkEmail,
+    { loading: emailLoading, error: emailError, data: emailData },
+  ] = useLazyQuery(CHECK_EMAIL_UNIQUENESS, {
+    variables: { email: formState.email },
+    onCompleted: () => {
+      console.log(emailData);
+      setEmailUnique(emailData.checkEmailUniqueness);
+    },
+    onError: () => {
+      setEmailUnique(false);
+    },
+    skip: !formState.email, // Skip the query if email is not provided
+  });
+  const [
+    checkUsername,
+    { loading: usernameLoading, error: usernameError, data: usernameData },
+  ] = useLazyQuery(CHECK_USERNAME_UNIQUENESS, {
+    variables: { username: formState.username },
+    onCompleted: () => {
+      console.log(usernameData.checkUsernameUniqueness);
+      setUsernameUnique(usernameData.checkUsernameUniqueness);
+    },
+    onError: () => {
+      setUsernameUnique(false);
+    },
+    skip: !formState.username, // Skip the query if username is not provided
+  });
   const [addUser] = useMutation(ADD_USER);
   const navigate = useNavigate();
 
@@ -28,6 +63,14 @@ function Signup(props) {
     // Check if passwords match
     if (formState.password !== formState.confirmPassword) {
       setPasswordsMatch(false);
+      return;
+    }
+
+    if (!emailUnique || !usernameUnique) {
+      return;
+    }
+
+    if (!formState.email || !formState.username || !formState.password) {
       return;
     }
 
@@ -65,6 +108,15 @@ function Signup(props) {
     // Reset password match state and error message when user makes changes
     setPasswordsMatch(true);
     setErrorMessage("");
+
+    // Check for uniqueness when the email or username input changes
+    if (name === "email" && value) {
+      checkEmail({ variables: { email: value } });
+    }
+
+    if (name === "username" && value) {
+      checkUsername({ variables: { username: value } });
+    }
   };
 
   return (
@@ -86,7 +138,11 @@ function Signup(props) {
             onChange={handleChange}
           />
         </div>
-        <div className="flex-row space-between my-2">
+        {usernameLoading && <p className="loading-message">Checking...</p>}
+        {!usernameUnique && (
+          <p className="error-message">Username already taken</p>
+        )}
+        <div className="flex-row space-between my-2 no-wrap">
           <input
             placeholder="Email"
             name="email"
@@ -96,7 +152,11 @@ function Signup(props) {
             onChange={handleChange}
           />
         </div>
-        <div className="flex-row space-between my-2">
+        {emailLoading && <p className="loading-message">Checking...</p>}
+        {!emailUnique && (
+          <p className="error-message unique-error">Email already taken</p>
+        )}
+        <div className="flex-row space-between my-2 no-wrap">
           <input
             placeholder="Password"
             name="password"
