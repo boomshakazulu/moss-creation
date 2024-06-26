@@ -22,11 +22,12 @@ export const QUERY_ALL_PRODUCTS = gql`
       video
       carousel
       averageRating
+      totalRatings
       reviews {
         _id
         text
         author
-        itemID {
+        itemId {
           _id
         }
         rating
@@ -64,7 +65,7 @@ export const QUERY_ME = gql`
         _id
         text
         author
-        itemID {
+        itemId {
           _id
         }
         rating
@@ -111,11 +112,13 @@ export const QUERY_PRODUCT = gql`
       stock
       video
       carousel
+      averageRating
+      totalRatings
       reviews {
         _id
         text
         author
-        itemID {
+        itemId {
           _id
         }
         rating

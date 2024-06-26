@@ -44,12 +44,15 @@ export const ADD_USER = gql`
 `;
 
 export const ADD_REVIEW = gql`
-  mutation addReview($text: String!, $itemId: String!, $author: String!) {
-    addReview(text: $text, itemId: $itemId, author: $author) {
+  mutation addReview($text: String!, $itemId: ID!, $rating: Int) {
+    addReview(text: $text, itemId: $itemId, rating: $rating) {
       _id
       text
       author
-      itemId
+      itemId {
+        _id
+      }
+      rating
       createdAt
     }
   }
@@ -87,6 +90,28 @@ export const UPDATE_PRODUCT = gql`
         itemId
         createdAt
       }
+    }
+  }
+`;
+
+export const UPDATE_REVIEW = gql`
+  mutation updateReview(
+    $itemId: ID!
+    $reviewId: ID!
+    $text: String
+    $rating: Int
+  ) {
+    updateReview(
+      itemId: $itemId
+      reviewId: $reviewId
+      text: $text
+      rating: $rating
+    ) {
+      _id
+      text
+      author
+      rating
+      createdAt
     }
   }
 `;

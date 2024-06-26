@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
+import { ADD_REVIEW } from "../../utils/mutations";
+import { useParams } from "react-router-dom";
 import "./index.css";
 
 const ReviewInput = () => {
   const [reviewText, setReviewText] = useState("");
+  const { itemId } = useParams();
   const [rating, setRating] = useState(0); // Initially, no stars are selected
+  const [addReview, { loading, error }] = useMutation(ADD_REVIEW);
 
   const handleReviewTextChange = (event) => {
     setReviewText(event.target.value);
@@ -13,12 +18,20 @@ const ReviewInput = () => {
     setRating(starRating);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here you can handle submitting the review, including the review text and rating
-    console.log("Review Text:", reviewText);
-    console.log("Rating:", rating);
-    // Add your logic to submit the review to the server or store it locally
+    try {
+      const result = await addReview({
+        variables: {
+          text: reviewText,
+          itemId: itemId,
+          rating: rating,
+        },
+      });
+      console.log(result);
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
   };
 
   return (

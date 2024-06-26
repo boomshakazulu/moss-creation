@@ -82,6 +82,11 @@
   color: #feffff;
 }
 
+.prod-card-rating {
+  display: flex;
+  justify-content: center;
+}
+
 /* .product-cards .row-max-width .col {
   display: flex;
   justify-content: center;

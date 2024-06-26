@@ -10,15 +10,33 @@ import { ADD_TO_CART, UPDATE_CART_QUANTITY } from "../utils/actions";
 import Auth from "../utils/auth.js";
 import { idbPromise } from "../utils/helpers";
 import ReviewInput from "../components/reviewInput/index";
+import ReviewList from "../components/reviewList/index.jsx";
 import "./product.css";
 
 function Product() {
   const { itemId } = useParams();
   const navigate = useNavigate();
   const [state, dispatch] = useStoreContext();
+  const [disableReview, setDisableReview] = useState(false);
+  const [loadingReview, setLoadingReview] = useState(true);
   const { loading, error, data } = useQuery(QUERY_PRODUCT, {
     variables: { itemId },
   });
+  const loggedInUser = Auth.loggedIn();
+
+  useEffect(() => {
+    if (!loading && data.product && loggedInUser) {
+      const profile = Auth.getProfile();
+      const loggedInUser = profile.data.username; // Get the username of the logged-in user
+      const hasReviewed = data.product.reviews.some(
+        (review) => review.author === loggedInUser
+      );
+      setDisableReview(hasReviewed);
+      setLoadingReview(false);
+    }
+    setLoadingReview(false);
+  }, [loading, data]);
+
   const { cart } = state;
 
   let loadMe = false;
@@ -27,7 +45,7 @@ function Product() {
   let purchasedProduct = false;
 
   let queryResult = {};
-  if (Auth.loggedIn) {
+  if (loggedInUser) {
     queryResult = useQuery(QUERY_ME);
   }
 
@@ -35,21 +53,22 @@ function Product() {
   ({ loading: loadMe, error: errMe, data: dataMe } = queryResult);
 
   // Check if the data is loaded and contains the necessary information
-  if (!loadMe && !errMe && dataMe) {
+  if (!loadMe && !errMe && dataMe && loggedInUser) {
     purchasedProduct = dataMe.me.orders.some((order) =>
       order.products.some((product) => product.product._id === itemId)
     );
   }
 
   // Show loading indicator while data is being fetched
-  if (loading || loadMe) return <p>Loading...</p>;
-
+  if (loading || loadMe || loadingReview) return <p>Loading...</p>;
   // Show error message if there's an error fetching data
   if (error) return <p>Error: {error.message}</p>;
 
   console.log(data);
 
   console.log(purchasedProduct);
+
+  console.log("disable review:", disableReview);
 
   const addToCart = () => {
     const itemInCart = cart.find(
@@ -84,6 +103,9 @@ function Product() {
     navigate("/checkout");
   };
 
+  console.log(queryResult);
+  console.log(data.product);
+
   return (
     <div>
       <Container className="product-section">
@@ -101,6 +123,10 @@ function Product() {
                 dangerouslySetInnerHTML={{ __html: data.product.description }}
               ></p>
               <h2 className="product-price">${data.product.price}</h2>
+              <div className="prod-rating-cont">
+                <StarRating averageRating={data.product.averageRating || 5} />(
+                {data.product.totalRatings})
+              </div>
               <p className="product-stock">
                 {data.product.stock > 0
                   ? `${data.product.stock} In Stock`
@@ -128,14 +154,15 @@ function Product() {
           </Col>
         </Row>
       </Container>
-      <div className="prod-rating-cont">
-        {data.product.averageRating ? (
-          <StarRating averageRating={data.product.averageRating} />
-        ) : (
-          <h4>This product has not been reviewed.</h4>
-        )}
-      </div>
-      <div>{purchasedProduct ? <ReviewInput /> : ""}</div>
+      <div>{purchasedProduct && !disableReview ? <ReviewInput /> : ""}</div>
+      {data.product.reviews ? (
+        <ReviewList
+          reviews={data.product.reviews}
+          currentUser={loggedInUser ? queryResult.data.me.username : null}
+        />
+      ) : (
+        <h4>This Product hasn't been reviewed</h4>
+      )}
     </div>
   );
 }

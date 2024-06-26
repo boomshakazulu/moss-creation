@@ -1,0 +1,28 @@
+.review-list {
+  display: flex;
+  flex-wrap: wrap !important;
+  justify-content: center;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.review-list h2 {
+  text-align: center;
+  width: 100%;
+}
+
+.review-card {
+  max-width: 80%;
+  width: 100% !important;
+}
+
+.review-card button {
+  max-width: 50px;
+}
+
+.stars-card span {
+  margin-left: 5px;
+  background-color: #ceead6;
+  border-style: none;
+  font-size: xx-large;
+}

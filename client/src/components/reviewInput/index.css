@@ -46,7 +46,13 @@
 
 @media (max-width: 600px) {
   .review-form {
-    margin-left: 10px;
-    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media (min-width: 762px) {
+  .stars {
+    background-color: #eef8f1;
   }
 }

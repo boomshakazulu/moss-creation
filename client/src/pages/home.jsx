@@ -33,6 +33,8 @@ const Home = () => {
               priceId={product.priceId}
               stripeProductId={product.stripeProductId}
               stock={product.stock}
+              averageRating={product.averageRating}
+              totalRatings={product.totalRatings}
               currentPage="home"
             />
           ))}
