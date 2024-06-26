@@ -12,7 +12,7 @@ const typeDefs = `
     video: String
     reviews:[Review]
     carousel: String
-    averageRating: Int
+    averageRating: Float
     totalRatings: Int
   }
 
@@ -39,7 +39,7 @@ const typeDefs = `
     _id: ID
     text: String
     author: String
-    itemID: [Product]
+    itemId: Product
     rating: Int
     createdAt: String
   }
@@ -68,8 +68,8 @@ const typeDefs = `
     user: User
     me: User
     products(name: String): [Product]
-    reviews(itemID: ID!): [Review]
-    review(reviewID: ID!): Review
+    reviews(itemId: ID!): [Review]
+    review(reviewId: ID!): Review
     product(itemId: String): Product
     order(_id: ID!): Order
     orders:[Order]
@@ -98,9 +98,10 @@ const typeDefs = `
     updateOrder(orderId: ID!, stripePaymentIntentId: String, price: Float, address: String, trackingNum: String fulfilled: Boolean): Order
     updateProduct(itemId: ID!, input: ProductInput): Product
     updateStock(itemId: ID, quantity: Int): Product
+    updateReview(itemId: ID! reviewId: ID!, text: String, rating: Int):Review
     completeOrder(orderId: ID!, carrier: String, trackingNum: String, fulfilled: Boolean, email: String): Order
     login(email: String!, password: String!): Auth
-    addReview(text: String, itemId: ID, author: String!): Review
+    addReview(text: String, itemId: ID!, rating: Int): Review
     forgotPassword(email: String!): String 
     resetPassword(token: String!, newPassword: String!): String
   }

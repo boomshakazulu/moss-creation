@@ -5,6 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 const {
   passResetEmail,
   passResetSuccessEmail,
@@ -20,7 +21,7 @@ const resolvers = {
     },
     product: async (parent, { itemId }) => {
       try {
-        return await Product.findById(itemId);
+        return await Product.findById(itemId).populate("reviews");
       } catch (err) {
         throw new Error("Failed to fetch product");
       }
@@ -181,7 +182,6 @@ const resolvers = {
           quantity,
         }));
 
-        console.log(products, mappedProducts);
         // Create a new order instance with the provided information
         const order = new Order({
           products: mappedProducts,
@@ -402,56 +402,129 @@ const resolvers = {
       });
       return { token, user };
     },
-    addReview: async (parent, { text, itemId }, context) => {
-      if (context.user) {
-        try {
-          // Create the new review
-          const review = await Review.create({
-            text,
-            author: context.user.username,
-            itemId,
-            rating,
-          });
+    addReview: async (parent, { text, itemId, rating }, context) => {
+      if (!context.user) {
+        throw new AuthenticationError("You must be logged in to add a review.");
+      }
 
-          // Update the user's reviews
-          await User.findOneAndUpdate(
-            { _id: context.user._id },
-            { $addToSet: { reviews: review._id } },
-            { new: true, runValidators: true }
-          );
+      try {
+        const objectId = new ObjectId(itemId);
+        const review = await Review.create({
+          text,
+          author: context.user.username,
+          itemId: objectId,
+          rating,
+        });
+        console.log("userId: ", context.user);
 
-          // Update the product's reviews and calculate new average rating
-          const product = await Product.findById(itemId);
-          product.reviews.push(review._id);
+        // Update user's reviews
+        await User.findByIdAndUpdate(context.user.id, {
+          $addToSet: { reviews: review._id },
+        });
 
-          // Calculate the new average rating
-          const totalRatings = product.reviews.length;
+        console.log("review: ", review);
+
+        // Update product's reviews and calculate new average rating
+        const product = await Product.findByIdAndUpdate(
+          itemId,
+          { $push: { reviews: review._id } },
+          { new: true }
+        );
+
+        if (!product) {
+          throw new ApolloError("Product not found.");
+        }
+
+        console.log("product: ", product);
+
+        const totalRatings = product.reviews.length;
+
+        if (totalRatings > 0) {
           const sumRatings = await Review.aggregate([
             { $match: { _id: { $in: product.reviews } } },
             { $group: { _id: null, sum: { $sum: "$rating" } } },
           ]);
 
-          const averageRating = sumRatings[0].sum / totalRatings;
+          const averageRating =
+            sumRatings.length > 0
+              ? Number((sumRatings[0].sum / totalRatings).toFixed(2))
+              : 0;
 
-          // Update the product's rating fields
+          console.log(
+            "sum, total, average: ",
+            sumRatings,
+            totalRatings,
+            averageRating
+          );
+
+          // Update product's rating fields
           product.averageRating = averageRating;
-          product.totalRatings = totalRatings;
-
-          await product.save();
-
-          return review;
-        } catch (error) {
-          // Handle validation errors
-          if (error.name === "ValidationError") {
-            // You can format the validation error messages as needed
-            throw new Error("Validation failed. Please check your input.");
-          }
-          // Handle other errors
-          throw error;
+        } else {
+          product.averageRating = 0;
         }
+
+        product.totalRatings = totalRatings;
+
+        await product.save();
+        console.log("product2: ", product);
+
+        return review;
+      } catch (error) {
+        if (error.name === "ValidationError") {
+          throw new UserInputError(
+            "Validation failed. Please check your input."
+          );
+        }
+        console.error("Error adding review:", error.message);
+        throw new ApolloError("Unable to add review.");
       }
-      // Throw authentication error with a message
-      throw new AuthenticationError("You must be logged in to add a review.");
+    },
+    updateReview: async (_, { itemId, reviewId, text, rating }, context) => {
+      try {
+        if (!context.user) {
+          throw new AuthenticationError(
+            "You must be logged in to update a review."
+          );
+        }
+
+        console.log(reviewId, text, rating);
+        const review = await Review.findByIdAndUpdate(
+          reviewId,
+          { $set: { text, rating } },
+          { new: true }
+        );
+
+        if (!review) {
+          throw new ApolloError("Review not found.");
+        }
+
+        const product = await Product.findById(itemId);
+        if (!product) {
+          throw new ApolloError("Product not found.");
+        }
+
+        const totalRatings = product.reviews.length;
+        const sumRatings = await Review.aggregate([
+          { $match: { _id: { $in: product.reviews } } },
+          { $group: { _id: null, sum: { $sum: "$rating" } } },
+        ]);
+
+        const averageRating =
+          sumRatings.length > 0
+            ? Number((sumRatings[0].sum / totalRatings).toFixed(2))
+            : 0;
+
+        // Update product's rating fields
+        product.averageRating = averageRating;
+        product.totalRatings = totalRatings;
+
+        await product.save();
+
+        return review;
+      } catch (error) {
+        console.error("Error updating review:", error.message);
+        throw new ApolloError("Unable to update review.");
+      }
     },
     updateOrder: async (_, { orderId, stripePaymentIntentId }, context) => {
       try {
