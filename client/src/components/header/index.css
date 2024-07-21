@@ -10,8 +10,6 @@
 }
 
 .header {
-  /* background: url("../../assets/images/MossyCreate.png") left center no-repeat;
-  background-size: auto 100%; Stretch horizontally, maintain aspect ratio */
   background: #ceead6 !important;
   max-height: 120px;
   display: flex;
@@ -160,18 +158,35 @@
   }
 }
 
-/* @media (max-width: 700px) {
+@media (max-width: 768px) {
   .header {
-    background: url("../../assets//images/mossymedium.png") center center
-      no-repeat;
-    background-size: cover;
+    position: sticky;
+    max-height: none;
+    top: 0px;
+    padding-bottom: 10px;
+    z-index: 1000;
   }
-} */
+  body.header-cartOpen {
+    overflow: hidden;
+  }
 
-/* @media (max-width: 550px) {
-  .header {
-    background: url("../../assets//images/mossysmall.png") center center
-      no-repeat;
-    background-size: 100% 100%;
+  .header-cartOpen .container {
+    overflow-y: auto; /* Allow internal scrolling */
+    height: calc(100vh - 60px);
   }
-} */
+  .cart {
+    overflow-y: auto; /* Allow scrolling within main content */
+    height: calc(100vh - 100px);
+  }
+
+  .brand-name {
+    position: absolute;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center; /* Center the text */
+    color: #72b787;
+    top: 0; /* Position it at the top */
+    left: 50%; /* Position it in the center horizontally */
+    transform: translateX(-50%); /* Adjust to center it precisely */
+  }
+}

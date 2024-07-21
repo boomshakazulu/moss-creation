@@ -584,24 +584,35 @@ const resolvers = {
         return null;
       } catch (error) {
         console.error(error);
-        throw new Error("Failed to initiate password reset");
+        throw new ApolloError("Failed to initiate password reset");
       }
     },
-    resetPassword: async (_, { token, newPassword }) => {
+    resetPassword: async (_, { token, newPassword }, context) => {
       try {
-        const decodedToken = UrlDecode(token);
-        const decoded = jwt.verify(decodedToken, process.env.SECRET_JWT);
-
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-        const user = await User.findByIdAndUpdate(
-          decoded.userId,
-          { $set: { password: hashedPassword, resetToken: null } },
-          { new: true }
-        );
-        if (!user) {
-          throw new Error("User not found");
+        let user;
+        if (context.user) {
+          user = await User.findByIdAndUpdate(
+            context.user.id,
+            { $set: { password: hashedPassword } },
+            { new: true }
+          );
+          if (!user) {
+            throw new ApolloError("User not found");
+          }
+        } else {
+          const decodedToken = UrlDecode(token);
+          const decoded = jwt.verify(decodedToken, process.env.SECRET_JWT);
+          user = await User.findByIdAndUpdate(
+            decoded.userId,
+            { $set: { password: hashedPassword, resetToken: null } },
+            { new: true }
+          );
+          if (!user) {
+            throw new ApolloError("User not found");
+          }
         }
 
         await passResetSuccessEmail(user.email);
@@ -609,10 +620,10 @@ const resolvers = {
         return "Password reset successfully";
       } catch (error) {
         if (error.name === "TokenExpiredError") {
-          throw new Error("Token expired");
+          throw new ApolloError("Token expired");
         }
         console.error(error);
-        throw new Error("Failed to reset password");
+        throw new ApolloError("Failed to reset password");
       }
     },
   },

@@ -85,10 +85,7 @@ export const UPDATE_PRODUCT = gql`
       video
       carousel
       reviews {
-        text
-        author
-        itemId
-        createdAt
+        _id
       }
     }
   }
@@ -163,7 +160,7 @@ export const FORGOT_PASSWORD = gql`
 `;
 
 export const RESET_PASSWORD = gql`
-  mutation resetPassword($token: String!, $newPassword: String!) {
+  mutation resetPassword($token: String, $newPassword: String!) {
     resetPassword(token: $token, newPassword: $newPassword)
   }
 `;

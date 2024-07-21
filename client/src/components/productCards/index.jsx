@@ -65,17 +65,24 @@ const productCards = (item) => {
           </div>
           <Card.Body>
             <Card.Title>{name}</Card.Title>
-            <div className="prod-card-rating">
-              <StarRating averageRating={averageRating || 5} />({totalRatings})
-            </div>
-            <Card.Text>Price: ${price}</Card.Text>
+            {totalRatings > 0 && (
+              <div className="prod-card-rating">
+                <StarRating averageRating={averageRating || 5} />({totalRatings}
+                )
+              </div>
+            )}
+            <Card.Text>${price}</Card.Text>
           </Card.Body>
         </Link>
         {currentPage !== "admin" && (
           <Card.Footer>
-            <Button variant="primary" className="w-100" onClick={addToCart}>
-              Add to Cart
-            </Button>
+            {stock > 0 ? (
+              <Button variant="primary" className="w-100" onClick={addToCart}>
+                Add to Cart
+              </Button>
+            ) : (
+              <div className="out-of-stock">Out of Stock</div>
+            )}
           </Card.Footer>
         )}
       </Card>

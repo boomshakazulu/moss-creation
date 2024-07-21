@@ -4,7 +4,7 @@ import { ADD_REVIEW } from "../../utils/mutations";
 import { useParams } from "react-router-dom";
 import "./index.css";
 
-const ReviewInput = () => {
+const ReviewInput = ({ profileItemId }) => {
   const [reviewText, setReviewText] = useState("");
   const { itemId } = useParams();
   const [rating, setRating] = useState(0); // Initially, no stars are selected
@@ -24,11 +24,12 @@ const ReviewInput = () => {
       const result = await addReview({
         variables: {
           text: reviewText,
-          itemId: itemId,
+          itemId: itemId || profileItemId,
           rating: rating,
         },
       });
       console.log(result);
+      window.location.reload();
     } catch (error) {
       console.error("Error adding review:", error);
     }

@@ -82,6 +82,10 @@
   color: #feffff;
 }
 
+.out-of-stock {
+  color: #feffff;
+}
+
 .prod-card-rating {
   display: flex;
   justify-content: center;

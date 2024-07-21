@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useStoreContext } from "../../utils/GlobalState";
 import Auth from "../../utils/auth";
 import Cart from "../Cart";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,13 +13,14 @@ import contactmeImg from "../../assets/images/menuBtns/contactme.png";
 import logoutImg from "../../assets/images/menuBtns/logout (2).png";
 import homeImg from "../../assets/images/menuBtns/home.png";
 import aboutmeImg from "../../assets/images/menuBtns/aboutme(2).png";
-import checkoutImg from "../../assets/images/menuBtns/checkout.png";
+import profileImg from "../../assets/images/menuBtns/Profile.png";
 
 import MenuBtn from "../menuBtn";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 992);
+  const [state, dispatch] = useStoreContext();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,7 +51,9 @@ const Header = () => {
       bg="dark"
       expanded={isMenuOpen}
       onToggle={toggleMenu}
-      className={`header ${isMenuOpen ? "expanded" : ""}`}
+      className={`header ${isMenuOpen ? "expanded" : ""} ${
+        state.cartOpen ? "header-cartOpen" : ""
+      }`}
     >
       <Container>
         {/* Hamburger menu button */}
@@ -74,18 +78,21 @@ const Header = () => {
                 </Link>
               </div>
               <div className="link-row">
-                <Link to="/checkout" className="link-box" onClick={closeMenu}>
-                  <img src={checkoutImg} alt="Checkout" />
-                </Link>
                 <Link to="/contact" className="link-box" onClick={closeMenu}>
                   <img src={contactmeImg} alt="Contact me" />
                 </Link>
-              </div>
-              {!Auth.loggedIn() ? (
-                <div className="link-row">
+                {Auth.loggedIn() ? (
+                  <Link to="/profile" className="link-box" onClick={closeMenu}>
+                    <img src={profileImg} alt="Profile" />
+                  </Link>
+                ) : (
                   <Link to="/login" className="link-box" onClick={closeMenu}>
                     <img src={loginImg} alt="Login" />
                   </Link>
+                )}
+              </div>
+              {!Auth.loggedIn() ? (
+                <div className="link-row">
                   <Link to="/signup" className="link-box" onClick={closeMenu}>
                     <img src={signupImg} alt="Signup" />
                   </Link>

@@ -103,7 +103,7 @@ const typeDefs = `
     login(email: String!, password: String!): Auth
     addReview(text: String, itemId: ID!, rating: Int): Review
     forgotPassword(email: String!): String 
-    resetPassword(token: String!, newPassword: String!): String
+    resetPassword(token: String, newPassword: String!): String
   }
 `;
 module.exports = typeDefs;

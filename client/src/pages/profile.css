@@ -1,0 +1,79 @@
+.profile-username {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.profile-password-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.profile-password-form label {
+  padding-bottom: 10px;
+}
+
+#profile-newPassword,
+#profile-confirmPassword {
+  width: 80%;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.order-history {
+  padding-top: 50px;
+  text-align: center;
+  width: 100%;
+}
+
+.order-history h2 {
+  padding-bottom: 20px;
+}
+
+.profile-order {
+  border-style: solid;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.profile-product-img {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.profile-product-img > div {
+  flex: 1; /* Take up remaining space */
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-product-img img {
+  max-width: 30%;
+  flex: 0 0 30%;
+}
+
+.profile-product-img h3,
+.profile-product-img p {
+  width: 100%;
+  text-align: center;
+  padding: 20px; /* Add padding for spacing */
+}
+
+.profile-review-button {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.profile-address,
+.profile-trackingnum {
+  padding-bottom: 20px;
+}
+@media (max-width: 786px) {
+  #profile-newPassword,
+  #profile-confirmPassword {
+    padding-bottom: 20px;
+  }
+}

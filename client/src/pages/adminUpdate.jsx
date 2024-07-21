@@ -29,7 +29,7 @@ function AdminUpdate() {
     variables: { itemId },
   });
 
-  console.log(data);
+  console.log(data, itemId);
 
   useEffect(() => {
     if (data && data.product) {
@@ -65,7 +65,7 @@ function AdminUpdate() {
       );
       await updateProduct({
         variables: {
-          itemId,
+          itemId: itemId,
           input: {
             name: formState.name,
             description: descriptionWithLineBreaks, // Use modified description

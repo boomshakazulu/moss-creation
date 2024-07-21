@@ -35,7 +35,7 @@ function Product() {
       setLoadingReview(false);
     }
     setLoadingReview(false);
-  }, [loading, data]);
+  }, [loading, data, loadingReview]);
 
   const { cart } = state;
 
@@ -133,29 +133,31 @@ function Product() {
                   : "Out of Stock"}
               </p>
             </div>
-            <Row>
-              <div className="product-btn-container">
-                <Button
-                  variant="success"
-                  className="product-btn-atc"
-                  onClick={addToCart}
-                >
-                  Add to Cart
-                </Button>{" "}
-                <Button
-                  variant="success"
-                  className="product-btn-buyNow"
-                  onClick={buyNow}
-                >
-                  Buy Now
-                </Button>
-              </div>
-            </Row>
+            {data.product.stock > 0 && (
+              <Row>
+                <div className="product-btn-container">
+                  <Button
+                    variant="success"
+                    className="product-btn-atc"
+                    onClick={addToCart}
+                  >
+                    Add to Cart
+                  </Button>{" "}
+                  <Button
+                    variant="success"
+                    className="product-btn-buyNow"
+                    onClick={buyNow}
+                  >
+                    Buy Now
+                  </Button>
+                </div>
+              </Row>
+            )}
           </Col>
         </Row>
       </Container>
       <div>{purchasedProduct && !disableReview ? <ReviewInput /> : ""}</div>
-      {data.product.reviews ? (
+      {data.product.reviews && data.product.reviews.length > 0 ? (
         <ReviewList
           reviews={data.product.reviews}
           currentUser={loggedInUser ? queryResult.data.me.username : null}
