@@ -1,0 +1,128 @@
+#progressbar-1 {
+  color: #455a64;
+}
+
+#progressbar-1 li {
+  list-style-type: none;
+  font-size: 13px;
+  width: 50%;
+  float: left;
+  position: relative;
+}
+
+#progressbar-1 #step1:before {
+  content: "1";
+  color: #fff;
+  width: 29px;
+  margin-left: 22px;
+  padding-left: 0px;
+}
+
+/* #progressbar-1 #step2:before {
+  content: "2";
+  color: #fff;
+  width: 29px;
+} */
+
+#progressbar-1 #step2:before {
+  content: "2";
+  color: #fff;
+  width: 29px;
+  margin-right: 22px;
+  text-align: center;
+}
+
+#progressbar-1 li:before {
+  line-height: 29px;
+  display: block;
+  font-size: 12px;
+  background: #455a64;
+  border-radius: 50%;
+  margin: auto;
+}
+
+#progressbar-1 li:after {
+  content: "";
+  width: 121%;
+  height: 2px;
+  background: #455a64;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 15px;
+  z-index: -1;
+}
+
+#progressbar-1 li:nth-child(2):after {
+  left: 50%;
+}
+
+#progressbar-1 li:nth-child(1):after {
+  left: 25%;
+  width: 121%;
+}
+
+#progressbar-1 li:nth-child(2):after {
+  left: 25%;
+  width: 50%;
+}
+
+#progressbar-1 li.active:before,
+#progressbar-1 li.active:after {
+  background: #1266f1;
+}
+
+.card-stepper {
+  max-width: 95%;
+  z-index: 0;
+}
+
+.MBDCol-history {
+  display: flex;
+}
+
+.orderHistHeader {
+  width: 100%;
+  text-align: center;
+  align-items: center;
+}
+
+.MBDCol-history img {
+  padding-left: 10px;
+}
+
+.product-container {
+  margin-bottom: 1rem; /* Adjust spacing between products */
+}
+
+.review-actions {
+  margin-top: 1rem; /* Space between product details and review actions */
+}
+
+.review-toggle {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem; /* Space between review buttons/components */
+  align-items: center;
+}
+
+.review-toggle button {
+  display: block;
+  width: 100%; /* Full width buttons */
+
+  text-align: center;
+}
+
+.review-toggle .review-card {
+  max-width: 100%;
+}
+
+.review-toggle .star-rating {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.review-toggle .star-rating .stars {
+  font-size: xx-large;
+}

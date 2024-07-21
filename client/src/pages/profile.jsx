@@ -6,6 +6,7 @@ import { RESET_PASSWORD } from "../utils/mutations";
 import Auth from "../utils/auth";
 import ReviewCard from "../components/reviewCard";
 import ReviewInput from "../components/reviewInput";
+import OrderDetails from "../components/orderHistoryCard/index";
 import "./profile.css";
 
 function Profile() {
@@ -40,18 +41,6 @@ function Profile() {
     setErrorMessage("");
   };
 
-  // Function to toggle edit review section for a product
-  const toggleEditReview = (productId) => {
-    setEditProductId(editProductId === productId ? null : productId);
-    setAddProductId(null); // Close add review section if open
-  };
-
-  // Function to toggle add review section for a product
-  const toggleAddReview = (productId) => {
-    setAddProductId(addProductId === productId ? null : productId);
-    setEditProductId(null); // Close edit review section if open
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formState.password !== formState.confirmPassword) {
@@ -67,7 +56,6 @@ function Profile() {
       setSuccessMessage(""); // Clear any previous success message
     }
   };
-
   if (loading) {
     return <div>loading...</div>;
   }
@@ -123,97 +111,107 @@ function Profile() {
 
         <div>
           {data.me.orders.slice(0, 5).map((order) => (
-            <div key={order._id} className="profile-order">
-              <h3>
-                {new Date(parseInt(order.purchaseDate)).toLocaleDateString()}
-              </h3>
-              {order.products.map((product) => {
-                const review = data.me.reviews.find(
-                  (review) => review.itemId._id === product.product._id
-                );
+            <OrderDetails
+              order={order}
+              reviews={data.me.reviews}
+              key={order._id}
+            />
+            //   <div key={order._id} className="profile-order">
+            //     <h3>
+            //       {new Date(parseInt(order.purchaseDate)).toLocaleDateString()}
+            //     </h3>
+            //     {order.products.map((product) => {
+            //       const review = data.me.reviews.find(
+            //         (review) => review.itemId._id === product.product._id
+            //       );
 
-                return (
-                  <div key={product.product._id} className="product-in-order">
-                    <div className="profile-product-img">
-                      <img
-                        src={product.product.photo[0]}
-                        alt={product.product.name}
-                      />
-                      <div>
-                        <h3>{product.product.name}</h3>
-                        <p>Quantity: {product.quantity}</p>
-                      </div>
-                    </div>
-                    {/* Toggle for Edit Review */}
-                    {review && editProductId === product.product._id && (
-                      <div className="profile-review-button">
-                        <button
-                          onClick={() => toggleEditReview(product.product._id)}
-                        >
-                          {editProductId === product.product._id
-                            ? "Close Edit Review"
-                            : "Edit Review"}
-                        </button>
-                        {editProductId === product.product._id && (
-                          <ReviewCard
-                            reviewId={review._id}
-                            username={review.author}
-                            createdAt={review.createdAt}
-                            text={review.text}
-                            rating={review.rating}
-                            isOwner={true}
-                          />
-                        )}
-                      </div>
-                    )}
+            //       return (
+            //         <div key={product.product._id} className="product-in-order">
+            //           <div className="profile-product-img">
+            //             <img
+            //               src={product.product.photo[0]}
+            //               alt={product.product.name}
+            //             />
+            //             <div>
+            //               <h3>{product.product.name}</h3>
+            //               <p>Quantity: {product.quantity}</p>
+            //             </div>
+            //           </div>
+            //           {/* Toggle for Edit Review */}
+            //           {review && editProductId === product.product._id && (
+            //             <div className="profile-review-button">
+            //               <button
+            //                 onClick={() =>
+            //                   toggleEditReview(product.product._id)
+            //                 }
+            //               >
+            //                 {editProductId === product.product._id
+            //                   ? "Close Edit Review"
+            //                   : "Edit Review"}
+            //               </button>
+            //               {editProductId === product.product._id && (
+            //                 <ReviewCard
+            //                   reviewId={review._id}
+            //                   username={review.author}
+            //                   createdAt={review.createdAt}
+            //                   text={review.text}
+            //                   rating={review.rating}
+            //                   isOwner={true}
+            //                 />
+            //               )}
+            //             </div>
+            //           )}
 
-                    {/* Toggle for Add Review */}
-                    {!review && addProductId === product.product._id && (
-                      <div className="profile-review-button">
-                        <button
-                          onClick={() => toggleAddReview(product.product._id)}
-                        >
-                          {addProductId === product.product._id
-                            ? "Close Add Review"
-                            : "Add Review"}
-                        </button>
-                        {addProductId === product.product._id && (
-                          <ReviewInput profileItemId={product.product._id} />
-                        )}
-                      </div>
-                    )}
+            //           {/* Toggle for Add Review */}
+            //           {!review && addProductId === product.product._id && (
+            //             <div className="profile-review-button">
+            //               <button
+            //                 onClick={() => toggleAddReview(product.product._id)}
+            //               >
+            //                 {addProductId === product.product._id
+            //                   ? "Close Add Review"
+            //                   : "Add Review"}
+            //               </button>
+            //               {addProductId === product.product._id && (
+            //                 <ReviewInput profileItemId={product.product._id} />
+            //               )}
+            //             </div>
+            //           )}
 
-                    {/* Render default state (no toggles open) */}
-                    {!review && addProductId !== product.product._id && (
-                      <div className="profile-review-button">
-                        <button
-                          onClick={() => toggleAddReview(product.product._id)}
-                        >
-                          Add Review
-                        </button>
-                      </div>
-                    )}
+            //           {/* Render default state (no toggles open) */}
+            //           {!review && addProductId !== product.product._id && (
+            //             <div className="profile-review-button">
+            //               <button
+            //                 onClick={() => toggleAddReview(product.product._id)}
+            //               >
+            //                 Add Review
+            //               </button>
+            //             </div>
+            //           )}
 
-                    {/* Close button for edit review */}
-                    {review && editProductId !== product.product._id && (
-                      <div className="profile-review-button">
-                        <button
-                          onClick={() => toggleEditReview(product.product._id)}
-                        >
-                          Edit Review
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-              <div className="profile-address">{order.address}</div>
-              <div className="profile-trackingnum">
-                {order.trackingNum
-                  ? `Tracking Number: ${order.trackingNum}`
-                  : `Tracking Number is not available yet`}
-              </div>
-            </div>
+            //           {/* Close button for edit review */}
+            //           {review && editProductId !== product.product._id && (
+            //             <div className="profile-review-button">
+            //               <button
+            //                 onClick={() =>
+            //                   toggleEditReview(product.product._id)
+            //                 }
+            //               >
+            //                 Edit Review
+            //               </button>
+            //             </div>
+            //           )}
+            //         </div>
+            //       );
+            //     })}
+            //     <div className="profile-address">{order.address}</div>
+            //     <div className="profile-trackingnum">
+            //       {order.trackingNum
+            //         ? `Tracking Number: ${order.trackingNum}`
+            //         : `Tracking Number is not available yet`}
+            //     </div>
+
+            // </div>
           ))}
         </div>
       </div>

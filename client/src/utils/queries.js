@@ -52,6 +52,7 @@ export const QUERY_ME = gql`
         price
         trackingNum
         fulfilled
+        carrier
         products {
           quantity
           product {

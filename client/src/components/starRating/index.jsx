@@ -40,7 +40,7 @@ const StarRating = ({ averageRating, setAverageRating, editable }) => {
     return stars;
   };
 
-  return <div>{renderStars()}</div>;
+  return <div className="star-rating">{renderStars()}</div>;
 };
 
 export default StarRating;

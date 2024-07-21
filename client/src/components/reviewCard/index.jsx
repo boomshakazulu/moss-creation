@@ -13,6 +13,7 @@ const ReviewCard = ({
   text,
   rating,
   isOwner,
+  revItemId,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(text);
@@ -21,12 +22,11 @@ const ReviewCard = ({
   const { itemId } = useParams();
 
   const formattedDate = new Date(parseInt(createdAt)).toLocaleDateString();
-  console.log(editedRating);
   const handleSave = async () => {
     try {
       await updateReview({
         variables: {
-          itemId,
+          itemId: itemId || revItemId,
           reviewId,
           text: editedText,
           rating: editedRating,
@@ -60,16 +60,16 @@ const ReviewCard = ({
         </Card.Subtitle>
         {isEditing ? (
           <>
+            <StarRating
+              averageRating={editedRating}
+              setAverageRating={setEditedRating}
+              editable
+            />
             <Form.Control
               as="textarea"
               rows={3}
               value={editedText}
               onChange={(e) => setEditedText(e.target.value)}
-            />
-            <StarRating
-              averageRating={editedRating}
-              setAverageRating={setEditedRating}
-              editable
             />
           </>
         ) : (
