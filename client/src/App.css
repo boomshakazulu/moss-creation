@@ -1,12 +1,14 @@
 main {
   padding-top: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 100px;
   width: 100vw;
-  min-height: 100%; /* Use min-height instead of height */
+  min-height: 100%;
 }
 
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
 }

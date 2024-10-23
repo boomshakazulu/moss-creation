@@ -60,7 +60,7 @@ function Profile() {
     return <div>loading...</div>;
   }
   return (
-    <div>
+    <div className="profile-container">
       <h1 className="profile-username">{data.me.username}</h1>
       <div className="profile-form-cont">
         <form onSubmit={handleSubmit} className="profile-password-form">
@@ -90,7 +90,7 @@ function Profile() {
           />
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-primary profile-save-button"
             disabled={passLoading}
           >
             {passLoading ? "Loading..." : "Change Password"}

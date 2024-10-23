@@ -54,7 +54,7 @@ const ReviewCard = ({
         </Button>
       )}
       <Card.Body>
-        <Card.Title>{username}</Card.Title>
+        <Card.Title className="review-card-title">{username}</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">
           Date: {formattedDate}
         </Card.Subtitle>

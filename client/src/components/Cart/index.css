@@ -10,6 +10,7 @@
 .cart-closed span {
   position: absolute;
   right: 5px;
+  top: 6px;
   bottom: 1.5px;
 }
 .cart h2 {
@@ -18,13 +19,17 @@
   padding-bottom: 0.5rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  margin-right: 4rem;
+  text-align: center;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 26px;
 }
 
 .cart .close {
   position: absolute;
   top: 0.5rem;
-  right: -1rem;
+  right: -0.4rem;
   cursor: pointer;
   transform: rotate(45deg);
   overflow: hidden;
@@ -35,9 +40,9 @@
 }
 
 .cart-closed {
-  position: absolute;
+  position: absolute !important;
   top: 2%;
-  right: 10%;
+  right: 10;
   font-size: 2rem;
   cursor: pointer;
   border-radius: 50%;
@@ -67,18 +72,66 @@
 }
 
 .total {
+  display: flex;
   padding-top: 10px;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+  align-items: center;
+}
+
+.total strong {
+  margin-bottom: 10px;
+  font-size: larger;
 }
 
 .total button {
-  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.total a {
+  margin-bottom: 10px;
+  color: blue;
+}
+
+.cart-name {
+  font-family: "Pacifico", cursive;
+}
+
+.trash {
+  color: red;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.cart-price {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cart-quantity {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cart-quantity input {
+  text-align: center;
+}
+
+@media screen and (min-width: 992px) {
+  .cart-closed {
+    position: initial;
+    margin: 0;
+    right: -0.2rem;
+  }
 }
 
 @media screen and (max-width: 992px) {
   .cart-closed {
     position: initial;
     margin: 0;
-    left: 1%;
+    right: -1rem;
   }
 }
 
@@ -103,6 +156,8 @@
     flex-wrap: wrap;
     width: 100%;
     padding-bottom: 20px;
+    border-bottom: 8px double black;
+    margin-bottom: 20px;
   }
   .cart-image {
     width: 30%;
@@ -166,9 +221,9 @@
     bottom: -4px;
     left: 5%;
     width: 90%;
-    height: 8px; /* Total height of both lines */
-    border-bottom: 2px solid black; /* Second underline */
-    border-top: 2px solid black; /* First underline */
+    height: 8px;
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
     box-sizing: border-box;
   }
   .cart-container a {

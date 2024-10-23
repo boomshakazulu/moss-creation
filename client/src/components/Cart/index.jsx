@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { idbPromise } from "../../utils/helpers";
 import CartItem from "../CartItem";
 import Auth from "../../utils/auth";
@@ -76,13 +76,15 @@ const Cart = () => {
             <CartItem key={item._id} item={item} />
           ))}
 
-          <div className="flex-row total">
+          <div className="flex-column total">
             <strong>Total: ${calculateTotal()}</strong>
 
             {Auth.loggedIn() ? (
               <button onClick={submitCheckout}>Checkout</button>
             ) : (
-              <span>(log in to check out)</span>
+              <Link to="/login" onClick={toggleCart}>
+                Log in to check out!
+              </Link>
             )}
           </div>
         </div>

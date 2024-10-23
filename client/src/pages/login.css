@@ -8,6 +8,12 @@
   margin-top: 30px;
   margin-bottom: 20px;
   text-align: center;
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 28px;
+  border-bottom: 4px double;
   color: #72b787;
 }
 

@@ -1,3 +1,7 @@
+.card-stepper {
+  margin-bottom: 15px;
+}
+
 #progressbar-1 {
   color: #455a64;
 }
@@ -89,6 +93,10 @@
 
 .MBDCol-history img {
   padding-left: 10px;
+}
+
+.track {
+  color: blue;
 }
 
 .product-container {

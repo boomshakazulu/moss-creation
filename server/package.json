@@ -23,6 +23,7 @@
     "graphql": "^16.6.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.0.2",
+    "moss-server": "file:",
     "nodemailer": "^6.9.13",
     "stripe": "^8.67.0"
   },

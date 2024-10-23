@@ -1,0 +1,33 @@
+.about-me-container {
+  margin: 0px 50px 0px 50px;
+  text-align: center;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
+  font-size: large;
+  color: #72b787;
+  margin-bottom: 50px;
+}
+
+.self-photo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.self-photo {
+  max-width: 50%;
+  border-radius: 50%;
+}
+
+.insta-embed {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 992px) {
+  .self-photo {
+    max-width: 200px;
+    width: 50%;
+  }
+}

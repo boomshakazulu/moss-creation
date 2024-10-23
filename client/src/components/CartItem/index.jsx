@@ -54,15 +54,9 @@ const CartItem = ({ item }) => {
             <h3>{item.name}</h3>
           </a>
         </div>
-        <div className="trash">
-          <span
-            role="img"
-            aria-label="trash"
-            onClick={() => removeFromCart(item)}
-          >
-            Remove
-          </span>
-        </div>
+        <p className="trash" onClick={() => removeFromCart(item)}>
+          Remove
+        </p>
         <div className="cart-price">
           <span>Price</span>
           <span>${item.price}</span>

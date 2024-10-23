@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+
 .menu-overlay {
   position: fixed;
   top: 0;
@@ -12,8 +14,10 @@
 .header {
   background: #ceead6 !important;
   max-height: 120px;
+  min-height: 80px;
   display: flex;
   align-items: center;
+  justify-content: space-around;
   padding: 0;
   width: 100% !important;
 }
@@ -21,6 +25,10 @@
 .brand-name {
   text-align: center; /* Center the text */
   color: #72b787;
+  font-family: "Pacifico", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 34px;
 }
 
 .nav-links {
@@ -31,14 +39,14 @@
   padding-right: 30px;
 }
 
-.menu-button {
+/* .menu-button {
   display: flex;
-  justify-content: flex-end !important; /* Move menu button to the right */
+  justify-content: flex-end !important;
 }
 
 .menu-button button {
   padding-right: 30px;
-}
+} */
 
 .nav-links a {
   color: #a3d5b2; /* Set the color as needed */
@@ -58,7 +66,7 @@
 }
 
 .links-location {
-  padding-top: 10px;
+  /* padding-top: 10px; */
   justify-content: end;
   width: 100%;
 }
@@ -126,8 +134,11 @@
   .navbar .container {
     flex-direction: column !important;
   }
-  .links-location {
+  /* .links-location {
     padding-top: 10px;
+  } */
+  .navbar-collapse {
+    padding-top: 0 !important;
   }
 }
 @media (max-width: 992px) {
@@ -139,7 +150,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     text-align: center; /* Center the text */
-    color: #72b787;
+    color: #579269;
     top: 0; /* Position it at the top */
     left: 50%; /* Position it in the center horizontally */
     transform: translateX(-50%); /* Adjust to center it precisely */
@@ -152,41 +163,53 @@
   }
 }
 
-@media (min-width: 576px) {
+/* @media (min-width: 576px) {
   .navbar .container {
     max-width: 100%;
   }
-}
+} */
 
 @media (max-width: 768px) {
-  .header {
+  /* .header {
     position: sticky;
     max-height: none;
     top: 0px;
     padding-bottom: 10px;
     z-index: 1000;
-  }
-  body.header-cartOpen {
+  } */
+  /* body.header-cartOpen {
     overflow: hidden;
-  }
+  } */
 
-  .header-cartOpen .container {
-    overflow-y: auto; /* Allow internal scrolling */
+  /* .header-cartOpen .container {
+    overflow-y: auto;
     height: calc(100vh - 60px);
-  }
-  .cart {
-    overflow-y: auto; /* Allow scrolling within main content */
+  } */
+
+  /* .cart {
+    overflow-y: auto; 
     height: calc(100vh - 100px);
-  }
+  } */
 
   .brand-name {
     position: absolute;
     padding-top: 20px;
     padding-bottom: 20px;
     text-align: center; /* Center the text */
-    color: #72b787;
     top: 0; /* Position it at the top */
     left: 50%; /* Position it in the center horizontally */
     transform: translateX(-50%); /* Adjust to center it precisely */
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-name {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-name {
+    font-size: 25px;
   }
 }

@@ -27,7 +27,6 @@ const OrderDetails = (order) => {
     trackingNum,
     carrier,
   } = order.order;
-  console.log(order, "prod:", products, "car", carrier, order.reviews);
 
   let trackingWebsite;
 
@@ -45,8 +44,6 @@ const OrderDetails = (order) => {
       trackingWebsite = null;
   }
 
-  console.log(trackingWebsite);
-
   // Function to toggle edit review section for a product
   const toggleEditReview = (productId) => {
     setEditProductId(editProductId === productId ? null : productId);
@@ -58,6 +55,10 @@ const OrderDetails = (order) => {
     setAddProductId(addProductId === productId ? null : productId);
     setEditProductId(null); // Close edit review section if open
   };
+
+  if (!order) {
+    return;
+  }
 
   return (
     <section>
@@ -84,9 +85,13 @@ const OrderDetails = (order) => {
               </MDBCardHeader>
               <MDBCardBody className="p-4">
                 {products.map((product) => {
-                  const review = order.reviews.find(
-                    (review) => review.itemId._id === product.product._id
-                  );
+                  console.log(product.product._id);
+                  let review;
+                  if (order.reviews) {
+                    review = order.reviews.find(
+                      (review) => review.itemId._id === product.product._id
+                    );
+                  }
 
                   return (
                     <div
@@ -122,8 +127,8 @@ const OrderDetails = (order) => {
                               }
                             >
                               {editProductId === product.product._id
-                                ? "Close Edit Review"
-                                : "Edit Review"}
+                                ? "Close Review"
+                                : "View Review"}
                             </button>
                             {editProductId === product.product._id && (
                               <ReviewCard
@@ -180,7 +185,7 @@ const OrderDetails = (order) => {
                                 toggleEditReview(product.product._id)
                               }
                             >
-                              Edit Review
+                              View Review
                             </button>
                           </div>
                         )}
@@ -216,7 +221,7 @@ const OrderDetails = (order) => {
               <MDBCardFooter className="p-4">
                 <div className="d-flex justify-content-between">
                   {trackingNum && (
-                    <MDBTypography tag="h5" className="fw-normal mb-0">
+                    <MDBTypography tag="h5" className="fw-normal mb-0 track">
                       <a
                         href={trackingWebsite}
                         target="_blank"

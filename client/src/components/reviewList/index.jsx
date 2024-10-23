@@ -1,6 +1,6 @@
 import React from "react";
 import ReviewCard from "../reviewCard/index";
-import "./style.css";
+import "./index.css";
 
 const ReviewList = ({ reviews, currentUser }) => {
   console.log(reviews);

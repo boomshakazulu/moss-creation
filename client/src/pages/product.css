@@ -1,9 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+
+.product-container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.product-container .review-list {
+  flex-direction: column;
+  align-items: center;
+}
+
 .carousel-column {
   width: 35% !important; /* Adjust the width of the column containing the carousel */
 }
 
 .product-section {
   max-width: 100%;
+  margin-bottom: 50px;
 }
 .product-info-container {
   height: 100%;
@@ -13,17 +26,22 @@
   position: relative; /* Position relative for absolute positioning of children */
   display: flex; /* Use flex layout */
   flex-direction: column; /* Stack children vertically */
+  color: #72b787;
 }
 
 .product-stock {
   padding-top: 10px; /* Adjusted padding */
   padding-bottom: 30px;
   text-align: center;
+  font-family: "Pacifico", cursive;
+  color: #72b787;
 }
 
 .product-price {
   text-align: center;
   padding-bottom: 10px;
+  font-family: "Pacifico", cursive;
+  color: #72b787;
 }
 
 .info-col {
@@ -45,6 +63,10 @@
   margin-left: 10%;
   margin-right: 10%;
   width: 50%;
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 .product-carousel {
   max-width: 100%; /* Ensure the container doesn't exceed the width of the carousel */
@@ -52,11 +74,18 @@
 
 .product-description {
   min-height: 60%;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .product-title {
   text-align: center;
   margin-bottom: 20px;
+  font-family: "Pacifico", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  color: #72b787;
 }
 
 .prod-rating-cont {
@@ -65,6 +94,17 @@
   /* padding-bottom: 100px; */
   display: flex;
   justify-content: center;
+}
+
+h4 {
+  font-family: "Pacifico", cursive;
+  text-align: center;
+  color: #72b787;
+}
+
+.review-list h2 {
+  color: #72b787;
+  padding-bottom: 10px;
 }
 
 @media (max-width: 576px) {

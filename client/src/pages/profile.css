@@ -1,6 +1,15 @@
+.profile-container {
+  max-width: 1000px;
+  margin: auto;
+}
+
 .profile-username {
   text-align: center;
   padding-bottom: 50px;
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .profile-password-form {
@@ -8,6 +17,9 @@
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
+  font-family: "Pacifico", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .profile-password-form label {
@@ -25,10 +37,17 @@
   padding-top: 50px;
   text-align: center;
   width: 100%;
+  font-family: "Pacifico", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .order-history h2 {
   padding-bottom: 20px;
+  font-family: "Josefin Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .profile-order {
@@ -75,5 +94,22 @@
   #profile-newPassword,
   #profile-confirmPassword {
     padding-bottom: 20px;
+  }
+}
+
+@media (min-width: 786px) {
+  .profile-password-form {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    align-content: center;
+  }
+
+  .profile-save-button {
+    max-width: 200px;
+  }
+
+  .profile-password-form input {
+    max-width: 400px;
   }
 }

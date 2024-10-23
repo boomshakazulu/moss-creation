@@ -1,0 +1,12 @@
+#success {
+  padding: 15px;
+  text-align: center;
+}
+
+#success p {
+  color: #579269;
+}
+
+#success a {
+  color: blue;
+}

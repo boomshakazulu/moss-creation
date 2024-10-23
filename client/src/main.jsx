@@ -21,6 +21,8 @@ import ForgotPasswordConfirmation from "./pages/forgotPasswordConfirm.jsx";
 import PasswordReset from "./pages/passwordReset.jsx";
 import AdminOrders from "./pages/adminOrders.jsx";
 import Profile from "./pages/profile.jsx";
+import AboutMe from "./pages/aboutme.jsx";
+import Contact from "./pages/contact.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup />,
+      },
+      {
+        path: "/about",
+        element: <AboutMe />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
       {
         path: "/item/:itemId",

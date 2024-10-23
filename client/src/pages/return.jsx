@@ -3,6 +3,7 @@ import { useStoreContext } from "../utils/GlobalState"; // Import useStoreContex
 import { UPDATE_STOCK } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
 import { CLEAR_CART } from "../utils/actions";
+import "./return.css";
 
 const Return = () => {
   const [status, setStatus] = useState(null);
@@ -83,9 +84,14 @@ const Return = () => {
     return (
       <section id="success">
         <p>
-          We appreciate your business! A confirmation email will be sent to{" "}
-          {customerEmail}. If you have any questions, please email{" "}
-          <a href="mailto:orders@example.com">orders@example.com</a>.
+          We appreciate your business! <br />
+          <br />A confirmation email will be sent to {customerEmail}. <br />{" "}
+          <br />
+          If you have any questions, please email{" "}
+          <a href="mailto:support@mossy-creations.com" className="return-email">
+            support@mossy-creations.com
+          </a>
+          .
         </p>
       </section>
     );

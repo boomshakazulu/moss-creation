@@ -13,7 +13,7 @@ function ForgotPasswordConfirmation() {
       >
         Password Reset Request Submitted
       </h2>
-      <p style={{ color: "#333" }}>
+      <p style={{ color: "#72b787", textAlign: "center" }}>
         If your email exists in our system, you will receive an email shortly
         with instructions on how to reset your password.
         <br></br>

@@ -1,13 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
 #nav-icon {
   width: 60px;
   height: 45px;
-  margin-top: 15px;
   position: relative;
+  margin-top: 0;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
@@ -17,6 +12,10 @@
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
   cursor: pointer;
+}
+
+.header .container .open {
+  top: 10px;
 }
 
 #nav-icon span {

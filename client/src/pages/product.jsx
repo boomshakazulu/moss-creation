@@ -107,7 +107,7 @@ function Product() {
   console.log(data.product);
 
   return (
-    <div>
+    <div className="product-container">
       <Container className="product-section">
         <h1 className="product-title">{data.product.name}</h1>
         <Row>

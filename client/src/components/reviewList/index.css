@@ -3,21 +3,31 @@
   flex-wrap: wrap !important;
   justify-content: center;
   width: 100%;
-  margin-top: 50px;
+  padding-top: 20px;
 }
 
 .review-list h2 {
   text-align: center;
   width: 100%;
+  font-family: "Pacifico", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  margin-bottom: 15px;
 }
 
 .review-card {
   max-width: 80%;
-  width: 100% !important;
+  width: 100%;
 }
 
 .review-card button {
   max-width: 50px;
+}
+
+.card-subtitle {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .stars-card span {
@@ -25,4 +35,10 @@
   background-color: #ceead6;
   border-style: none;
   font-size: xx-large;
+}
+
+@media (min-width: 768px) {
+  .review-card {
+    width: 350px;
+  }
 }
