@@ -15,7 +15,7 @@ import Header from "./components/header";
 import Auth from "./utils/auth";
 
 const httpLink = createHttpLink({
-  uri: "https://mossycreations.netlify.app/graphql",
+  uri: "https://mossycreations.onrender.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
