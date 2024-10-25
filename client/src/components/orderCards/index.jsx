@@ -9,7 +9,8 @@ import Product from "../../pages/product";
 const OrderCards = ({ order }) => {
   const [orderData, setOrderData] = useState(order);
   const [completeOrder, { error }] = useMutation(COMPLETE_ORDER);
-  console.log(orderData);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const handleCarrierChange = (e) => {
     setOrderData((prevOrder) => ({
       ...prevOrder,
@@ -35,9 +36,7 @@ const OrderCards = ({ order }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Order submitted:", orderData);
     try {
-      console.log(orderData);
       await completeOrder({
         variables: {
           orderId: orderData._id,
@@ -48,7 +47,7 @@ const OrderCards = ({ order }) => {
         },
       });
     } catch (err) {
-      console.log(err);
+      setErrorMessage("Error completing order " + err);
     }
   };
 
@@ -183,6 +182,11 @@ const OrderCards = ({ order }) => {
 
         {!order.fulfilled ? <Button type="submit">Submit</Button> : ""}
       </Form>
+      {errorMessage ? (
+        <div>
+          <p className="error-text">{errorMessage}</p>
+        </div>
+      ) : null}
     </Container>
   );
 };

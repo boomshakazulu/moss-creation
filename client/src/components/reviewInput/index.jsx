@@ -9,6 +9,7 @@ const ReviewInput = ({ profileItemId }) => {
   const { itemId } = useParams();
   const [rating, setRating] = useState(0); // Initially, no stars are selected
   const [addReview, { loading, error }] = useMutation(ADD_REVIEW);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleReviewTextChange = (event) => {
     setReviewText(event.target.value);
@@ -28,10 +29,12 @@ const ReviewInput = ({ profileItemId }) => {
           rating: rating,
         },
       });
-      console.log(result);
+      setErrorMessage(null);
       window.location.reload();
     } catch (error) {
-      console.error("Error adding review:", error);
+      setErrorMessage(
+        "There was an error adding your review, please try again later."
+      );
     }
   };
 
@@ -66,6 +69,11 @@ const ReviewInput = ({ profileItemId }) => {
       <button type="submit" className="review-submit">
         Submit Review
       </button>
+      {errorMessage ? (
+        <div>
+          <p className="error-text">{errorMessage}</p>
+        </div>
+      ) : null}
     </form>
   );
 };

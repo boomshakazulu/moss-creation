@@ -28,7 +28,9 @@ const Return = () => {
     const urlParams = new URLSearchParams(queryString);
     const sessionId = urlParams.get("session_id");
 
-    fetch(`http://localhost:3001/session-status?session_id=${sessionId}`)
+    fetch(
+      `https://mossycreations-e28ddb580b4a.herokuapp.com/session-status?session_id=${sessionId}`
+    )
       .then((res) => res.json())
       .then((data) => {
         setStatus(data.status);
@@ -55,12 +57,6 @@ const Return = () => {
                   quantity: cart.purchaseQuantity,
                 },
               });
-            } else {
-              console.error(
-                "Invalid itemId or quantity:",
-                cart._id,
-                cart.purchaseQuantity
-              );
             }
           }
 

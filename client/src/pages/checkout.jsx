@@ -42,7 +42,6 @@ const CheckoutForm = () => {
     async (userId) => {
       const user = Auth.getProfile();
       try {
-        console.log(user.data.id);
         const cartItems = state.cart.map((item) => ({
           price: item.priceId,
           quantity: item.purchaseQuantity,
@@ -55,7 +54,7 @@ const CheckoutForm = () => {
         }));
 
         const response = await fetch(
-          "http://localhost:3001/create-checkout-session",
+          "https://mossycreations-e28ddb580b4a.herokuapp.com/create-checkout-session",
           {
             method: "POST",
             headers: {
@@ -64,7 +63,7 @@ const CheckoutForm = () => {
             body: JSON.stringify({
               line_items: cartItems,
               shipping_address_collection: {
-                allowed_countries: ["US"], // Specify the countries you want to allow shipping to
+                allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
               },
               metadata: {
                 products: JSON.stringify(productIds),
@@ -82,7 +81,6 @@ const CheckoutForm = () => {
         const data = await response.json();
         return data.clientSecret;
       } catch (error) {
-        console.error("Error fetching client secret:", error);
         throw error;
       }
     },
@@ -100,9 +98,9 @@ const CheckoutForm = () => {
           const secret = await fetchClientSecret(userId);
           setClientSecret(secret);
         }
+        setErrorMessage(null);
       } catch (error) {
         // If error occurs due to user not being logged in
-        console.log(error);
         setErrorMessage("User not logged in error");
       }
     };

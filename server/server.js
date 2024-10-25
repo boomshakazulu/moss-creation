@@ -10,11 +10,10 @@ const mongoose = require("mongoose");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-const endpointSecret =
-  "whsec_402bb1d3a4683b032b8da55a1985df12b6111a219a5263535531798492305adb";
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const PORT = process.env.PORT || 3001;
-const MY_DOMAIN = `http://localhost:3000`;
+const MY_DOMAIN = `https://www.mossy-creations.com`;
 const app = express();
 app.use(cors());
 const server = new ApolloServer({
@@ -52,7 +51,7 @@ const startApolloServer = async () => {
         ui_mode: "embedded",
         line_items: line_items,
         shipping_address_collection: {
-          allowed_countries: ["US"],
+          allowed_countries: ["US", "CA"],
         },
         mode: "payment",
         return_url: `${MY_DOMAIN}/return?session_id={CHECKOUT_SESSION_ID}`,
@@ -78,7 +77,6 @@ const startApolloServer = async () => {
     express.raw({ type: "application/json" }),
     async (req, res) => {
       const sig = req.headers["stripe-signature"];
-
       let event;
 
       try {

@@ -64,12 +64,6 @@ function Product() {
   // Show error message if there's an error fetching data
   if (error) return <p>Error: {error.message}</p>;
 
-  console.log(data);
-
-  console.log(purchasedProduct);
-
-  console.log("disable review:", disableReview);
-
   const addToCart = () => {
     const itemInCart = cart.find(
       (cartItem) => cartItem._id === data.product._id
@@ -102,9 +96,6 @@ function Product() {
     addToCart();
     navigate("/checkout");
   };
-
-  console.log(queryResult);
-  console.log(data.product);
 
   return (
     <div className="product-container">

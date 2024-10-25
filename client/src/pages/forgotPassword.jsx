@@ -8,6 +8,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [forgotPassword, { loading }] = useMutation(FORGOT_PASSWORD);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -18,8 +19,11 @@ function ForgotPassword() {
     try {
       await forgotPassword({ variables: { email } });
       navigate("/forgotpassword-confirmation");
+      setErrorMessage(null);
     } catch (error) {
-      console.log(error);
+      setErrorMessage(
+        "Unable to process your request at this time. Please check your email address and try again."
+      );
     }
   };
 
@@ -51,6 +55,11 @@ function ForgotPassword() {
           <Link to="/login">Login</Link>
         </span>
       </p>
+      {errorMessage ? (
+        <div>
+          <p className="error-text">{errorMessage}</p>
+        </div>
+      ) : null}
     </div>
   );
 }

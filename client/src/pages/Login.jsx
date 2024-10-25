@@ -8,6 +8,7 @@ import "./login.css"; // Import the CSS file
 function Login(props) {
   const [formState, setFormState] = useState({ email: "", password: "" });
   const [login, { error }] = useMutation(LOGIN);
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,8 +25,9 @@ function Login(props) {
       });
       const token = mutationResponse.data.login.token;
       Auth.login(token);
+      setErrorMessage(null);
     } catch (e) {
-      console.log(e);
+      setErrorMessage("Failed to login. Please try again");
     }
   };
 
@@ -68,6 +70,11 @@ function Login(props) {
         {error ? (
           <div>
             <p className="error-text">The provided credentials are incorrect</p>
+          </div>
+        ) : null}
+        {errorMessage ? (
+          <div>
+            <p className="error-text">{errorMessage}</p>
           </div>
         ) : null}
         <div className="flex-row flex-end btnContainer">

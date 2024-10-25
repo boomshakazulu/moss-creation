@@ -15,7 +15,7 @@ import Header from "./components/header";
 import Auth from "./utils/auth";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:3001/graphql",
+  uri: "https://mossycreations-e28ddb580b4a.herokuapp.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

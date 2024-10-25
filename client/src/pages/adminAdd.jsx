@@ -7,6 +7,7 @@ import "./adminAdd.css";
 
 function AdminAdd() {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
   const [formState, setFormState] = useState({
     name: "",
     description: "",
@@ -46,8 +47,11 @@ function AdminAdd() {
         },
       });
       navigate("/admin");
+      setErrorMessage(null);
     } catch (error) {
-      console.error("Error adding product:", error);
+      setErrorMessage(
+        "Error updating product. Please check that a name, description, price, and stock quantity is added and try again"
+      );
     }
   };
 
@@ -182,6 +186,11 @@ function AdminAdd() {
       />
       {/* Add more input fields for other form fields */}
       <button type="submit">Submit</button>
+      {errorMessage ? (
+        <div>
+          <p className="error-text">{errorMessage}</p>
+        </div>
+      ) : null}
     </form>
   );
 }
