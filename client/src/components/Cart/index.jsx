@@ -39,6 +39,7 @@ const Cart = () => {
 
   function submitCheckout() {
     navigate("/checkout");
+    toggleCart();
   }
 
   function handleClickOutside(event) {
