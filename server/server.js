@@ -52,7 +52,7 @@ const startApolloServer = async () => {
         ui_mode: "embedded",
         line_items: line_items,
         shipping_address_collection: {
-          allowed_countries: ["US"],
+          allowed_countries: ["US", "CA"],
         },
         mode: "payment",
         return_url: `${MY_DOMAIN}/return?session_id={CHECKOUT_SESSION_ID}`,
