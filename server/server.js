@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-const endpointSecret = "whsec_kOlFreQvPhfFb4N2SmB7U0tb6F5kKJHQ";
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const PORT = process.env.PORT || 3001;
 const MY_DOMAIN = `https://www.mossy-creations.com`;
