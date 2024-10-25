@@ -10,8 +10,7 @@ const mongoose = require("mongoose");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-const endpointSecret =
-  "whsec_402bb1d3a4683b032b8da55a1985df12b6111a219a5263535531798492305adb";
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const PORT = process.env.PORT || 3001;
 const MY_DOMAIN = `https://www.mossy-creations.com`;
@@ -83,7 +82,6 @@ const startApolloServer = async () => {
 
       try {
         event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-        res.status(200).send("Webhook received");
       } catch (err) {
         res.status(400).send(`Webhook Error: ${err.message}`);
         console.error(err.message);
