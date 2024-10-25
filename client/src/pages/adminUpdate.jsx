@@ -7,8 +7,9 @@ import { QUERY_PRODUCT } from "../utils/queries";
 import "./adminAdd.css";
 
 function AdminUpdate() {
-  const { itemId } = useParams(); // Assuming you're using React Router for getting itemId from URL params
+  const { itemId } = useParams();
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
   const [formState, setFormState] = useState({
     name: "",
     description: "",
@@ -28,8 +29,6 @@ function AdminUpdate() {
   const { loading, error, data } = useQuery(QUERY_PRODUCT, {
     variables: { itemId },
   });
-
-  console.log(data, itemId);
 
   useEffect(() => {
     if (data && data.product) {
@@ -68,7 +67,7 @@ function AdminUpdate() {
           itemId: itemId,
           input: {
             name: formState.name,
-            description: descriptionWithLineBreaks, // Use modified description
+            description: descriptionWithLineBreaks,
             price: parseFloat(formState.price),
             photo: formState.photo,
             stock: parseInt(formState.stock),
@@ -79,9 +78,12 @@ function AdminUpdate() {
       });
       // Handle successful submission
       navigate("/admin");
+      setErrorMessage(null);
     } catch (err) {
       // Handle error
-      console.error(err);
+      setErrorMessage(
+        "Error updating product. Please check that a name, description, price, and stock quantity is added and try again"
+      );
     }
   };
 
@@ -216,6 +218,11 @@ function AdminUpdate() {
       />
       {/* Add more input fields for other form fields */}
       <button type="submit">Submit</button>
+      {errorMessage ? (
+        <div>
+          <p className="error-text">{errorMessage}</p>
+        </div>
+      ) : null}
     </form>
   );
 }

@@ -12,18 +12,12 @@ function AdminOrders() {
       navigate("/");
     }
   }, []);
-  console.log(data);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   const fulfilledOrders = data.orders.filter((order) => order.fulfilled);
   const unfulfilledOrders = data.orders.filter((order) => !order.fulfilled);
-  console.log(
-    "fulfilled: ",
-    fulfilledOrders,
-    "unfulfilled: ",
-    unfulfilledOrders
-  );
 
   return (
     <div>

@@ -3,13 +3,10 @@ import ReviewCard from "../reviewCard/index";
 import "./index.css";
 
 const ReviewList = ({ reviews, currentUser }) => {
-  console.log(reviews);
   // Filter out reviews with text and set isOwner prop
   const filteredReviews = reviews.filter(
     (review) => review.text && review.author === currentUser
   );
-
-  console.log(filteredReviews);
 
   return (
     <div className="review-list">

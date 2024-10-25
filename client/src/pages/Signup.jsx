@@ -26,13 +26,12 @@ function Signup(props) {
   ] = useLazyQuery(CHECK_EMAIL_UNIQUENESS, {
     variables: { email: formState.email },
     onCompleted: () => {
-      console.log(emailData);
       setEmailUnique(emailData.checkEmailUniqueness);
     },
     onError: () => {
       setEmailUnique(false);
     },
-    skip: !formState.email, // Skip the query if email is not provided
+    skip: !formState.email,
   });
   const [
     checkUsername,
@@ -40,13 +39,12 @@ function Signup(props) {
   ] = useLazyQuery(CHECK_USERNAME_UNIQUENESS, {
     variables: { username: formState.username },
     onCompleted: () => {
-      console.log(usernameData.checkUsernameUniqueness);
       setUsernameUnique(usernameData.checkUsernameUniqueness);
     },
     onError: () => {
       setUsernameUnique(false);
     },
-    skip: !formState.username, // Skip the query if username is not provided
+    skip: !formState.username,
   });
   const [addUser] = useMutation(ADD_USER);
   const navigate = useNavigate();
@@ -85,15 +83,18 @@ function Signup(props) {
 
       const token = mutationResponse.data.addUser.token;
       Auth.login(token);
+      setErrorMessage(null);
     } catch (error) {
       // Extract error message from the error object
-      const errorMessage = error.message;
+      setErrorMessage(error.message);
       if (errorMessage.includes("E11000")) {
         setErrorMessage(
           "Email or username already exists. Please choose a different one."
         );
       } else {
-        console.error(errorMessage);
+        setErrorMessage(
+          "We are unable to process your request. Please check your information and try again."
+        );
       }
     }
   };

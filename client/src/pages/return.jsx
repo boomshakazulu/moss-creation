@@ -55,12 +55,6 @@ const Return = () => {
                   quantity: cart.purchaseQuantity,
                 },
               });
-            } else {
-              console.error(
-                "Invalid itemId or quantity:",
-                cart._id,
-                cart.purchaseQuantity
-              );
             }
           }
 

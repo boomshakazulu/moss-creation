@@ -20,6 +20,7 @@ const ReviewCard = ({
   const [editedRating, setEditedRating] = useState(rating);
   const [updateReview] = useMutation(UPDATE_REVIEW);
   const { itemId } = useParams();
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const formattedDate = new Date(parseInt(createdAt)).toLocaleDateString();
   const handleSave = async () => {
@@ -33,8 +34,9 @@ const ReviewCard = ({
         },
       });
       setIsEditing(false);
+      setErrorMessage(null);
     } catch (error) {
-      console.error("Error updating review:", error.message);
+      setErrorMessage("Unable to update review. Please try again later");
     }
   };
 
@@ -79,6 +81,11 @@ const ReviewCard = ({
           </>
         )}
       </Card.Body>
+      {errorMessage ? (
+        <div>
+          <p className="error-text">{errorMessage}</p>
+        </div>
+      ) : null}
     </Card>
   );
 };

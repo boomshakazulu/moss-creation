@@ -43,7 +43,7 @@ const ProductCards = (item) => {
           purchaseQuantity: newQuantity,
         });
       } else {
-        console.log("Cannot add more than available stock");
+        console.error("Cannot add more than available stock");
       }
     } else {
       dispatch({

@@ -85,7 +85,6 @@ const OrderDetails = (order) => {
               </MDBCardHeader>
               <MDBCardBody className="p-4">
                 {products.map((product) => {
-                  console.log(product.product._id);
                   let review;
                   if (order.reviews) {
                     review = order.reviews.find(

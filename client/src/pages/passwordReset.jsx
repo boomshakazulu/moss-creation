@@ -31,7 +31,6 @@ function PasswordReset() {
     });
     setPasswordsMatch(true);
     setErrorMessage("");
-    console.log(formState);
   };
 
   const handleSubmit = async (e) => {
