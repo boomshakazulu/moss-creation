@@ -14,7 +14,7 @@ const endpointSecret =
   "whsec_402bb1d3a4683b032b8da55a1985df12b6111a219a5263535531798492305adb";
 
 const PORT = process.env.PORT || 3001;
-const MY_DOMAIN = `https://mossycreations-e28ddb580b4a.herokuapp.com`;
+const MY_DOMAIN = `https://www.mossy-creations.com`;
 const app = express();
 app.use(cors());
 const server = new ApolloServer({
