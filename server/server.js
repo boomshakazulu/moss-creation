@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 
 const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+const endpointSecret = "whsec_kOlFreQvPhfFb4N2SmB7U0tb6F5kKJHQ";
 
 const PORT = process.env.PORT || 3001;
 const MY_DOMAIN = `https://www.mossy-creations.com`;
@@ -77,7 +77,6 @@ const startApolloServer = async () => {
     express.raw({ type: "application/json" }),
     async (req, res) => {
       const sig = req.headers["stripe-signature"];
-      const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
       let event;
 
       try {
