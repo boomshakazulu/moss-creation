@@ -77,7 +77,7 @@ const startApolloServer = async () => {
     express.raw({ type: "application/json" }),
     async (req, res) => {
       const sig = req.headers["stripe-signature"];
-
+      const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
       let event;
 
       try {
