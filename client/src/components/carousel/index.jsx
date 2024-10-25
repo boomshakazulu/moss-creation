@@ -37,7 +37,7 @@ const Carousel = ({ items, isHomePage }) => {
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: imagesToShow.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
