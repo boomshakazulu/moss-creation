@@ -92,7 +92,7 @@ const startApolloServer = async () => {
 
       // Handle the event
       switch (event.type) {
-        case "payment_intent.succeeded":
+        case "charge.succeeded":
           const paymentIntentId = event.data.object.id.toString();
           const paymentIntent = await stripe.paymentIntents.retrieve(
             paymentIntentId
