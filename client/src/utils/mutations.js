@@ -144,10 +144,7 @@ export const ADD_PRODUCT = gql`
       video
       carousel
       reviews {
-        text
-        author
-        itemId
-        createdAt
+        _id
       }
     }
   }
