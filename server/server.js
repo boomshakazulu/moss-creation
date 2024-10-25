@@ -83,6 +83,7 @@ const startApolloServer = async () => {
 
       try {
         event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+        res.status(200).send("Webhook received");
       } catch (err) {
         res.status(400).send(`Webhook Error: ${err.message}`);
         console.error(err.message);
