@@ -63,7 +63,7 @@ const CheckoutForm = () => {
             body: JSON.stringify({
               line_items: cartItems,
               shipping_address_collection: {
-                allowed_countries: ["US"], // Specify the countries you want to allow shipping to
+                allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
               },
               metadata: {
                 products: JSON.stringify(productIds),
