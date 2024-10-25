@@ -13,7 +13,7 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const cartRef = useRef();
-
+  console.log(state.cart);
   useEffect(() => {
     async function getCart() {
       const cart = await idbPromise("cart", "get");

@@ -65,6 +65,17 @@ function Product() {
   if (error) return <p>Error: {error.message}</p>;
 
   const addToCart = () => {
+    const {
+      photo,
+      name,
+      _id,
+      price,
+      stock,
+      currentPage,
+      averageRating,
+      totalRatings,
+    } = data.product;
+
     const itemInCart = cart.find(
       (cartItem) => cartItem._id === data.product._id
     );

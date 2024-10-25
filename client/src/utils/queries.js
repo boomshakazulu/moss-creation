@@ -112,6 +112,8 @@ export const QUERY_PRODUCT = gql`
       photo
       stock
       video
+      priceId
+      stripeProductId
       carousel
       averageRating
       totalRatings

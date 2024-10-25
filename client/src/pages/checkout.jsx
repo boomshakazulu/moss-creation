@@ -38,54 +38,51 @@ const CheckoutForm = () => {
     }
   }, []);
 
-  const fetchClientSecret = useCallback(
-    async (userId) => {
-      const user = Auth.getProfile();
-      try {
-        const cartItems = state.cart.map((item) => ({
-          price: item.priceId,
-          quantity: item.purchaseQuantity,
-        }));
+  const fetchClientSecret = useCallback(async () => {
+    const user = Auth.getProfile();
+    try {
+      const cartItems = state.cart.map((item) => ({
+        price: item.priceId,
+        quantity: item.purchaseQuantity,
+      }));
 
-        const productIds = state.cart.map((item) => ({
-          productId: item._id,
-          quantity: item.purchaseQuantity,
-          price: item.price,
-        }));
+      const productIds = state.cart.map((item) => ({
+        productId: item._id,
+        quantity: item.purchaseQuantity,
+        price: item.price,
+      }));
 
-        const response = await fetch(
-          "https://mossycreations-e28ddb580b4a.herokuapp.com/create-checkout-session",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+      const response = await fetch(
+        "https://mossycreations-e28ddb580b4a.herokuapp.com/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            line_items: cartItems,
+            shipping_address_collection: {
+              allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
             },
-            body: JSON.stringify({
-              line_items: cartItems,
-              shipping_address_collection: {
-                allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
-              },
-              metadata: {
-                products: JSON.stringify(productIds),
-                customerEmail: user.data.email,
-                userId: user.data.id,
-              },
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch client secret");
+            metadata: {
+              products: JSON.stringify(productIds),
+              customerEmail: user.data.email,
+              userId: user.data.id,
+            },
+          }),
         }
+      );
 
-        const data = await response.json();
-        return data.clientSecret;
-      } catch (error) {
-        throw error;
+      if (!response.ok) {
+        throw new Error("Failed to fetch client secret");
       }
-    },
-    [state.cart]
-  );
+
+      const data = await response.json();
+      return data.clientSecret;
+    } catch (error) {
+      throw error;
+    }
+  }, [state.cart]);
 
   useEffect(() => {
     const fetchDecodedToken = async () => {
