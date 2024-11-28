@@ -20,7 +20,6 @@ const CheckoutForm = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const location = useLocation();
   const { buyNow } = location.state || {};
-  console.log(buyNow);
 
   useEffect(() => {
     // Redirect logic with messages
@@ -66,7 +65,7 @@ const CheckoutForm = () => {
           }));
 
       const response = await fetch(
-        "http://localhost:3001/create-checkout-session",
+        "https://www.mossy-creations.com/create-checkout-session",
         {
           method: "POST",
           headers: {
