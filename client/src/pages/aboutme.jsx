@@ -21,10 +21,10 @@ function AboutMe() {
           <br />
           <br />
           As the driving force behind Mossy Creations, I am passionate about
-          crafting pieces that embody the essence of the wild and the
-          whimsical.s With meticulous attention to detail and a deep
-          appreciation for the transformative power of art, each creation is
-          carefully handcrafted to evoke a sense of wonder and enchantment.
+          crafting pieces that embody the essence of the wild and the whimsical.
+          With meticulous attention to detail and a deep appreciation for the
+          transformative power of art, each creation is carefully handcrafted to
+          evoke a sense of wonder and enchantment.
           <br />
           <br />
           From haunting terrariums to whimsical fairy gardens and captivating
