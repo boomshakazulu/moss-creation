@@ -57,8 +57,11 @@ const Cart = () => {
   if (!state.cartOpen) {
     return (
       <div className="cart-closed" onClick={toggleCart}>
-        <span role="img" aria-label="trash">
+        <span role="img" aria-label="cart">
           <img className="cartImg" src={cartImg} alt="Cart" />
+          {state.cart.length > 0 && (
+            <div className="cart-badge">{state.cart.length}</div>
+          )}
         </span>
       </div>
     );

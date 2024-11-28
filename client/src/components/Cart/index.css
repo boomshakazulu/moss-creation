@@ -39,16 +39,38 @@
   text-decoration: underline;
 }
 
+.cart-badge {
+  position: absolute;
+  top: 43px; /* Adjusted to better align with the top of the cart image */
+  right: 55px; /* Adjusted to float the badge near the top-right of the image */
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10; /* Ensure badge is above the cart icon */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
 .cart-closed {
   position: absolute !important;
   top: 2%;
-  right: 10;
+  right: 10px;
   font-size: 2rem;
   cursor: pointer;
   border-radius: 50%;
   padding: 0.25rem;
   width: 50px;
   height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
 .cart-closed:hover {
@@ -63,6 +85,7 @@
 .cartImg {
   max-height: 70px !important;
   padding-right: 10px;
+  position: relative;
 }
 
 .cart input {
