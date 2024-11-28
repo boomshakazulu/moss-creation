@@ -10,10 +10,16 @@
 }
 
 .input-stars {
+  display: flex;
+  justify-content: center;
   width: 100%;
   text-align: center;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.input-stars button {
+  background-color: #ceead6;
 }
 
 .input-stars label {
@@ -33,7 +39,9 @@
 }
 
 .review-submit {
-  margin-top: 10px;
+  background-color: #a3d5b2;
+  width: 200px;
+  margin-top: 10px !important;
   margin-bottom: 10px;
 }
 
@@ -46,6 +54,7 @@
 
 @media (max-width: 600px) {
   .review-form {
+    max-width: 85vw !important;
     padding-left: 10px;
     padding-right: 10px;
   }

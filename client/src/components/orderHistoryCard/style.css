@@ -114,13 +114,6 @@
   align-items: center;
 }
 
-.review-toggle button {
-  display: block;
-  width: 100%; /* Full width buttons */
-
-  text-align: center;
-}
-
 .review-toggle .review-card {
   max-width: 100%;
 }
