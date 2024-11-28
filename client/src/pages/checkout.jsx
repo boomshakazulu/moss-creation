@@ -5,7 +5,7 @@ import {
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { useStoreContext } from "../utils/GlobalState";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Auth from "../utils/auth";
 
 const stripePromise = loadStripe(
@@ -18,6 +18,9 @@ const CheckoutForm = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
+  const location = useLocation();
+  const { buyNow } = location.state || {};
+  console.log(buyNow);
 
   useEffect(() => {
     // Redirect logic with messages
@@ -29,7 +32,7 @@ const CheckoutForm = () => {
       return () => clearTimeout(redirectTimer); // Cleanup timer on unmount
     }
 
-    if (!state.cart || state.cart.length === 0) {
+    if (!state.cart || (state.cart.length === 0 && !buyNow)) {
       const redirectTimer = setTimeout(() => {
         navigate("/");
       }, 5000);
@@ -41,19 +44,29 @@ const CheckoutForm = () => {
   const fetchClientSecret = useCallback(async () => {
     const user = Auth.getProfile();
     try {
-      const cartItems = state.cart.map((item) => ({
-        price: item.priceId,
-        quantity: item.purchaseQuantity,
-      }));
+      const cartItems = buyNow
+        ? [{ price: buyNow.product.priceId, quantity: 1 }]
+        : state.cart.map((item) => ({
+            price: item.priceId,
+            quantity: item.purchaseQuantity,
+          }));
 
-      const productIds = state.cart.map((item) => ({
-        productId: item._id,
-        quantity: item.purchaseQuantity,
-        price: item.price,
-      }));
+      const productIds = buyNow
+        ? [
+            {
+              productId: buyNow.product._id,
+              quantity: 1,
+              price: buyNow.product.price,
+            },
+          ]
+        : state.cart.map((item) => ({
+            productId: item._id,
+            quantity: item.purchaseQuantity,
+            price: item.price,
+          }));
 
       const response = await fetch(
-        "https://mossycreations-e28ddb580b4a.herokuapp.com/create-checkout-session",
+        "http://localhost:3001/create-checkout-session",
         {
           method: "POST",
           headers: {
@@ -137,7 +150,7 @@ const CheckoutForm = () => {
     );
   }
 
-  if (!state.cart || state.cart.length === 0) {
+  if (!state.cart || (state.cart.length === 0 && !buyNow)) {
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>
