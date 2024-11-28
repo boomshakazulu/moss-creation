@@ -6,7 +6,10 @@ import { useQuery } from "@apollo/client";
 
 function AdminOrders() {
   const { loading, error, data } = useQuery(QUERY_ORDERS);
+  const [isFulfilledOpen, setIsFulfilledOpen] = useState(false);
+  const [isUnfulfilledOpen, setIsUnfulfilledOpen] = useState(true);
 
+  // Redirect if not admin
   useEffect(() => {
     if (!Auth.isAdmin()) {
       navigate("/");
@@ -16,23 +19,66 @@ function AdminOrders() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
+  //sorts fulfilled and unfulfilled orders
   const fulfilledOrders = data.orders.filter((order) => order.fulfilled);
   const unfulfilledOrders = data.orders.filter((order) => !order.fulfilled);
 
+  // Toggle the visibility of fulfilled orders
+  const toggleFulfilled = () => {
+    setIsFulfilledOpen(!isFulfilledOpen);
+  };
+
+  // Toggle the visibility of unfulfilled orders
+  const toggleUnfulfilled = () => {
+    setIsUnfulfilledOpen(!isUnfulfilledOpen);
+  };
+
   return (
     <div>
-      <section className="unfulfilled">
-        <h2>Unfulfilled Orders</h2>
-        {unfulfilledOrders.map((order) => (
-          <OrderCards key={order._id} order={order} />
-        ))}
-      </section>
-      <section className="fulfilled">
-        <h2>Fulfilled Orders</h2>
-        {fulfilledOrders.map((order) => (
-          <OrderCards key={order._id} order={order} />
-        ))}
-      </section>
+      {/* Unfulfilled Orders Section */}
+      <div className="order-section">
+        <h2
+          onClick={toggleUnfulfilled}
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "30px",
+          }}
+        >
+          <span>Unfulfilled Orders</span>
+          <span style={{ marginLeft: "10px", transition: "transform 0.3s" }}>
+            {isUnfulfilledOpen ? "▲" : "▼"} {/* Arrow changes direction */}
+          </span>
+        </h2>
+        {isUnfulfilledOpen && (
+          <section className="unfulfilled">
+            {unfulfilledOrders.map((order) => (
+              <OrderCards key={order._id} order={order} />
+            ))}
+          </section>
+        )}
+      </div>
+
+      {/* Fulfilled Orders Section */}
+      <div className="order-section">
+        <h2
+          onClick={toggleFulfilled}
+          style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+        >
+          <span>Fulfilled Orders</span>
+          <span style={{ marginLeft: "10px", transition: "transform 0.3s" }}>
+            {isFulfilledOpen ? "▲" : "▼"} {/* Arrow changes direction */}
+          </span>
+        </h2>
+        {isFulfilledOpen && (
+          <section className="fulfilled">
+            {fulfilledOrders.map((order) => (
+              <OrderCards key={order._id} order={order} />
+            ))}
+          </section>
+        )}
+      </div>
     </div>
   );
 }
