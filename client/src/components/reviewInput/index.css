@@ -47,7 +47,7 @@
 
 .stars {
   margin-left: 5px;
-  background-color: #ceead6;
+  background-color: #ceead6 !important;
   border-style: none;
   font-size: large;
 }

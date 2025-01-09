@@ -43,7 +43,6 @@ const resolvers = {
               model: "Product",
             },
           });
-        console.log(user);
 
         user.orders.sort((a, b) => b.purchaseDate - a.purchaseDate);
 
@@ -198,7 +197,6 @@ const resolvers = {
         const savedOrder = await order.save();
 
         // Associate the order with the user who made the purchase
-        console.log("user: ", userId, "savedOrder: ", savedOrder);
         await User.findByIdAndUpdate(userId, {
           $push: { orders: savedOrder._id },
         });
@@ -252,7 +250,10 @@ const resolvers = {
           //Create product in Stripe
           const stripeProduct = await stripe.products.create({
             name: input.name,
-            description: input.description,
+            description: input.description
+              .replace(/<\/?[^>]+(>|$)/g, " ")
+              .replace(/\s+/g, " ")
+              .trim(),
             // Add other product details as needed
           });
 
@@ -312,7 +313,10 @@ const resolvers = {
               updatedProduct.stripeProductId, // Use the stripeProductId saved in MongoDB
               {
                 name: input.name,
-                description: input.description,
+                description: input.description
+                  .replace(/<\/?[^>]+(>|$)/g, " ")
+                  .replace(/\s+/g, " ")
+                  .trim(),
                 // Update other product details as needed
               }
             );
@@ -415,14 +419,11 @@ const resolvers = {
           itemId: objectId,
           rating,
         });
-        console.log("userId: ", context.user);
 
         // Update user's reviews
         await User.findByIdAndUpdate(context.user.id, {
           $addToSet: { reviews: review._id },
         });
-
-        console.log("review: ", review);
 
         // Update product's reviews and calculate new average rating
         const product = await Product.findByIdAndUpdate(
@@ -434,8 +435,6 @@ const resolvers = {
         if (!product) {
           throw new ApolloError("Product not found.");
         }
-
-        console.log("product: ", product);
 
         const totalRatings = product.reviews.length;
 
@@ -450,13 +449,6 @@ const resolvers = {
               ? Number((sumRatings[0].sum / totalRatings).toFixed(2))
               : 0;
 
-          console.log(
-            "sum, total, average: ",
-            sumRatings,
-            totalRatings,
-            averageRating
-          );
-
           // Update product's rating fields
           product.averageRating = averageRating;
         } else {
@@ -466,7 +458,6 @@ const resolvers = {
         product.totalRatings = totalRatings;
 
         await product.save();
-        console.log("product2: ", product);
 
         return review;
       } catch (error) {
@@ -487,7 +478,6 @@ const resolvers = {
           );
         }
 
-        console.log(reviewId, text, rating);
         const review = await Review.findByIdAndUpdate(
           reviewId,
           { $set: { text, rating } },

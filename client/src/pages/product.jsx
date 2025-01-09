@@ -102,7 +102,6 @@ function Product() {
       idbPromise("cart", "put", { ...data.product, purchaseQuantity: 1 });
     }
   };
-  console.log(data);
 
   const buyNow = () => {
     navigate("/checkout", { state: { buyNow: { ...data } } });
