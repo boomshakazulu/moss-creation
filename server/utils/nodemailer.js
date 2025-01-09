@@ -25,7 +25,7 @@ module.exports = {
           <h2 style="text-align: center;">Password Reset</h2>
           <p style="text-align: center;">We received a request to reset your password. If you did not make this request, you can ignore this email.</p>
           <p style="text-align: center;">To reset your password, please click on the link below:</p>
-          <p style="text-align: center;"><a href="www.mossy-creations.com/password-reset/${token}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
+          <p style="text-align: center;"><a href="https://www.mossy-creations.com/password-reset/${token}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a></p>
           <p style="text-align: center;">If you're having trouble clicking the "Reset Password" button, you can copy and paste the following URL into your web browser:</p>
           <p style="text-align: center;">www.mossy-creations.com/password-reset/${token}</p>
         </body>
