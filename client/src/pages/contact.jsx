@@ -25,19 +25,26 @@ function Contact() {
           For all inquiries or for any special request please contact me by
           instagram{" "}
           <a
+            style={{ whiteSpace: "nowrap" }}
             href="https://www.instagram.com/mossy_creations_by_katie/"
             target="_blank"
           >
             @mossy_creations_by_katie
           </a>{" "}
           or by email{" "}
-          <a href="mailto:support@mossy-creations.com">
+          <a
+            style={{ whiteSpace: "nowrap" }}
+            href="mailto:support@mossy-creations.com"
+          >
             support@mossy-creations.com
           </a>
           .
           <br /> <br />
           If you are reaching out about a previous order please email{" "}
-          <a href="mailto:support@mossy-creations.com">
+          <a
+            style={{ whiteSpace: "nowrap" }}
+            href="mailto:support@mossy-creations.com"
+          >
             support@mossy-creations.com
           </a>{" "}
           and include your name to help us find your order.

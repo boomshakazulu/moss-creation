@@ -9,7 +9,7 @@ import "./index.css";
 
 const ProductCards = (item) => {
   const [state, dispatch] = useStoreContext();
-  const [addedToCart, setAddedToCart] = useState(false); // Initialize state
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const {
     photo,

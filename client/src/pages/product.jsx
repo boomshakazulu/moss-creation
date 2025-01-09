@@ -19,6 +19,7 @@ function Product() {
   const [state, dispatch] = useStoreContext();
   const [disableReview, setDisableReview] = useState(false);
   const [loadingReview, setLoadingReview] = useState(true);
+  const [addedToCart, setAddedToCart] = useState(false);
   const { loading, error, data } = useQuery(QUERY_PRODUCT, {
     variables: { itemId },
   });
@@ -101,6 +102,7 @@ function Product() {
       });
       idbPromise("cart", "put", { ...data.product, purchaseQuantity: 1 });
     }
+    setAddedToCart(true);
   };
 
   const buyNow = () => {
@@ -134,16 +136,26 @@ function Product() {
                   : "Out of Stock"}
               </p>
             </div>
-            {data.product.stock > 0 && (
+            {data.product.stock > 0 ? (
               <Row>
                 <div className="product-btn-container">
-                  <Button
-                    variant="success"
-                    className="product-btn-atc"
-                    onClick={addToCart}
-                  >
-                    Add to Cart
-                  </Button>{" "}
+                  {addedToCart ? (
+                    <Button
+                      variant="success"
+                      className="product-btn-atc"
+                      disabled
+                    >
+                      Added to Cart
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="success"
+                      className="product-btn-atc"
+                      onClick={addToCart}
+                    >
+                      Add to Cart
+                    </Button>
+                  )}
                   <Button
                     variant="success"
                     className="product-btn-buyNow"
@@ -153,6 +165,8 @@ function Product() {
                   </Button>
                 </div>
               </Row>
+            ) : (
+              <div className="out-of-stock">Out of Stock</div>
             )}
           </Col>
         </Row>

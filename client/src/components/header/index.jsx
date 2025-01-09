@@ -118,6 +118,7 @@ const Header = () => {
             <div className="nav-links">
               <Link to="/">Home</Link>
               <Link to="/about">About</Link>
+              <Link to="/contact">Contact Me</Link>
               {/* <Cart /> */}
               {!Auth.loggedIn() ? (
                 <>
@@ -125,9 +126,12 @@ const Header = () => {
                   <Link to="/login">Login</Link>
                 </>
               ) : (
-                <Link onClick={() => Auth.logout()} to="/">
-                  Logout
-                </Link>
+                <>
+                  <Link to="/profile">Profile</Link>
+                  <Link onClick={() => Auth.logout()} to="/">
+                    Logout
+                  </Link>
+                </>
               )}
               {Auth.isAdmin() && <Link to="/admin">Admin</Link>}
             </div>
