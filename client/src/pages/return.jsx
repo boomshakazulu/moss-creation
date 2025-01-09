@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 import { useStoreContext } from "../utils/GlobalState"; // Import useStoreContext
 import { UPDATE_STOCK } from "../utils/mutations";
 import { useMutation } from "@apollo/client";
