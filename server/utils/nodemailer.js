@@ -93,14 +93,14 @@ module.exports = {
           <p style="text-align: center;">${trackingNum}</p>
           <p style="text-align: center;">To track your order please click on the link below</p>
           <p style="text-align: center;"><a href="${trackingWebsite}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Track my package</a></p>
-          <p style="text-align: center;">If you're having trouble clicking the "Reset Password" button, you can copy and paste the following URL into your web browser:</p>
+          <p style="text-align: center;">If you're having trouble clicking the "Track My Package" button, you can copy and paste the following URL into your web browser:</p>
           <p style="text-align: center;">${trackingWebsite}</p>
         </body>
         </html>
       `,
       });
     } catch (err) {
-      console.error("Error sending password reset success email:", error);
+      console.error("Error sending password reset success email:", err);
       throw new Error("Failed to send password reset success email");
     }
   },
