@@ -69,23 +69,23 @@ const Return = () => {
     }
   };
 
-  // if (status === "open") {
-  //   return <Navigate to="/checkout" />;
-  // }
+  if (status === "open") {
+    return <Navigate to="/checkout" />;
+  }
 
-  // if (status === "failed" || status === "open") {
-  //   return (
-  //     <section id="failed">
-  //       <p>
-  //         We appreciate you for visiting us. <br />
-  //         Unfortunately there was an issue with your payment method and we are
-  //         unable to process your order order at this time. <br />
-  //         Please try another method of payment or try again later <br />
-  //         Thank you!
-  //       </p>
-  //     </section>
-  //   );
-  // }
+  if (status === "failed") {
+    return (
+      <section id="failed">
+        <p>
+          We appreciate you for visiting us. <br />
+          Unfortunately there was an issue with your payment method and we are
+          unable to process your order order at this time. <br />
+          Please try another method of payment or try again later <br />
+          Thank you!
+        </p>
+      </section>
+    );
+  }
 
   if (status === "complete") {
     updateStockAsync();
