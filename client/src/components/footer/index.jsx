@@ -8,7 +8,13 @@ const Footer = () => {
       <div className="container">
         <p className="mb-0">
           If you have any questions or requests, please{" "}
-          <Link to="/contact" className="text-light fw-bold">
+          <Link
+            to="/contact"
+            className="text-light fw-bold"
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+          >
             contact me
           </Link>
           .

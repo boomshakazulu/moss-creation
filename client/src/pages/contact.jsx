@@ -48,7 +48,7 @@ function Contact() {
       </div>
       <div className="faq-container">
         <h2 className="faq-title">FAQ</h2>
-        <Accordion defaultActiveKey="0">
+        <Accordion defaultActiveKey={null}>
           <Accordion.Item eventKey="0">
             <Accordion.Header>What is the price of shipping?</Accordion.Header>
             <Accordion.Body>
