@@ -3,10 +3,15 @@ import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import BootstrapCarousel from "react-bootstrap/Carousel";
+import Modal from "react-bootstrap/Modal";
 import "./index.css";
 
 const Carousel = ({ items, isHomePage }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [show, setShow] = useState(false);
+
   const imagesToShow = isHomePage
     ? items.map((item) => item.carousel)
     : items.photo;
@@ -35,6 +40,15 @@ const Carousel = ({ items, isHomePage }) => {
     preloadImages();
   }, [imagesToShow]);
 
+  const handleSelect = (selectedIndex) => {
+    setActiveIndex(selectedIndex);
+  };
+
+  const toggleModalOn = (index) => {
+    setActiveIndex(index);
+    setShow(true);
+  };
+
   const settings = {
     dots: true,
     infinite: imagesToShow.length > 1,
@@ -56,13 +70,42 @@ const Carousel = ({ items, isHomePage }) => {
                   <img src={image} alt={items[index].name} />
                 </Link>
               ) : (
-                <img src={image} alt={items.name} />
+                <img
+                  src={image}
+                  alt={items.name}
+                  onClick={() => toggleModalOn(index)}
+                />
               )}
             </div>
           ))}
         </Slider>
       )}
       {!imagesLoaded && <p>Loading...</p>}
+
+      <Modal
+        show={show}
+        onHide={() => setShow(false)}
+        dialogClassName="modal-90w"
+      >
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
+          <BootstrapCarousel
+            activeIndex={activeIndex}
+            onSelect={handleSelect}
+            interval={null} // Disable autoplay in modal
+          >
+            {imagesToShow.map((image, index) => (
+              <BootstrapCarousel.Item key={index}>
+                <img
+                  src={image}
+                  alt={items.name}
+                  className="modal-carousel-img"
+                />
+              </BootstrapCarousel.Item>
+            ))}
+          </BootstrapCarousel>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

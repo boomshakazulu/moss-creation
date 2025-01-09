@@ -15,7 +15,7 @@ import Header from "./components/header";
 import Auth from "./utils/auth";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:3001/graphql",
+  uri: import.meta.env.VITE_API_SERVER_URL + "/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
