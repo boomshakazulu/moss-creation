@@ -45,33 +45,29 @@ const Return = () => {
     }
   }, [state.cart]);
 
-  useEffect(() => {
-    const updateStockAsync = async () => {
-      if (state.cart) {
-        try {
-          for (const cart of state.cart) {
-            // Validate that cart._id is a valid ID and cart.purchaseQuantity is a valid integer
-            if (isValidId(cart._id) && isValidInteger(cart.purchaseQuantity)) {
-              await updateStock({
-                variables: {
-                  itemId: cart._id,
-                  quantity: cart.purchaseQuantity,
-                },
-              });
-            }
+  const updateStockAsync = async () => {
+    if (state.cart) {
+      try {
+        for (const cart of state.cart) {
+          // Validate that cart._id is a valid ID and cart.purchaseQuantity is a valid integer
+          if (isValidId(cart._id) && isValidInteger(cart.purchaseQuantity)) {
+            await updateStock({
+              variables: {
+                itemId: cart._id,
+                quantity: cart.purchaseQuantity,
+              },
+            });
           }
-
-          // Dispatch the CLEAR_CART action after processing the cart
-          dispatch({ type: CLEAR_CART });
-        } catch (error) {
-          // Handle error if needed
-          console.error(error);
         }
-      }
-    };
 
-    updateStockAsync();
-  }, [isCartLoaded]);
+        // Dispatch the CLEAR_CART action after processing the cart
+        dispatch({ type: CLEAR_CART });
+      } catch (error) {
+        // Handle error if needed
+        console.error(error);
+      }
+    }
+  };
 
   if (status === "open") {
     return <Navigate to="/checkout" />;
@@ -92,6 +88,7 @@ const Return = () => {
   }
 
   if (status === "complete") {
+    updateStockAsync();
     return (
       <section id="success">
         <p>
