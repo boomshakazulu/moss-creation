@@ -13,7 +13,7 @@ const db = require("./config/connection");
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const PORT = process.env.PORT || 3001;
-const MY_DOMAIN = `https://www.mossy-creations.com`;
+const MY_DOMAIN = process.env.DOMAIN_URL;
 const app = express();
 app.use(cors());
 const server = new ApolloServer({

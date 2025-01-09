@@ -64,26 +64,23 @@ const CheckoutForm = () => {
             price: item.price,
           }));
 
-      const response = await fetch(
-        "https://www.mossy-creations.com/create-checkout-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      const response = await fetch(import.meta.env.VITE_API_CHECKOUT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          line_items: cartItems,
+          shipping_address_collection: {
+            allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
           },
-          body: JSON.stringify({
-            line_items: cartItems,
-            shipping_address_collection: {
-              allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
-            },
-            metadata: {
-              products: JSON.stringify(productIds),
-              customerEmail: user.data.email,
-              userId: user.data.id,
-            },
-          }),
-        }
-      );
+          metadata: {
+            products: JSON.stringify(productIds),
+            customerEmail: user.data.email,
+            userId: user.data.id,
+          },
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch client secret");
