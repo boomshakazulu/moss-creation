@@ -413,6 +413,13 @@ const resolvers = {
 
       try {
         const objectId = new ObjectId(itemId);
+        const existingReview = await Review.findOne({
+          username: context.user,
+          itemId: itemId,
+        });
+        if (existingReview) {
+          return;
+        }
         const review = await Review.create({
           text,
           author: context.user.username,
@@ -425,39 +432,31 @@ const resolvers = {
           $addToSet: { reviews: review._id },
         });
 
-        // Update product's reviews and calculate new average rating
-        const product = await Product.findByIdAndUpdate(
-          itemId,
-          { $push: { reviews: review._id } },
-          { new: true }
-        );
+        const aggregationResult = await Review.aggregate([
+          { $match: { itemId: new ObjectId(itemId) } }, // Match reviews for the product
+          {
+            $group: {
+              _id: "$itemId",
+              averageRating: { $avg: "$rating" }, // Calculate average rating
+              totalRatings: { $sum: 1 }, // Count total ratings
+            },
+          },
+        ]);
 
-        if (!product) {
-          throw new ApolloError("Product not found.");
-        }
-
-        const totalRatings = product.reviews.length;
-
-        if (totalRatings > 0) {
-          const sumRatings = await Review.aggregate([
-            { $match: { _id: { $in: product.reviews } } },
-            { $group: { _id: null, sum: { $sum: "$rating" } } },
-          ]);
-
-          const averageRating =
-            sumRatings.length > 0
-              ? Number((sumRatings[0].sum / totalRatings).toFixed(2))
-              : 0;
-
-          // Update product's rating fields
-          product.averageRating = averageRating;
+        if (aggregationResult.length > 0) {
+          const { averageRating, totalRatings } = aggregationResult[0];
+          await Product.findByIdAndUpdate(
+            itemId,
+            {
+              $push: { reviews: review._id },
+              averageRating,
+              totalRatings,
+            },
+            { new: true }
+          );
         } else {
-          product.averageRating = 0;
+          throw new ApolloError("Failed to update product ratings.");
         }
-
-        product.totalRatings = totalRatings;
-
-        await product.save();
 
         return review;
       } catch (error) {
@@ -466,7 +465,6 @@ const resolvers = {
             "Validation failed. Please check your input."
           );
         }
-        console.error("Error adding review:", error.message);
         throw new ApolloError("Unable to add review.");
       }
     },
@@ -488,27 +486,31 @@ const resolvers = {
           throw new ApolloError("Review not found.");
         }
 
-        const product = await Product.findById(itemId);
-        if (!product) {
-          throw new ApolloError("Product not found.");
-        }
-
-        const totalRatings = product.reviews.length;
-        const sumRatings = await Review.aggregate([
-          { $match: { _id: { $in: product.reviews } } },
-          { $group: { _id: null, sum: { $sum: "$rating" } } },
+        const aggregationResult = await Review.aggregate([
+          { $match: { itemId: new ObjectId(itemId) } },
+          {
+            $group: {
+              _id: "$itemId",
+              averageRating: { $avg: "$rating" },
+              totalRatings: { $sum: 1 },
+            },
+          },
         ]);
 
-        const averageRating =
-          sumRatings.length > 0
-            ? Number((sumRatings[0].sum / totalRatings).toFixed(2))
-            : 0;
-
-        // Update product's rating fields
-        product.averageRating = averageRating;
-        product.totalRatings = totalRatings;
-
-        await product.save();
+        if (aggregationResult.length > 0) {
+          const { averageRating, totalRatings } = aggregationResult[0];
+          await Product.findByIdAndUpdate(
+            itemId,
+            {
+              $push: { reviews: review._id },
+              averageRating,
+              totalRatings,
+            },
+            { new: true }
+          );
+        } else {
+          throw new ApolloError("Failed to update product ratings.");
+        }
 
         return review;
       } catch (error) {
