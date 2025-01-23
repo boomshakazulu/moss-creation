@@ -73,6 +73,7 @@
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  white-space: nowrap;
 }
 
 .card-link:hover {
@@ -128,14 +129,14 @@
   width: 100%;
 }
 
+.prod-card-col {
+  display: flex;
+  justify-content: center;
+}
+
 @media (min-width: 992px) {
   .column-size {
     width: 100% !important;
-  }
-
-  .prod-card-col {
-    display: flex;
-    justify-content: center;
   }
 
   .row-max-width {
@@ -151,5 +152,14 @@
     max-width: calc(
       16.666% - 10px
     ) !important; /* Adjust percentage as needed */
+  }
+}
+
+@media (max-width: 370px) {
+  .prod-card-col button {
+    padding: 10px 15px;
+  }
+  .card-footer {
+    padding: 10px 3px;
   }
 }

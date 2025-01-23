@@ -1,9 +1,18 @@
 .card-stepper {
   margin-bottom: 15px;
+  color: #579269;
+}
+
+.order-hist-date {
+  color: #579269 !important;
+}
+
+.card-stepper p {
+  color: #579269 !important;
 }
 
 #progressbar-1 {
-  color: #455a64;
+  color: #579269;
 }
 
 #progressbar-1 li {

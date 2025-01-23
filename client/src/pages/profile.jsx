@@ -4,14 +4,11 @@ import { useMutation, useQuery } from "@apollo/client";
 import { QUERY_ME } from "../utils/queries";
 import { RESET_PASSWORD } from "../utils/mutations";
 import Auth from "../utils/auth";
-import ReviewCard from "../components/reviewCard";
-import ReviewInput from "../components/reviewInput";
 import OrderDetails from "../components/orderHistoryCard/index";
+import Pagination from "../components/pagination";
 import "./profile.css";
 
 function Profile() {
-  const [editProductId, setEditProductId] = useState(null);
-  const [addProductId, setAddProductId] = useState(null);
   const [formState, setFormState] = useState({
     password: "",
     confirmPassword: "",
@@ -19,6 +16,7 @@ function Profile() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const [resetPassword, { loading: passLoading }] = useMutation(RESET_PASSWORD);
   const loggedIn = Auth.loggedIn();
   const navigate = useNavigate();
@@ -58,6 +56,26 @@ function Profile() {
   if (loading) {
     return <div>loading...</div>;
   }
+
+  //handles pagination for order history.
+  const ordersPerPage = 2;
+
+  const totalPages = Math.ceil(data.me.orders.length / ordersPerPage);
+
+  const startIndex = (currentPage - 1) * ordersPerPage;
+  const currentOrders = data.me.orders.slice(
+    startIndex,
+    startIndex + ordersPerPage
+  );
+  //handles page change to scroll to top
+  const handlePageChange = (page) => {
+    const scrollLocation = document.getElementById("order-history-title");
+    setCurrentPage(page);
+    if (scrollLocation) {
+      scrollLocation.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="profile-container">
       <h1 className="profile-username">{data.me.username}</h1>
@@ -106,112 +124,22 @@ function Profile() {
       )}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       <div className="order-history">
-        <h2>Order History</h2>
+        <h2 id="order-history-title">Order History</h2>
 
         <div>
-          {data.me.orders.slice(0, 5).map((order) => (
+          {currentOrders.map((order) => (
             <OrderDetails
               order={order}
               reviews={data.me.reviews}
               key={order._id}
             />
-            //   <div key={order._id} className="profile-order">
-            //     <h3>
-            //       {new Date(parseInt(order.purchaseDate)).toLocaleDateString()}
-            //     </h3>
-            //     {order.products.map((product) => {
-            //       const review = data.me.reviews.find(
-            //         (review) => review.itemId._id === product.product._id
-            //       );
-
-            //       return (
-            //         <div key={product.product._id} className="product-in-order">
-            //           <div className="profile-product-img">
-            //             <img
-            //               src={product.product.photo[0]}
-            //               alt={product.product.name}
-            //             />
-            //             <div>
-            //               <h3>{product.product.name}</h3>
-            //               <p>Quantity: {product.quantity}</p>
-            //             </div>
-            //           </div>
-            //           {/* Toggle for Edit Review */}
-            //           {review && editProductId === product.product._id && (
-            //             <div className="profile-review-button">
-            //               <button
-            //                 onClick={() =>
-            //                   toggleEditReview(product.product._id)
-            //                 }
-            //               >
-            //                 {editProductId === product.product._id
-            //                   ? "Close Edit Review"
-            //                   : "Edit Review"}
-            //               </button>
-            //               {editProductId === product.product._id && (
-            //                 <ReviewCard
-            //                   reviewId={review._id}
-            //                   username={review.author}
-            //                   createdAt={review.createdAt}
-            //                   text={review.text}
-            //                   rating={review.rating}
-            //                   isOwner={true}
-            //                 />
-            //               )}
-            //             </div>
-            //           )}
-
-            //           {/* Toggle for Add Review */}
-            //           {!review && addProductId === product.product._id && (
-            //             <div className="profile-review-button">
-            //               <button
-            //                 onClick={() => toggleAddReview(product.product._id)}
-            //               >
-            //                 {addProductId === product.product._id
-            //                   ? "Close Add Review"
-            //                   : "Add Review"}
-            //               </button>
-            //               {addProductId === product.product._id && (
-            //                 <ReviewInput profileItemId={product.product._id} />
-            //               )}
-            //             </div>
-            //           )}
-
-            //           {/* Render default state (no toggles open) */}
-            //           {!review && addProductId !== product.product._id && (
-            //             <div className="profile-review-button">
-            //               <button
-            //                 onClick={() => toggleAddReview(product.product._id)}
-            //               >
-            //                 Add Review
-            //               </button>
-            //             </div>
-            //           )}
-
-            //           {/* Close button for edit review */}
-            //           {review && editProductId !== product.product._id && (
-            //             <div className="profile-review-button">
-            //               <button
-            //                 onClick={() =>
-            //                   toggleEditReview(product.product._id)
-            //                 }
-            //               >
-            //                 Edit Review
-            //               </button>
-            //             </div>
-            //           )}
-            //         </div>
-            //       );
-            //     })}
-            //     <div className="profile-address">{order.address}</div>
-            //     <div className="profile-trackingnum">
-            //       {order.trackingNum
-            //         ? `Tracking Number: ${order.trackingNum}`
-            //         : `Tracking Number is not available yet`}
-            //     </div>
-
-            // </div>
           ))}
+          {/* Pagination Controls */}
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

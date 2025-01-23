@@ -16,6 +16,13 @@ const Home = () => {
     (product) => product.carousel
   );
 
+  const productsInStock = data.products
+    .filter((product) => product.stock > 0)
+    .sort((a, b) => b.averageRating - a.averageRating);
+  const productsOutOfStock = data.products
+    .filter((product) => product.stock <= 0)
+    .sort((a, b) => b.averageRating - a.averageRating);
+
   return (
     <div className="product-div">
       <section>
@@ -23,7 +30,22 @@ const Home = () => {
       </section>
       <section className="product-cards">
         <Row className="g-4 row-max-width">
-          {data.products.map((product) => (
+          {productsInStock.map((product) => (
+            <ProductCards
+              key={product._id}
+              _id={product._id}
+              photo={product.photo}
+              name={product.name}
+              price={product.price}
+              priceId={product.priceId}
+              stripeProductId={product.stripeProductId}
+              stock={product.stock}
+              averageRating={product.averageRating}
+              totalRatings={product.totalRatings}
+              currentPage="home"
+            />
+          ))}
+          {productsOutOfStock.map((product) => (
             <ProductCards
               key={product._id}
               _id={product._id}

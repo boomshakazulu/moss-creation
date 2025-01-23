@@ -4,14 +4,11 @@ import { useMutation } from "@apollo/client";
 import { COMPLETE_ORDER } from "../../utils/mutations";
 
 import "./style.css";
-import Product from "../../pages/product";
 
 const OrderCards = ({ order }) => {
   const [orderData, setOrderData] = useState(order);
   const [completeOrder, { error }] = useMutation(COMPLETE_ORDER);
   const [errorMessage, setErrorMessage] = useState(null);
-
-  console.log(orderData.purchaseDate);
 
   const handleCarrierChange = (e) => {
     setOrderData((prevOrder) => ({
@@ -84,21 +81,6 @@ const OrderCards = ({ order }) => {
             </ul>
           </Col>
         </Form.Group>
-
-        {/* <Form.Group as={Row} className="order-card-row py-2">
-          <Form.Label column sm={4} className="order-hist-label">
-            Stripe Payment Intent ID:
-          </Form.Label>
-          <Col sm={8} className="order-hist-info">
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={orderData.stripePaymentIntentId}
-            />
-          </Col>
-        </Form.Group> */}
-
-        {/* <h5 className="mt-4">Shipping Information</h5> */}
 
         <Form.Group as={Row} className="order-card-row py-2">
           <Form.Label column sm={4} className="order-hist-label">

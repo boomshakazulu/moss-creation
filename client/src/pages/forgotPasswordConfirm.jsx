@@ -19,7 +19,10 @@ function ForgotPasswordConfirmation() {
         <br></br>
         <br></br>
         If you do not recieve an email please check your spam folder for an
-        email from <br></br> "support@mossy-creations.com"
+        email from <br></br>{" "}
+        <a href="mailto:support@mossy-creations.com" style={{ color: "blue" }}>
+          support@mossy-creations.com
+        </a>
       </p>
     </div>
   );

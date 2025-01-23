@@ -76,7 +76,7 @@ const OrderDetails = (order) => {
                   <div>
                     <p className="text-muted mb-0">
                       Placed On{" "}
-                      <span className="fw-bold text-body">
+                      <span className="fw-bold text-body order-hist-date">
                         {new Date(parseInt(purchaseDate)).toLocaleDateString()}
                       </span>
                     </p>

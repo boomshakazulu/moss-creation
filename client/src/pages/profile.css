@@ -1,6 +1,7 @@
 .profile-container {
   max-width: 1000px;
   margin: auto;
+  color: #579269;
 }
 
 .profile-username {
@@ -24,6 +25,10 @@
 
 .profile-password-form label {
   padding-bottom: 10px;
+}
+
+.pagination {
+  justify-content: center;
 }
 
 #profile-newPassword,

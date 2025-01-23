@@ -113,14 +113,12 @@ const startApolloServer = async () => {
 
           // Handle the successful payment intent, e.g., create an order in the database
           try {
-            console.log(metadata);
             const mappedProducts = products.map((product) => ({
               product: mongoose.Types.ObjectId.createFromHexString(
                 product.productId
               ),
               quantity: product.quantity,
             }));
-            console.log(mappedProducts);
             // Use the extracted products to create the order
             const order = await resolvers.Mutation.addOrder(
               null,
@@ -136,7 +134,6 @@ const startApolloServer = async () => {
               },
               null
             );
-            console.log("Order created:", order);
             res.status(200).json({ success: true });
           } catch (error) {
             console.error("Error creating order:", error);
