@@ -12,6 +12,8 @@ const OrderCards = ({ order }) => {
   const [hasBeenWarned, setHasBeenWarned] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  console.log(orderData);
+
   //sets the correct shipping carrier on change
   const handleCarrierChange = (e) => {
     setOrderData((prevOrder) => ({
