@@ -129,13 +129,17 @@ function Product() {
                 dangerouslySetInnerHTML={{ __html: data.product.description }}
               ></p>
               <h2 className="product-price">${data.product.price}</h2>
-              <div className="prod-rating-cont">
-                <StarRating
-                  averageRating={data.product.averageRating || 5}
-                  productPage={true}
-                />
-                ({data.product.totalRatings})
-              </div>
+              {data.product.totalRatings ? (
+                <div className="prod-rating-cont">
+                  <StarRating
+                    averageRating={data.product.averageRating || 5}
+                    productPage={true}
+                  />
+                  ({data.product.totalRatings})
+                </div>
+              ) : (
+                ""
+              )}
               <p className="product-stock">
                 {data.product.stock > 0
                   ? `${data.product.stock} In Stock`
@@ -172,7 +176,7 @@ function Product() {
                 </div>
               </Row>
             ) : (
-              <div className="out-of-stock">Out of Stock</div>
+              ""
             )}
           </Col>
         </Row>
