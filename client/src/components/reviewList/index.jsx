@@ -1,6 +1,6 @@
 import React from "react";
 import ReviewCard from "../reviewCard/index";
-import "./index.css";
+import "./style.css";
 
 const ReviewList = ({ reviews, currentUser }) => {
   // Filter out reviews with text and set isOwner prop

@@ -5,7 +5,7 @@ import { useStoreContext } from "../../utils/GlobalState";
 import Auth from "../../utils/auth";
 import Cart from "../Cart";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
+import "./style.css";
 
 import signupImg from "../../assets/images/menuBtns/signup.png";
 import loginImg from "../../assets/images/menuBtns/login.png";
@@ -32,6 +32,7 @@ const Header = () => {
     }
   };
 
+  //useEffect for resizing the header for small windows
   useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth <= 992);

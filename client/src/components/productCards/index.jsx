@@ -5,7 +5,7 @@ import { useStoreContext } from "../../utils/GlobalState";
 import { ADD_TO_CART, UPDATE_CART_QUANTITY } from "../../utils/actions";
 import { idbPromise } from "../../utils/helpers";
 import StarRating from "../starRating/index";
-import "./index.css";
+import "./style.css";
 
 const ProductCards = (item) => {
   const [state, dispatch] = useStoreContext();

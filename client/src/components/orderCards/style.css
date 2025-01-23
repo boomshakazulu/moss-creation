@@ -1,26 +1,33 @@
-.fulfilled,
-.unfulfilled {
+/* Order card row adjustment */
+.order-card-row {
+  width: 100%;
+  margin: 0;
   display: flex;
-  justify-content: center;
-  width: 100vw;
-  flex-wrap: wrap;
-  overflow: hidden;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 0;
 }
 
-.fulfilled h2,
-.unfulfilled h2 {
-  width: 100vw;
-  text-align: center;
-  margin-bottom: 20px;
+/* Ensures the label takes the left portion */
+.order-hist-label {
+  width: 25%;
+  padding-left: 5px;
+  text-align: left;
 }
-.order-card {
-  display: flex;
-  max-width: 100vw;
-  border: 1px solid black;
-  border-radius: 8px;
+
+/* Ensures the control takes the right portion */
+.order-hist-info {
+  width: calc(75% - 5px);
   padding: 0;
-  width: 95%; /* Allow the container to adjust its width based on content */
-  margin: 0;
+  margin-right: 5px;
+}
+
+/* Inputs and selects inside the rows */
+.order-card-row input,
+.order-card-row select,
+.order-card-row textarea {
+  width: 100%;
+  text-align: center;
 }
 
 .order-card-row:nth-child(odd) {
@@ -31,64 +38,28 @@
   background-color: #e9ecef;
 }
 
-.order-hist-info {
-  width: auto;
-  text-align: center;
-  max-width: auto;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.order-hist-info input {
-  width: auto; /* Ensure inputs take up full width of their parent container */
-  max-width: calc(100%); /* Prevent overflow */
-  word-wrap: break-word; /* Break long words to wrap inside the input */
-  box-sizing: border-box; /* Include padding and border in the width calculation */
-  padding-left: 0;
-  padding-right: 0;
-  text-align: center;
-}
-
-.order-card-row {
-  width: 100%;
-  max-width: 100%;
-  margin: 0px;
-  align-items: center !important;
-  padding: 0px;
-  justify-content: space-between;
-  text-align: center;
-  flex-wrap: nowrap;
-  padding-bottom: 5px;
-  align-items: center;
-}
-
+/* Flexbox container adjustments */
 .order-card form {
   display: flex;
-  flex-wrap: wrap;
-  width: 100%; /* Ensure the form fills the container */
+  flex-direction: column;
+  width: 100%;
   max-width: 100%;
-  overflow: hidden;
   text-align: center;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  border-color: black;
+  border-style: solid;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 
-.row .order-hist-label {
-  width: auto;
-  padding-left: 5px;
+/* Optional: Error text styling */
+.order-card .error-text {
+  margin: 10px;
 }
 
-.order-card-list {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-}
-
-.order-card label {
-  padding: 0px;
-}
-
+/* Form group adjustments */
 .order-card .form-group {
   margin-bottom: 0; /* Remove bottom margin to reduce space between rows */
 }
@@ -100,14 +71,25 @@
   text-align: center;
   padding-top: 10px;
   padding-bottom: 10px;
+  border-bottom: double black;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
 }
 
+/* Styling for checkboxes */
 .order-hist-checkbox input {
   width: 10px;
   padding: 10px;
 }
 
+/* Submit button styling */
 .order-hist-submit {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.order-card-list {
+  display: flex;
+  flex-direction: column;
 }

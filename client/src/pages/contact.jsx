@@ -1,9 +1,21 @@
-import React from "react";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import instaPhoto from "../assets/images/instagram.jpeg";
 import "./contact.css";
 import Accordion from "react-bootstrap/Accordion";
 
 function Contact() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollToBottom) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [location.state]);
+
   return (
     <div>
       <div className="insta-qr-container">

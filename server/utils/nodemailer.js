@@ -89,19 +89,65 @@ module.exports = {
         <html lang="en">
         <body style="font-family: Arial, sans-serif; text-align: center;">
           <h2 style="text-align: center;">Order Shipped!</h2>
-          <p style="text-align: center;">Your ${carrier} tracking number is</p>
-          <p style="text-align: center;">${trackingNum}</p>
-          <p style="text-align: center;">To track your order please click on the link below</p>
-          <p style="text-align: center;"><a href="${trackingWebsite}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">Track my package</a></p>
-          <p style="text-align: center;">If you're having trouble clicking the "Track My Package" button, you can copy and paste the following URL into your web browser:</p>
-          <p style="text-align: center;">${trackingWebsite}</p>
+          ${
+            trackingNum
+              ? `
+            <p style="text-align: center;">Your ${carrier} tracking number is</p>
+            <p style="text-align: center;">${trackingNum}</p>
+            <p style="text-align: center;">To track your order please click on the link below</p>
+            <p style="text-align: center;">
+              <a href="${trackingWebsite}" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;">
+                Track my package
+              </a>
+            </p>
+            <p style="text-align: center;">If you're having trouble clicking the "Track My Package" button, you can copy and paste the following URL into your web browser:</p>
+            <p style="text-align: center;">${trackingWebsite}</p>
+          `
+              : `
+            <p style="text-align: center;">There is no tracking number available at this time.</p>
+            <p style="text-align: center;">You will be notified when one is available</p>
+          `
+          }
+          <p style="text-align: center;">Thank You!</p>
         </body>
         </html>
       `,
       });
     } catch (err) {
-      console.error("Error sending password reset success email:", err);
-      throw new Error("Failed to send password reset success email");
+      console.error("Error sending order tracking email:", err);
+      throw new Error("Failed to send order tracking email");
+    }
+  },
+  orderRecievedEmail: async function (email) {
+    try {
+      const info = await transporter.sendMail({
+        from: '"Do Not Reply" <support@mossy-creations.com>',
+        to: email,
+        subject: "Order Confirmation",
+        html: `
+         <!DOCTYPE html>
+        <html lang="en">
+        <body style="font-family: Arial, sans-serif; text-align: center;">
+          <h2 style="text-align: center;">We have recieved your order!</h2>
+          <p style="text-align: center;">We are working to get this shipped out to you as soon as possible</p>
+          <p style="text-align: center;">Once we ship your order you will recieve and email with a tracking number</p>
+          <p style="text-align: center;">You may also see the status of your order on the profile page of our website</p>
+           <p style="text-align: center;">
+              <a href="https://www.mossy-creations.com/profile" style="color: #007bff;">
+                www.mossy-creations.com/profile
+              </a>
+            </p>
+            <br>
+            <br>
+            <p style="text-align: center;">If you didn't submit an order or if you have any questions about your order feel free to contact us at</p>
+            <p style="text-align: center;"><a href="mailto:support@mossy-creations.com" style="color: #007bff;">
+                support@mossy-creations.com
+              </a> </p>
+      `,
+      });
+    } catch (err) {
+      console.error("Error sending order order confirmation email:", err);
+      throw new Error("Failed to send order confirmation email");
     }
   },
 };

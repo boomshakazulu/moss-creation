@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_REVIEW } from "../../utils/mutations";
 import { useParams } from "react-router-dom";
-import "./index.css";
+import "./style.css";
 
 const ReviewInput = ({ profileItemId, productPage }) => {
   const [reviewText, setReviewText] = useState("");

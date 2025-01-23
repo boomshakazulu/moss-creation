@@ -5,16 +5,17 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import BootstrapCarousel from "react-bootstrap/Carousel";
 import Modal from "react-bootstrap/Modal";
-import "./index.css";
+import "./style.css";
 
 const Carousel = ({ items, isHomePage }) => {
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [show, setShow] = useState(false);
 
+  //maps images for display in carousels making sure they weren't saved as empty strings
   const imagesToShow = isHomePage
-    ? items.map((item) => item.carousel)
-    : items.photo;
+    ? items.map((item) => item.carousel.length > 1 && item.carousel)
+    : items.photo.map((photo) => photo.length > 1 && photo);
 
   // Conditionally apply CSS classes
   const containerClass = isHomePage ? "homepage-carousel" : "product-carousel";
@@ -44,6 +45,7 @@ const Carousel = ({ items, isHomePage }) => {
     setActiveIndex(selectedIndex);
   };
 
+  //toggles modal for zoomed images on product page
   const toggleModalOn = (index) => {
     setActiveIndex(index);
     setShow(true);

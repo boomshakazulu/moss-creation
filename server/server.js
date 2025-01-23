@@ -100,12 +100,19 @@ const startApolloServer = async () => {
           const userId = metadata.userId;
           const cart = metadata.cart;
           const shipInfo = paymentIntent.shipping.address;
-          const address = `${shipInfo.line1} ${
-            shipInfo.line2 ? shipInfo.line2 : ""
-          },
-            ${shipInfo.city},
-            ${shipInfo.state},
-            ${shipInfo.postal_code}`;
+          let address;
+          if (shipInfo.line2) {
+            address = `${shipInfo.line1},
+${shipInfo.line2},
+${shipInfo.city},
+${shipInfo.state},
+${shipInfo.postal_code}`;
+          } else {
+            address = `${shipInfo.line1},
+${shipInfo.city},
+${shipInfo.state},
+${shipInfo.postal_code}`;
+          }
           const price = paymentIntent.amount / 100;
           const name = paymentIntent.name;
           const customerEmail = metadata.customerEmail;

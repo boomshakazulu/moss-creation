@@ -5,7 +5,7 @@ import CartItem from "../CartItem";
 import Auth from "../../utils/auth";
 import { useStoreContext } from "../../utils/GlobalState";
 import { TOGGLE_CART, ADD_MULTIPLE_TO_CART } from "../../utils/actions";
-import "./index.css";
+import "./style.css";
 import cartImg from "../../assets/images/menuBtns/cart.png";
 
 const Cart = () => {

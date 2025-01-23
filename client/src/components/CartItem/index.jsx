@@ -14,7 +14,7 @@ const CartItem = ({ item }) => {
     });
     idbPromise("cart", "delete", { ...item });
   };
-
+  //checks stock amount relative to stock input to not allow you to add more items than are available
   const onChange = (e) => {
     const value = e.target.value;
     const availableStock = item.stock;
@@ -38,7 +38,7 @@ const CartItem = ({ item }) => {
       }
     }
   };
-
+  //navigates to item page
   const itemNavigation = () => {
     navigate(`/item/${item._id}`);
   };

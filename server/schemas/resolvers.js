@@ -10,6 +10,7 @@ const {
   passResetEmail,
   passResetSuccessEmail,
   trackingNumberEmail,
+  orderRecievedEmail,
 } = require("../utils/nodemailer");
 
 const { UrlEncode, UrlDecode } = require("../utils/helper");
@@ -176,6 +177,8 @@ const resolvers = {
       context
     ) => {
       try {
+        await orderRecievedEmail(customerEmail);
+
         const mappedProducts = products.map(({ product, quantity }) => ({
           product,
           quantity,
