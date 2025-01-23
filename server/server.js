@@ -146,7 +146,7 @@ ${shipInfo.postal_code}`;
             console.error("Error creating order:", error);
           }
           break;
-        // Add other event types you want to handle
+        // Add other event types in future
         default:
           console.log("Unhandled event type:", event.type);
       }
