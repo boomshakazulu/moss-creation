@@ -60,7 +60,12 @@ const ProductCards = (item) => {
       <Card className="h-100">
         <Link to={getProductLink(item)} className="card-link">
           <div className="card-image-container">
-            <Card.Img variant="top" src={photo[0]} className="card-image" />
+            <Card.Img
+              variant="top"
+              src={photo[0]}
+              alt={name}
+              className="card-image"
+            />
           </div>
           <Card.Body>
             <Card.Title>{name}</Card.Title>

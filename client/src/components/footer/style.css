@@ -1,6 +1,7 @@
 footer {
   width: 100%;
   overflow: hidden;
+  margin-top: auto;
 }
 
 footer div p {

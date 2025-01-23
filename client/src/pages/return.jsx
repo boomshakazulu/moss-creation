@@ -30,7 +30,9 @@ const Return = () => {
     const sessionId = urlParams.get("session_id");
 
     fetch(
-      `https://mossycreations-e28ddb580b4a.herokuapp.com/session-status?session_id=${sessionId}`
+      `${
+        import.meta.env.VITE_API_SERVER_URL
+      }/session-status?session_id=${sessionId}`
     )
       .then((res) => res.json())
       .then((data) => {
