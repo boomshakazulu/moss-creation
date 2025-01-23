@@ -7,6 +7,10 @@ const ReviewList = ({ reviews, currentUser }) => {
   const filteredReviews = reviews.filter(
     (review) => review.text && review.author === currentUser
   );
+  //removes the current users review from the rest of the render
+  const finalReviews = reviews.filter(
+    (review) => !(review.text && review.author === currentUser)
+  );
 
   return (
     <div className="review-list">
@@ -23,7 +27,7 @@ const ReviewList = ({ reviews, currentUser }) => {
         />
       ))}
       {reviews[0].text !== null
-        ? reviews.map((review, index) => (
+        ? finalReviews.map((review, index) => (
             <ReviewCard
               key={index}
               reviewId={review._id}

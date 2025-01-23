@@ -4,7 +4,7 @@ import { ADD_REVIEW } from "../../utils/mutations";
 import { useParams } from "react-router-dom";
 import "./index.css";
 
-const ReviewInput = ({ profileItemId }) => {
+const ReviewInput = ({ profileItemId, productPage }) => {
   const [reviewText, setReviewText] = useState("");
   const { itemId } = useParams();
   const [rating, setRating] = useState(0); // Initially, no stars are selected
@@ -49,7 +49,7 @@ const ReviewInput = ({ profileItemId }) => {
             type="button"
             onClick={() => handleStarClick(star)}
             style={{ color: star <= rating ? "gold" : "gray" }}
-            className="stars"
+            className={`stars ${productPage ? "product-page-stars" : ""}`}
           >
             &#9733; {/* Unicode character for a star */}
           </button>

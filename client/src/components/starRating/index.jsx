@@ -1,6 +1,11 @@
 import React from "react";
 
-const StarRating = ({ averageRating, setAverageRating, editable }) => {
+const StarRating = ({
+  averageRating,
+  setAverageRating,
+  editable,
+  productPage,
+}) => {
   const totalStars = 5;
   const filledStars = Math.round(averageRating);
 
@@ -17,7 +22,9 @@ const StarRating = ({ averageRating, setAverageRating, editable }) => {
         stars.push(
           <span
             key={i}
-            className="filled-star stars"
+            className={`filled-star stars ${
+              productPage ? "product-page-stars" : ""
+            }`}
             style={{ color: "gold" }}
             onClick={() => handleClick(i)}
           >
@@ -29,7 +36,9 @@ const StarRating = ({ averageRating, setAverageRating, editable }) => {
           <span
             key={i}
             style={{ color: "gray" }}
-            className="empty-star stars"
+            className={`empty-star stars ${
+              productPage ? "product-page-stars" : ""
+            }`}
             onClick={() => handleClick(i)}
           >
             &#9734;

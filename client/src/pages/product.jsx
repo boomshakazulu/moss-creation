@@ -22,6 +22,7 @@ function Product() {
   const [addedToCart, setAddedToCart] = useState(false);
   const { loading, error, data } = useQuery(QUERY_PRODUCT, {
     variables: { itemId },
+    fetchPolicy: "network-only",
   });
   const loggedInUser = Auth.loggedIn();
 
@@ -35,7 +36,9 @@ function Product() {
       setDisableReview(hasReviewed);
       setLoadingReview(false);
     }
-    setLoadingReview(false);
+    if (!loading && data.product) {
+      setLoadingReview(false);
+    }
   }, [loading, data, loadingReview]);
 
   const { cart } = state;
@@ -127,8 +130,11 @@ function Product() {
               ></p>
               <h2 className="product-price">${data.product.price}</h2>
               <div className="prod-rating-cont">
-                <StarRating averageRating={data.product.averageRating || 5} />(
-                {data.product.totalRatings})
+                <StarRating
+                  averageRating={data.product.averageRating || 5}
+                  productPage={true}
+                />
+                ({data.product.totalRatings})
               </div>
               <p className="product-stock">
                 {data.product.stock > 0
@@ -171,11 +177,18 @@ function Product() {
           </Col>
         </Row>
       </Container>
-      <div>{purchasedProduct && !disableReview ? <ReviewInput /> : ""}</div>
-      {data.product.reviews && data.product.reviews.length > 0 ? (
+      <div>
+        {purchasedProduct && !disableReview ? (
+          <ReviewInput productPage={true} />
+        ) : (
+          ""
+        )}
+      </div>
+      {data?.product?.reviews?.length > 0 ? (
         <ReviewList
           reviews={data.product.reviews}
           currentUser={loggedInUser ? queryResult.data.me.username : null}
+          productPage={true}
         />
       ) : (
         <h4>This Product hasn't been reviewed</h4>

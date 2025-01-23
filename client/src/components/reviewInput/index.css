@@ -60,8 +60,8 @@
   }
 }
 
-@media (min-width: 762px) {
-  .stars {
-    background-color: #eef8f1;
+@media (min-width: 994px) {
+  .product-page-stars {
+    background-color: #eef8f1 !important;
   }
 }

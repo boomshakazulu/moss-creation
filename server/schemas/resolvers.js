@@ -502,7 +502,6 @@ const resolvers = {
           await Product.findByIdAndUpdate(
             itemId,
             {
-              $push: { reviews: review._id },
               averageRating,
               totalRatings,
             },
