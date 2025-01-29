@@ -28,7 +28,7 @@ const CheckoutForm = () => {
   useEffect(() => {
     if (loading) return;
 
-    if (data?.products?.length && (state.cart.length > 0 || buyNow)) {
+    if (data?.products?.length && state.cart.length > 0) {
       // Ensure updatedCart is an array
       const updatedCart = Array.isArray(state.cart) ? state.cart : [state.cart];
 
@@ -60,16 +60,18 @@ const CheckoutForm = () => {
         type: "VERIFY_CART_ITEMS",
         payload: finalUpdatedCart,
       });
-
-      setCartVerified(true);
-      setInitialFetchComplete(true); // Mark as complete
     }
+    setCartVerified(true);
+    setInitialFetchComplete(true);
   }, [data]);
 
   const fetchClientSecret = useCallback(
     async (userId, userEmail) => {
       if (!initialFetchComplete) return;
-      if (!state.cart || (state.cart.length === 0 && initialFetchComplete)) {
+      if (
+        !state.cart ||
+        (state.cart.length === 0 && initialFetchComplete && !buyNow)
+      ) {
         throw new Error("Cart is empty");
       }
 
@@ -137,14 +139,14 @@ const CheckoutForm = () => {
         const userId = decodedToken ? decodedToken.data.id : null;
         const userEmail = decodedToken ? decodedToken.data.email : null;
 
-        if (userId && state.cart.length > 0) {
+        if ((userId && state.cart.length > 0) || buyNow) {
           const secret = await fetchClientSecret(userId, userEmail, state.cart);
           setClientSecret(secret);
         } else {
-          setErrorMessage("Cart is empty or user not logged in");
+          setErrorMessage("There was an issue with your cart on checkout");
         }
       } catch (error) {
-        setErrorMessage("Error occurred while fetching the client secret.");
+        setErrorMessage("There was an issue with your cart on checkout.");
       }
     };
 
@@ -152,6 +154,7 @@ const CheckoutForm = () => {
   }, [initialFetchComplete, buyNow]);
 
   if (!Auth.loggedIn()) {
+    S;
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>
