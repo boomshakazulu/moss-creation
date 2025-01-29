@@ -7,10 +7,10 @@ import {
 import { useStoreContext } from "../utils/GlobalState";
 import { useNavigate, useLocation } from "react-router-dom";
 import Auth from "../utils/auth";
+import { QUERY_ALL_PRODUCTS } from "../utils/queries.js";
+import { useQuery } from "@apollo/client";
 
-const stripePromise = loadStripe(
-  "pk_test_51OepiODs30DMhvSh8ixbeX0chGCZQ4Mkkr2xgdlOyvIR4yJLyJW0TBdYcCpZ22yrnvBv0seEoO4YDdwtV3864sBf00TM8vwKgQ"
-);
+const stripePromise = loadStripe(import.meta.env.VITE_API_STRIPEPROMISE);
 
 const CheckoutForm = () => {
   const [state, dispatch] = useStoreContext();
@@ -18,34 +18,67 @@ const CheckoutForm = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
+  const [cartVerified, setCartVerified] = useState(false);
   const location = useLocation();
+  const { loading, error, data } = useQuery(QUERY_ALL_PRODUCTS, {
+    fetchPolicy: "network-only",
+  });
   const { buyNow } = location.state || {};
 
   useEffect(() => {
-    // Redirect logic with messages
-    if (!Auth.loggedIn() || errorMessage) {
-      const redirectTimer = setTimeout(() => {
-        navigate("/signup");
-      }, 5000);
+    if (loading) return;
 
-      return () => clearTimeout(redirectTimer); // Cleanup timer on unmount
+    if (data?.products?.length && (state.cart.length > 0 || buyNow)) {
+      // Ensure updatedCart is an array
+      const updatedCart = Array.isArray(state.cart) ? state.cart : [state.cart];
+
+      const finalUpdatedCart = updatedCart
+        .map((cartItem) => {
+          const latestProduct = data.products.find(
+            (prod) => prod._id === cartItem._id
+          );
+
+          if (!latestProduct || data.products.stock === 0) {
+            return null;
+          }
+
+          return {
+            ...cartItem,
+            averageRating: latestProduct.averageRating,
+            name: latestProduct.name,
+            price: latestProduct.price,
+            priceId: latestProduct.priceId,
+            stock: latestProduct.stock,
+            stripeProductId: latestProduct.stripeProductId,
+            purchaseQuantity: cartItem.purchaseQuantity,
+          };
+        })
+        .filter((cartItem) => cartItem !== null);
+
+      // Dispatch an action to update the cart in state
+      dispatch({
+        type: "VERIFY_CART_ITEMS",
+        payload: finalUpdatedCart,
+      });
+
+      setCartVerified(true);
+      setInitialFetchComplete(true); // Mark as complete
     }
+  }, [data]);
 
-    if (!state.cart || (state.cart.length === 0 && !buyNow)) {
-      const redirectTimer = setTimeout(() => {
-        navigate("/");
-      }, 5000);
+  const fetchClientSecret = useCallback(
+    async (userId, userEmail) => {
+      if (!initialFetchComplete) return;
+      if (!state.cart || (state.cart.length === 0 && initialFetchComplete)) {
+        throw new Error("Cart is empty");
+      }
 
-      return () => clearTimeout(redirectTimer);
-    }
-  }, []);
+      // Ensure state.cart is always treated as an array
+      const cartItems = Array.isArray(state.cart) ? state.cart : [state.cart];
 
-  const fetchClientSecret = useCallback(async () => {
-    const user = Auth.getProfile();
-    try {
-      const cartItems = buyNow
+      const items = buyNow
         ? [{ price: buyNow.product.priceId, quantity: 1 }]
-        : state.cart.map((item) => ({
+        : cartItems.map((item) => ({
             price: item.priceId,
             quantity: item.purchaseQuantity,
           }));
@@ -58,76 +91,78 @@ const CheckoutForm = () => {
               price: buyNow.product.price,
             },
           ]
-        : state.cart.map((item) => ({
+        : cartItems.map((item) => ({
             productId: item._id,
             quantity: item.purchaseQuantity,
             price: item.price,
           }));
 
-      const response = await fetch(import.meta.env.VITE_API_CHECKOUT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          line_items: cartItems,
-          shipping_address_collection: {
-            allowed_countries: ["US", "CA"], // Specify the countries you want to allow shipping to
+      try {
+        const response = await fetch(import.meta.env.VITE_API_CHECKOUT_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-          metadata: {
-            products: JSON.stringify(productIds),
-            customerEmail: user.data.email,
-            userId: user.data.id,
-          },
-        }),
-      });
+          body: JSON.stringify({
+            line_items: items,
+            shipping_address_collection: {
+              allowed_countries: ["US", "CA"],
+            },
+            metadata: {
+              products: JSON.stringify(productIds),
+              customerEmail: userEmail,
+              userId: userId,
+            },
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch client secret");
+        if (!response.ok) {
+          throw new Error("Failed to fetch client secret");
+        }
+
+        const result = await response.json();
+        return result.clientSecret;
+      } catch (error) {
+        console.error("Error in fetchClientSecret:", error);
+        throw error;
       }
-
-      const data = await response.json();
-      return data.clientSecret;
-    } catch (error) {
-      throw error;
-    }
-  }, [state.cart]);
+    },
+    [initialFetchComplete, buyNow]
+  );
 
   useEffect(() => {
     const fetchDecodedToken = async () => {
       try {
         const decodedToken = Auth.getProfile();
         const userId = decodedToken ? decodedToken.data.id : null;
-        // Set userId or handle accordingly
-        setInitialFetchComplete(true);
-        if (state.cart.length > 0) {
-          const secret = await fetchClientSecret(userId);
+        const userEmail = decodedToken ? decodedToken.data.email : null;
+
+        if (userId && state.cart.length > 0) {
+          const secret = await fetchClientSecret(userId, userEmail, state.cart);
           setClientSecret(secret);
+        } else {
+          setErrorMessage("Cart is empty or user not logged in");
         }
-        setErrorMessage(null);
       } catch (error) {
-        // If error occurs due to user not being logged in
-        setErrorMessage("User not logged in error");
+        setErrorMessage("Error occurred while fetching the client secret.");
       }
     };
 
     fetchDecodedToken();
-  }, [fetchClientSecret, state.cart]);
+  }, [initialFetchComplete, buyNow]);
 
   if (!Auth.loggedIn()) {
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>
-          Please create an account to checkout.
-          <br />
-          <br />
-          You will be redirected to the signup page in 5 seconds.
+          Please create an account to checkout. You will be redirected to the
+          signup page in 5 seconds.
         </h3>
       </div>
     );
   }
 
-  if (!initialFetchComplete) {
+  if (!initialFetchComplete || loading) {
     return <div>Loading...</div>;
   }
 
@@ -136,8 +171,7 @@ const CheckoutForm = () => {
       <div>
         <h2>Error:</h2>
         <h3>
-          The checkout is having some issues please try again in some minutes or
-          contact us at{" "}
+          {errorMessage} Please try again later or contact us at{" "}
           <a href="mailto:support@mossy-creations.com">
             support@mossy-creations.com
           </a>
@@ -157,13 +191,13 @@ const CheckoutForm = () => {
     );
   }
 
-  const options = {
-    fetchClientSecret,
-  };
-
   return (
     <div id="checkout">
-      <EmbeddedCheckoutProvider stripe={stripePromise} options={options}>
+      {/* Now conditionally render loading and error states inside JSX */}
+      <EmbeddedCheckoutProvider
+        stripe={stripePromise}
+        options={{ fetchClientSecret }}
+      >
         <EmbeddedCheckout />
       </EmbeddedCheckoutProvider>
     </div>

@@ -9,6 +9,7 @@ import {
   CLEAR_CART,
   TOGGLE_CART,
   SET_STRIPE_PAYMENT_INTENT_ID,
+  VERIFY_CART_ITEMS,
 } from "./actions";
 import { idbPromise } from "./helpers";
 
@@ -18,6 +19,12 @@ export const reducer = (state, action) => {
       return {
         ...state,
         products: [...action.products],
+      };
+
+    case VERIFY_CART_ITEMS:
+      return {
+        ...state,
+        cart: Array.isArray(action.payload) ? [...action.payload] : state.cart,
       };
 
     case ADD_TO_CART:

@@ -424,7 +424,7 @@ const resolvers = {
           return;
         }
         const review = await Review.create({
-          text,
+          text: text || "",
           author: context.user.username,
           itemId: objectId,
           rating,
@@ -481,7 +481,7 @@ const resolvers = {
 
         const review = await Review.findByIdAndUpdate(
           reviewId,
-          { $set: { text, rating } },
+          { $set: { text: text || "", rating } },
           { new: true }
         );
 
