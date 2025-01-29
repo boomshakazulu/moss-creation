@@ -45,7 +45,7 @@ const Footer = () => {
         <div className="footer-column">
           <ul>
             <li className="facebook-list-item">
-              <a href="">
+              <a href="https://www.facebook.com/profile.php?id=61558554467419">
                 <img
                   src={facebookLogo}
                   alt="Facebook Logo"
