@@ -41,7 +41,13 @@ const Return = () => {
     fetch(
       `${
         import.meta.env.VITE_API_SERVER_URL
-      }/session-status?session_id=${sessionId}`
+      }/session-status?session_id=${sessionId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     )
       .then((res) => res.json())
       .then((data) => {
