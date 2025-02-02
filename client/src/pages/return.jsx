@@ -40,7 +40,6 @@ const Return = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("data:", data.status);
         setStatus(data.status);
         setCustomerEmail(data.customer_email).catch((err) => {
           if (attempt < MAX_RETRIES) {
@@ -87,7 +86,6 @@ const Return = () => {
         // Dispatch the CLEAR_CART action after processing the cart
         dispatch({ type: CLEAR_CART });
       } catch (error) {
-        // Handle error if needed
         console.error(error);
       }
     }
