@@ -43,12 +43,7 @@ const Return = () => {
         import.meta.env.VITE_API_SERVER_URL
       }/session-status?session_id=${sessionId}`
     )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Server responded with status: ${res.status}`);
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setStatus(data.status);
         setCustomerEmail(data.customer_email);
@@ -60,6 +55,7 @@ const Return = () => {
             delay
           );
         } else {
+          console.log(err);
           setStatus("failed");
         }
       });
