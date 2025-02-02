@@ -74,72 +74,69 @@ const CheckoutForm = () => {
     setInitialFetchComplete(true);
   }, [data]);
 
-  const fetchClientSecret = useCallback(
-    async (userId, userEmail) => {
-      if (!initialFetchComplete) return;
-      if (
-        !state.cart ||
-        (state.cart.length === 0 && initialFetchComplete && !buyNow)
-      ) {
-        throw new Error("Cart is empty");
-      }
+  const fetchClientSecret = useCallback(async () => {
+    if (!initialFetchComplete) return;
+    if (
+      !state.cart ||
+      (state.cart.length === 0 && initialFetchComplete && !buyNow)
+    ) {
+      throw new Error("Cart is empty");
+    }
+    const user = Auth.getProfile();
+    // Ensure state.cart is always treated as an array
+    const cartItems = Array.isArray(state.cart) ? state.cart : [state.cart];
 
-      // Ensure state.cart is always treated as an array
-      const cartItems = Array.isArray(state.cart) ? state.cart : [state.cart];
+    const items = buyNow
+      ? [{ price: buyNow.product.priceId, quantity: 1 }]
+      : cartItems.map((item) => ({
+          price: item.priceId,
+          quantity: item.purchaseQuantity,
+        }));
 
-      const items = buyNow
-        ? [{ price: buyNow.product.priceId, quantity: 1 }]
-        : cartItems.map((item) => ({
-            price: item.priceId,
-            quantity: item.purchaseQuantity,
-          }));
-
-      const productIds = buyNow
-        ? [
-            {
-              productId: buyNow.product._id,
-              quantity: 1,
-              price: buyNow.product.price,
-            },
-          ]
-        : cartItems.map((item) => ({
-            productId: item._id,
-            quantity: item.purchaseQuantity,
-            price: item.price,
-          }));
-
-      try {
-        const response = await fetch(import.meta.env.VITE_API_CHECKOUT_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+    const productIds = buyNow
+      ? [
+          {
+            productId: buyNow.product._id,
+            quantity: 1,
+            price: buyNow.product.price,
           },
-          body: JSON.stringify({
-            line_items: items,
-            shipping_address_collection: {
-              allowed_countries: ["US", "CA"],
-            },
-            metadata: {
-              products: JSON.stringify(productIds),
-              customerEmail: userEmail,
-              userId: userId,
-            },
-          }),
-        });
+        ]
+      : cartItems.map((item) => ({
+          productId: item._id,
+          quantity: item.purchaseQuantity,
+          price: item.price,
+        }));
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch client secret");
-        }
+    try {
+      const response = await fetch(import.meta.env.VITE_API_CHECKOUT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          line_items: items,
+          shipping_address_collection: {
+            allowed_countries: ["US", "CA"],
+          },
+          metadata: {
+            products: JSON.stringify(productIds),
+            customerEmail: user.data.email,
+            userId: user.data.id,
+          },
+        }),
+      });
 
-        const result = await response.json();
-        return result.clientSecret;
-      } catch (error) {
-        console.error("Error in fetchClientSecret:", error);
-        throw error;
+      if (!response.ok) {
+        throw new Error("Failed to fetch client secret");
       }
-    },
-    [initialFetchComplete, buyNow]
-  );
+
+      const result = await response.json();
+      return result.clientSecret;
+    } catch (error) {
+      console.error("Error in fetchClientSecret:", error);
+      throw error;
+    }
+  }, [initialFetchComplete, buyNow]);
 
   useEffect(() => {
     if (initialFetchComplete) {
@@ -147,14 +144,9 @@ const CheckoutForm = () => {
         try {
           const decodedToken = Auth.getProfile();
           const userId = decodedToken ? decodedToken.data.id : null;
-          const userEmail = decodedToken ? decodedToken.data.email : null;
 
           if ((userId && state.cart.length > 0) || (userId && buyNow)) {
-            const secret = await fetchClientSecret(
-              userId,
-              userEmail,
-              state.cart
-            );
+            const secret = await fetchClientSecret(state.cart);
             setClientSecret(secret);
           } else {
             setErrorMessage("There was an issue with your cart on checkout");
@@ -168,8 +160,16 @@ const CheckoutForm = () => {
     }
   }, [initialFetchComplete, buyNow]);
 
+  useEffect(() => {
+    if (!Auth.loggedIn()) {
+      redirectOnError("/login");
+    }
+    if (initialFetchComplete && !state.cart) {
+      redirectOnError("/");
+    }
+  }, []);
+
   if (!Auth.loggedIn()) {
-    redirectOnError("/login");
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>
@@ -199,7 +199,6 @@ const CheckoutForm = () => {
   }
 
   if (!state.cart || (state.cart.length === 0 && !buyNow)) {
-    redirectOnError("/");
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>
