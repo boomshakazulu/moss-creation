@@ -33,41 +33,25 @@ const Return = () => {
     attempt = 1,
     delay = INITIAL_DELAY
   ) => {
-    if (!sessionId) {
-      setStatus("failed");
-      return;
-    }
-
     fetch(
       `${
         import.meta.env.VITE_API_SERVER_URL
-      }/session-status?session_id=${sessionId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      }/session-status?session_id=${sessionId}`
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("Fetch successful:", data); // Debugging
-        setStatus((prevStatus) =>
-          prevStatus !== "complete" ? data.status : prevStatus
-        );
-        setCustomerEmail(data.customer_email);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (attempt < MAX_RETRIES) {
-          setTimeout(
-            () => fetchSessionStatus(sessionId, attempt + 1, delay * 2),
-            delay
-          );
-        } else {
-          console.log(err);
-          setStatus("failed");
-        }
+        console.log("data:", data.status);
+        setStatus(data.status);
+        setCustomerEmail(data.customer_email).catch((err) => {
+          if (attempt < MAX_RETRIES) {
+            setTimeout(
+              () => fetchSessionStatus(sessionId, attempt + 1, delay * 2),
+              delay
+            );
+          } else {
+            setStatus("failed");
+          }
+        });
       });
   };
 
