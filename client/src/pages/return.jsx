@@ -45,10 +45,14 @@ const Return = () => {
     )
       .then((res) => res.json())
       .then((data) => {
-        setStatus(data.status);
+        console.log("Fetch successful:", data); // Debugging
+        setStatus((prevStatus) =>
+          prevStatus !== "complete" ? data.status : prevStatus
+        );
         setCustomerEmail(data.customer_email);
       })
       .catch((err) => {
+        console.log(err);
         if (attempt < MAX_RETRIES) {
           setTimeout(
             () => fetchSessionStatus(sessionId, attempt + 1, delay * 2),
