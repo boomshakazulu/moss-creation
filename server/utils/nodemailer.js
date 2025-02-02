@@ -12,6 +12,9 @@ const transporter = nodemailer.createTransport({
 
 module.exports = {
   passResetEmail: async function (email, token) {
+    if (!email || !token) {
+      return;
+    }
     try {
       // send mail with defined transport object
       const info = await transporter.sendMail({
@@ -39,6 +42,9 @@ module.exports = {
   },
 
   passResetSuccessEmail: async function (email) {
+    if (!email) {
+      return;
+    }
     try {
       const info = await transporter.sendMail({
         from: '"Do Not Reply" <support@mossy-creations.com>', // sender address
@@ -64,6 +70,10 @@ module.exports = {
 
   trackingNumberEmail: async function (carrier, trackingNum, email) {
     let trackingWebsite;
+
+    if (!email) {
+      return;
+    }
 
     switch (carrier) {
       case "UPS":
@@ -119,6 +129,10 @@ module.exports = {
     }
   },
   orderRecievedEmail: async function (email) {
+    if (!email) {
+      return;
+    }
+
     try {
       const info = await transporter.sendMail({
         from: '"Do Not Reply" <support@mossy-creations.com>',

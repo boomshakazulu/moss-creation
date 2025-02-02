@@ -25,6 +25,15 @@ const CheckoutForm = () => {
   });
   const { buyNow } = location.state || {};
 
+  const redirectOnError = (location) => {
+    if (!Auth.loggedIn() || errorMessage) {
+      const redirectTimer = setTimeout(() => {
+        navigate(location);
+      }, 5000);
+      return () => clearTimeout(redirectTimer);
+    }
+  };
+
   useEffect(() => {
     if (loading) return;
 
@@ -133,28 +142,34 @@ const CheckoutForm = () => {
   );
 
   useEffect(() => {
-    const fetchDecodedToken = async () => {
-      try {
-        const decodedToken = Auth.getProfile();
-        const userId = decodedToken ? decodedToken.data.id : null;
-        const userEmail = decodedToken ? decodedToken.data.email : null;
+    if (initialFetchComplete) {
+      const fetchDecodedToken = async () => {
+        try {
+          const decodedToken = Auth.getProfile();
+          const userId = decodedToken ? decodedToken.data.id : null;
+          const userEmail = decodedToken ? decodedToken.data.email : null;
 
-        if ((userId && state.cart.length > 0) || buyNow) {
-          const secret = await fetchClientSecret(userId, userEmail, state.cart);
-          setClientSecret(secret);
-        } else {
-          setErrorMessage("There was an issue with your cart on checkout");
+          if ((userId && state.cart.length > 0) || (userId && buyNow)) {
+            const secret = await fetchClientSecret(
+              userId,
+              userEmail,
+              state.cart
+            );
+            setClientSecret(secret);
+          } else {
+            setErrorMessage("There was an issue with your cart on checkout");
+          }
+        } catch (error) {
+          setErrorMessage("There was an issue with your cart on checkout.");
         }
-      } catch (error) {
-        setErrorMessage("There was an issue with your cart on checkout.");
-      }
-    };
+      };
 
-    fetchDecodedToken();
+      fetchDecodedToken();
+    }
   }, [initialFetchComplete, buyNow]);
 
   if (!Auth.loggedIn()) {
-    S;
+    redirectOnError("/login");
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>
@@ -184,6 +199,7 @@ const CheckoutForm = () => {
   }
 
   if (!state.cart || (state.cart.length === 0 && !buyNow)) {
+    redirectOnError("/");
     return (
       <div>
         <h3 style={{ textAlign: "center" }}>

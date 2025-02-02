@@ -71,6 +71,12 @@ const Return = () => {
     }
   };
 
+  useEffect(() => {
+    if (status === "complete") {
+      updateStockAsync();
+    }
+  }, [status]);
+
   if (status === "open") {
     return <Navigate to="/checkout" />;
   }
@@ -90,7 +96,6 @@ const Return = () => {
   }
 
   if (status === "complete") {
-    updateStockAsync();
     return (
       <section id="success">
         <p>
