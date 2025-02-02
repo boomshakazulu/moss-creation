@@ -184,6 +184,17 @@ const CheckoutForm = () => {
     return <div>Loading...</div>;
   }
 
+  if (!state.cart || (state.cart.length === 0 && !buyNow)) {
+    return (
+      <div>
+        <h3 style={{ textAlign: "center" }}>
+          Your cart is currently empty! You will be redirected to the homepage
+          in 5 seconds.
+        </h3>
+      </div>
+    );
+  }
+
   if (errorMessage) {
     return (
       <div>
@@ -193,17 +204,6 @@ const CheckoutForm = () => {
           <a href="mailto:support@mossy-creations.com">
             support@mossy-creations.com
           </a>
-        </h3>
-      </div>
-    );
-  }
-
-  if (!state.cart || (state.cart.length === 0 && !buyNow)) {
-    return (
-      <div>
-        <h3 style={{ textAlign: "center" }}>
-          Your cart is currently empty! You will be redirected to the homepage
-          in 5 seconds.
         </h3>
       </div>
     );
