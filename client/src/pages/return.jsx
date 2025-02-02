@@ -24,21 +24,53 @@ const Return = () => {
     return Number.isInteger(value);
   };
 
-  useEffect(() => {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const sessionId = urlParams.get("session_id");
+  const MAX_RETRIES = 3;
+  const INITIAL_DELAY = 1000;
+
+  //attempts to fetch and refetch session status on failure to prevent false negatives
+  const fetchSessionStatus = (
+    sessionId,
+    attempt = 1,
+    delay = INITIAL_DELAY
+  ) => {
+    if (!sessionId) {
+      setStatus("failed");
+      return;
+    }
 
     fetch(
       `${
         import.meta.env.VITE_API_SERVER_URL
       }/session-status?session_id=${sessionId}`
     )
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Server responded with status: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setStatus(data.status);
         setCustomerEmail(data.customer_email);
+      })
+      .catch((err) => {
+        if (attempt < MAX_RETRIES) {
+          setTimeout(
+            () => fetchSessionStatus(sessionId, attempt + 1, delay * 2),
+            delay
+          );
+        } else {
+          setStatus("failed");
+        }
       });
+  };
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const sessionId = urlParams.get("session_id");
+
+    fetchSessionStatus(sessionId);
   }, []);
 
   useEffect(() => {
