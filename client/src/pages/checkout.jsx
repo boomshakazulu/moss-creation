@@ -167,7 +167,7 @@ const CheckoutForm = () => {
     if (initialFetchComplete && !state.cart) {
       redirectOnError("/");
     }
-  }, []);
+  }, [initialFetchComplete]);
 
   if (!Auth.loggedIn()) {
     return (
