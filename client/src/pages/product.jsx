@@ -11,6 +11,7 @@ import Auth from "../utils/auth.js";
 import { idbPromise } from "../utils/helpers";
 import ReviewInput from "../components/reviewInput/index";
 import ReviewList from "../components/reviewList/index.jsx";
+import Pagination from "../components/pagination";
 import "./product.css";
 
 function Product() {
@@ -20,6 +21,7 @@ function Product() {
   const [disableReview, setDisableReview] = useState(false);
   const [loadingReview, setLoadingReview] = useState(true);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const { loading, error, data } = useQuery(QUERY_PRODUCT, {
     variables: { itemId },
     fetchPolicy: "network-only",
@@ -112,6 +114,25 @@ function Product() {
     navigate("/checkout", { state: { buyNow: { ...data } } });
   };
 
+  //handles pagination for review cards
+  const reviewsPerPage = 4;
+
+  const totalPages = Math.ceil(data.product.reviews.length / reviewsPerPage);
+
+  const startIndex = (currentPage - 1) * reviewsPerPage;
+  const currentReviews = data.product.reviews.slice(
+    startIndex,
+    startIndex + reviewsPerPage
+  );
+
+  const handlePageChange = (page) => {
+    const scrollLocation = document.getElementById("review-header");
+    setCurrentPage(page);
+    if (scrollLocation) {
+      scrollLocation.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="product-container">
       <Container className="product-section">
@@ -189,11 +210,19 @@ function Product() {
         )}
       </div>
       {data?.product?.reviews?.length > 0 ? (
-        <ReviewList
-          reviews={data.product.reviews}
-          currentUser={loggedInUser ? queryResult.data.me.username : null}
-          productPage={true}
-        />
+        <div id="review-header">
+          <ReviewList
+            reviews={data.product.reviews}
+            currentUser={loggedInUser ? queryResult.data.me.username : null}
+            productPage={true}
+          />
+
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       ) : (
         <h4>This Product hasn't been reviewed</h4>
       )}

@@ -41,4 +41,12 @@
   .review-card {
     width: 350px;
   }
+
+  .review-list {
+    display: flex;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    padding-top: 20px;
+  }
 }
