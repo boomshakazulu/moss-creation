@@ -20,10 +20,18 @@ footer div p {
 }
 
 .facebook-list-item {
-  padding: 15px;
+  padding: 0px 15px;
 }
 
 .facebook-logo {
   width: 35px;
   margin-right: 15px;
+}
+
+.footer-left-ul li {
+  padding-top: 15px;
+}
+
+.footer-right-ul {
+  padding-top: 15px;
 }

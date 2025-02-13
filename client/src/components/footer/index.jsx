@@ -9,7 +9,7 @@ const Footer = () => {
     <footer className="bg-dark text-light py-4">
       <div className="footer-container">
         <div className="footer-column">
-          <ul>
+          <ul className="footer-left-ul">
             <li>
               <a
                 className="text-light"
@@ -40,10 +40,6 @@ const Footer = () => {
                 @mossy_creations_by_katie
               </a>
             </li>
-          </ul>
-        </div>
-        <div className="footer-column">
-          <ul>
             <li className="facebook-list-item">
               <a href="https://www.facebook.com/profile.php?id=61558554467419">
                 <img
@@ -52,6 +48,19 @@ const Footer = () => {
                   className="facebook-logo"
                 />
                 Mossy Creations
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div className="footer-column">
+          <ul className="footer-right-ul">
+            <li>
+              <a
+                href="/terms-of-service.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms of Service
               </a>
             </li>
           </ul>

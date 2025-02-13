@@ -111,6 +111,38 @@ function Contact() {
               </a>
             </Accordion.Body>
           </Accordion.Item>
+          <Accordion.Item eventKey="3">
+            <Accordion.Header>What is your privacy policy?</Accordion.Header>
+            <Accordion.Body>
+              We only store the information necessary to complete your order or
+              maintain your account.
+              <br />
+              <br />
+              **The information we store includes:** - Email address - Username
+              - Address (for shipping) - Name (for shipping) - Payment statuses
+              and payment amounts - Reviews - **Encrypted (hashed) passwords
+              (for account authentication only, never stored in plain text)**
+              <br />
+              <br />
+              We do **not** store any billing information. All billing details
+              are securely processed by our payment provider,
+              <a
+                href="https://stripe.com"
+                style={{ color: "blue" }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {" "}
+                Stripe
+              </a>
+              . You can review their privacy policy for more details.
+              <br />
+              <br />
+              We do **not** sell or share any stored information with third
+              parties. If you wish to update or delete your information, please
+              contact our support team.
+            </Accordion.Body>
+          </Accordion.Item>
         </Accordion>
       </div>
     </div>
