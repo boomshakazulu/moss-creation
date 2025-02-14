@@ -1,5 +1,9 @@
 const { User, Product, Review, Order } = require("../models");
-const { AuthenticationError, ApolloError } = require("apollo-server-express");
+const {
+  AuthenticationError,
+  ApolloError,
+  UserInputError,
+} = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const jwt = require("jsonwebtoken");
@@ -423,6 +427,7 @@ const resolvers = {
         if (existingReview) {
           return;
         }
+
         const review = await Review.create({
           text: text || "",
           author: context.user.username,

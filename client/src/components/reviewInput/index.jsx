@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_REVIEW } from "../../utils/mutations";
 import { useParams } from "react-router-dom";
@@ -24,7 +24,7 @@ const ReviewInput = ({ profileItemId, productPage }) => {
     try {
       const result = await addReview({
         variables: {
-          text: reviewText,
+          text: reviewText || "",
           itemId: itemId || profileItemId,
           rating: rating,
         },

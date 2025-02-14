@@ -41,16 +41,18 @@ const Return = () => {
       .then((res) => res.json())
       .then((data) => {
         setStatus(data.status);
-        setCustomerEmail(data.customer_email).catch((err) => {
-          if (attempt < MAX_RETRIES) {
-            setTimeout(
-              () => fetchSessionStatus(sessionId, attempt + 1, delay * 2),
-              delay
-            );
-          } else {
-            setStatus("failed");
-          }
-        });
+        setCustomerEmail(data.customer_email); // No .catch() needed here
+      })
+      .catch((err) => {
+        // Handle fetch errors here
+        if (attempt < MAX_RETRIES) {
+          setTimeout(
+            () => fetchSessionStatus(sessionId, attempt + 1, delay * 2),
+            delay
+          );
+        } else {
+          setStatus("failed");
+        }
       });
   };
 
