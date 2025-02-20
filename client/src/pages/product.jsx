@@ -162,12 +162,12 @@ function Product() {
                 ""
               )}
               <p className="product-stock">
-                {data.product.stock > 0
+                {data.product.stock > 0 && data.product.active
                   ? `${data.product.stock} In Stock`
                   : "Out of Stock"}
               </p>
             </div>
-            {data.product.stock > 0 ? (
+            {data.product.stock > 0 && data.product.active ? (
               <Row>
                 <div className="product-btn-container">
                   {addedToCart ? (
