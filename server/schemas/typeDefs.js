@@ -14,6 +14,7 @@ const typeDefs = `
     carousel: String
     averageRating: Float
     totalRatings: Int
+    active: Boolean
   }
 
   type Order {
@@ -76,6 +77,7 @@ const typeDefs = `
     checkout(products: [ID]!): Checkout
     checkEmailUniqueness(email: String!): Boolean!
     checkUsernameUniqueness(username: String!): Boolean!
+    activeProducts: [Product]
   }
 
   input ProductInput {
@@ -88,6 +90,7 @@ const typeDefs = `
     stock: Int
     video: String
     carousel: String
+    active: Boolean
   }
 
   type Mutation {
@@ -104,6 +107,7 @@ const typeDefs = `
     addReview(text: String, itemId: ID!, rating: Int): Review
     forgotPassword(email: String!): String 
     resetPassword(token: String, newPassword: String!): String
+    activateProductToggle(itemId: ID!, active: Boolean): Product
   }
 `;
 module.exports = typeDefs;

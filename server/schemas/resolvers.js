@@ -22,13 +22,24 @@ const { UrlEncode, UrlDecode } = require("../utils/helper");
 const resolvers = {
   Query: {
     products: async (parent) => {
-      return await Product.find();
+      try {
+        return await Product.find();
+      } catch (err) {
+        throw new Error("Failed to fetch products");
+      }
     },
     product: async (parent, { itemId }) => {
       try {
         return await Product.findById(itemId).populate("reviews");
       } catch (err) {
         throw new Error("Failed to fetch product");
+      }
+    },
+    activeProducts: async (parent) => {
+      try {
+        return await Product.find({ active: true });
+      } catch (err) {
+        throw new Error("Failed to fetch active products");
       }
     },
     me: async (parent, args, context) => {
@@ -623,6 +634,26 @@ const resolvers = {
         }
         console.error(error);
         throw new ApolloError("Failed to reset password");
+      }
+    },
+    activateProductToggle: async (_, { itemId, active }, context) => {
+      if (context.user && context.user.role === "admin") {
+        try {
+          const product = await Product.findByIdAndUpdate(
+            itemId,
+            { $set: { active: active } },
+            { new: true }
+          );
+          if (!product) {
+            throw new ApolloError("Product not found");
+          }
+          return product;
+        } catch (err) {
+          throw new ApolloError("Failed to update product");
+        }
+      } else {
+        // If the user doesn't have the 'admin' role, throw an error
+        throw new Error("Unauthorized: Only admin users can update products");
       }
     },
   },

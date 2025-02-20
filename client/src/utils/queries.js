@@ -23,6 +23,37 @@ export const QUERY_ALL_PRODUCTS = gql`
       carousel
       averageRating
       totalRatings
+      active
+      reviews {
+        _id
+        text
+        author
+        itemId {
+          _id
+        }
+        rating
+        createdAt
+      }
+    }
+  }
+`;
+
+export const QUERY_ACTIVE_PRODUCTS = gql`
+  {
+    activeProducts {
+      _id
+      name
+      description
+      price
+      priceId
+      stripeProductId
+      photo
+      stock
+      video
+      carousel
+      averageRating
+      totalRatings
+      active
       reviews {
         _id
         text
@@ -117,6 +148,7 @@ export const QUERY_PRODUCT = gql`
       carousel
       averageRating
       totalRatings
+      active
       reviews {
         _id
         text

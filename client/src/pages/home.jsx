@@ -2,28 +2,30 @@ import React, { useState, useEffect } from "react";
 import Carousel from "../components/carousel/index.jsx";
 import { Card, Button, Row, Col } from "react-bootstrap";
 import ProductCards from "../components/productCards/index.jsx";
-import { QUERY_ALL_PRODUCTS } from "../utils/queries.js";
+import { QUERY_ACTIVE_PRODUCTS } from "../utils/queries.js";
 import { useQuery } from "@apollo/client";
 import { useStoreContext } from "../utils/GlobalState";
 
 const Home = () => {
   const [state, dispatch] = useStoreContext();
-  const { loading, error, data } = useQuery(QUERY_ALL_PRODUCTS);
+  const { loading, error, data } = useQuery(QUERY_ACTIVE_PRODUCTS);
+
+  console.log(data);
 
   useEffect(() => {
     if (loading) return;
 
-    if (data?.products?.length && state.cart.length > 0) {
+    if (data?.activeProducts?.length && state.cart.length > 0) {
       // Ensure updatedCart is an array
       const updatedCart = Array.isArray(state.cart) ? state.cart : [state.cart];
 
       const finalUpdatedCart = updatedCart
         .map((cartItem) => {
-          const latestProduct = data.products.find(
+          const latestProduct = data.activeProducts.find(
             (prod) => prod._id === cartItem._id
           );
 
-          if (!latestProduct || data.products.stock === 0) {
+          if (!latestProduct || data.activeProducts.stock === 0) {
             return null;
           }
 
@@ -52,14 +54,14 @@ const Home = () => {
   if (loading || !data) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  const productsWithCarousel = data.products.filter(
+  const productsWithCarousel = data.activeProducts.filter(
     (product) => product.carousel
   );
 
-  const productsInStock = data.products
+  const productsInStock = data.activeProducts
     .filter((product) => product.stock > 0)
     .sort((a, b) => b.averageRating - a.averageRating);
-  const productsOutOfStock = data.products
+  const productsOutOfStock = data.activeProducts
     .filter((product) => product.stock <= 0)
     .sort((a, b) => b.averageRating - a.averageRating);
 

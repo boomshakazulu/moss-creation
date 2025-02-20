@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);

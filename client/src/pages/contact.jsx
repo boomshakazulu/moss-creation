@@ -143,6 +143,25 @@ function Contact() {
               contact our support team.
             </Accordion.Body>
           </Accordion.Item>
+          <Accordion.Item eventKey="4">
+            <Accordion.Header>What is your return policy?</Accordion.Header>
+            <Accordion.Body>
+              <p>
+                We offer a <strong>30-day return policy</strong> for all
+                products, including custom-made items. To request a return,
+                please contact us at{" "}
+                <a href="mailto:support@mossy-creations.com">
+                  support@mossy-creations.com
+                </a>{" "}
+                with details about the issue.
+              </p>
+              <p>
+                <strong>Damaged Items:</strong> If your order arrives damaged,
+                please email us with photos, and we’ll arrange a refund or
+                exchange.
+              </p>
+            </Accordion.Body>
+          </Accordion.Item>
         </Accordion>
       </div>
     </div>

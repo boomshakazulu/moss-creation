@@ -84,6 +84,7 @@ export const UPDATE_PRODUCT = gql`
       stock
       video
       carousel
+      active
       reviews {
         _id
       }
@@ -126,6 +127,7 @@ export const UPDATE_STOCK = gql`
       stock
       video
       carousel
+      active
     }
   }
 `;
@@ -143,6 +145,7 @@ export const ADD_PRODUCT = gql`
       stock
       video
       carousel
+      active
       reviews {
         _id
       }
@@ -193,6 +196,29 @@ export const COMPLETE_ORDER = gql`
       stripePaymentIntentId
       trackingNum
       _id
+    }
+  }
+`;
+
+export const ACTIVATE_PRODUCT_TOGGLE = gql`
+  mutation activateProductToggle($itemId: ID!, $active: Boolean) {
+    activateProductToggle(itemId: $itemId, active: $active) {
+      _id
+      name
+      description
+      price
+      priceId
+      stripeProductId
+      photo
+      stock
+      video
+      reviews {
+        _id
+      }
+      carousel
+      averageRating
+      totalRatings
+      active
     }
   }
 `;

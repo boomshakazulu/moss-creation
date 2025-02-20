@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import { useNavigate, useParams } from "react-router-dom";
 import Auth from "../utils/auth";
-import { UPDATE_PRODUCT } from "../utils/mutations";
+import { UPDATE_PRODUCT, ACTIVATE_PRODUCT_TOGGLE } from "../utils/mutations";
 import { QUERY_PRODUCT } from "../utils/queries";
 import "./adminAdd.css";
 
@@ -53,6 +53,7 @@ function AdminUpdate() {
   }, [data]);
 
   const [updateProduct] = useMutation(UPDATE_PRODUCT);
+  const [toggleActivation] = useMutation(ACTIVATE_PRODUCT_TOGGLE);
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
@@ -106,6 +107,32 @@ function AdminUpdate() {
     }
   };
 
+  const handleDeactivate = async () => {
+    try {
+      await toggleActivation({
+        variables: {
+          itemId: itemId,
+          active: false,
+        },
+      });
+    } catch (err) {
+      setErrorMessage("There was an issue deactivating the product");
+    }
+  };
+
+  const handleActivate = async () => {
+    try {
+      await toggleActivation({
+        variables: {
+          itemId: itemId,
+          active: true,
+        },
+      });
+    } catch (err) {
+      setErrorMessage("There was an issue deactivating the product");
+    }
+  };
+
   const handleAddPhotoField = () => {
     setFormState({
       ...formState,
@@ -132,98 +159,118 @@ function AdminUpdate() {
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="form-container">
-      <h1 className="add-title">Product Update</h1>
-      <p className="description">
-        At minimum add a name, 1 photo, price and stock.<br></br>You can leave
-        unwanted boxes blank.<br></br>This can be edited later!<br></br> keep
-        carousel images landscape and only supply one if you want it included on
-        the carousel
-      </p>
-      <label htmlFor="productName">Product Name:</label>
-      <input
-        placeholder="Product Name"
-        type="text"
-        name="name"
-        value={formState.name}
-        onChange={handleInputChange}
-      />
-      <label htmlFor="productDescription">Description:</label>
-      <div
-        className="description-box"
-        dangerouslySetInnerHTML={{ __html: formState.description }}
-        contentEditable={true}
-        onBlur={(e) =>
-          handleInputChange({
-            target: { name: "description", value: e.target.innerText },
-          })
-        }
-      />
-      <label htmlFor="price">Price:</label>
-      <input
-        placeholder="20.99"
-        type="number"
-        name="price"
-        value={formState.price}
-        onChange={handleInputChange}
-      />
-      <label htmlFor="photos">Photo URLs:</label>
-      <p>(The first one will be displayed on the homepage!)</p>
-      {Array.isArray(formState.photo) &&
-        formState.photo.map((photo, index) => (
-          <div key={index} className="photo-input-container">
-            <input
-              placeholder="https://..."
-              type="text"
-              value={photo}
-              onChange={(e) => handlePhotoInputChange(index, e.target.value)}
-            />
-            {/* Delete button */}
-            <button
-              type="button"
-              onClick={() => handleDeletePhotoField(index)}
-              className="delete-photo-button"
-            >
-              Delete
-            </button>
-          </div>
-        ))}
-      <button type="button" onClick={handleAddPhotoField}>
-        + Add Photo
-      </button>
+    <div className="admin-update-container">
+      <form onSubmit={handleFormSubmit} className="form-container">
+        <h1 className="add-title">Product Update</h1>
+        <p className="description">
+          At minimum add a name, 1 photo, price and stock.<br></br>You can leave
+          unwanted boxes blank.<br></br>This can be edited later!<br></br> keep
+          carousel images landscape and only supply one if you want it included
+          on the carousel
+        </p>
+        <label htmlFor="productName">Product Name:</label>
+        <input
+          placeholder="Product Name"
+          type="text"
+          name="name"
+          value={formState.name}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="productDescription">Description:</label>
+        <div
+          className="description-box"
+          dangerouslySetInnerHTML={{ __html: formState.description }}
+          contentEditable={true}
+          onBlur={(e) =>
+            handleInputChange({
+              target: { name: "description", value: e.target.innerText },
+            })
+          }
+        />
+        <label htmlFor="price">Price:</label>
+        <input
+          placeholder="20.99"
+          type="number"
+          name="price"
+          value={formState.price}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="photos">Photo URLs:</label>
+        <p>(The first one will be displayed on the homepage!)</p>
+        {Array.isArray(formState.photo) &&
+          formState.photo.map((photo, index) => (
+            <div key={index} className="photo-input-container">
+              <input
+                placeholder="https://..."
+                type="text"
+                value={photo}
+                onChange={(e) => handlePhotoInputChange(index, e.target.value)}
+              />
+              {/* Delete button */}
+              <button
+                type="button"
+                onClick={() => handleDeletePhotoField(index)}
+                className="delete-photo-button"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        <button type="button" onClick={handleAddPhotoField}>
+          + Add Photo
+        </button>
 
-      <label htmlFor="stock">Stock Number:</label>
-      <input
-        placeholder="2"
-        type="number"
-        name="stock"
-        value={formState.stock}
-        onChange={handleInputChange}
-      />
-      <label htmlFor="video">Video URL:</label>
-      <input
-        placeholder="https://..."
-        type="text"
-        name="video"
-        value={formState.video}
-        onChange={handleInputChange}
-      />
-      <label htmlFor="carousel">Carousel IMG:</label>
-      <input
-        placeholder="https://..."
-        type="text"
-        name="carousel"
-        value={formState.carousel}
-        onChange={handleInputChange}
-      />
-      {/* Add more input fields for other form fields */}
-      <button type="submit">Submit</button>
-      {errorMessage ? (
-        <div>
-          <p className="error-text">{errorMessage}</p>
-        </div>
-      ) : null}
-    </form>
+        <label htmlFor="stock">Stock Number:</label>
+        <input
+          placeholder="2"
+          type="number"
+          name="stock"
+          value={formState.stock}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="video">Video URL:</label>
+        <input
+          placeholder="https://..."
+          type="text"
+          name="video"
+          value={formState.video}
+          onChange={handleInputChange}
+        />
+        <label htmlFor="carousel">Carousel IMG:</label>
+        <input
+          placeholder="https://..."
+          type="text"
+          name="carousel"
+          value={formState.carousel}
+          onChange={handleInputChange}
+        />
+        {/* Add more input fields for other form fields */}
+        <button type="submit">Submit</button>
+
+        {errorMessage ? (
+          <div>
+            <p className="error-text">{errorMessage}</p>
+          </div>
+        ) : null}
+      </form>
+      {data?.product?.active ? (
+        <button
+          type="click"
+          className="activate-toggle"
+          onClick={handleDeactivate}
+        >
+          Deactivate
+        </button>
+      ) : (
+        <button
+          type="click"
+          className="activate-toggle"
+          onClick={handleActivate}
+        >
+          Activate
+        </button>
+      )}
+    </div>
   );
 }
 
