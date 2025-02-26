@@ -21,6 +21,9 @@ const ReviewInput = ({ profileItemId, productPage }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!rating) {
+      return setErrorMessage("Please submit a star rating and try again");
+    }
     try {
       const result = await addReview({
         variables: {

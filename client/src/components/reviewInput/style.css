@@ -1,5 +1,6 @@
 .review-form {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
@@ -7,6 +8,7 @@
   border-style: solid;
   margin: auto;
   max-width: 600px;
+  border-color: #579269;
 }
 
 .input-stars {
@@ -43,6 +45,8 @@
   width: 200px;
   margin-top: 10px !important;
   margin-bottom: 10px;
+  border-color: #579269;
+  color: #fff;
 }
 
 .stars {
