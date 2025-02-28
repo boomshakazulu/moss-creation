@@ -8,7 +8,7 @@
 }
 
 .card-stepper p {
-  color: #579269;
+  color: #579269 !important;
 }
 
 #progressbar-1 {
@@ -92,6 +92,11 @@
 
 .MBDCol-history {
   display: flex;
+}
+
+.shipped-to,
+.shipped-to span {
+  font-family: "noto sans", "Times New Roman", Times, serif;
 }
 
 .orderHistHeader {

@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 .product-container {
   max-width: 900px;
   margin: auto;
@@ -26,22 +26,23 @@
   position: relative; /* Position relative for absolute positioning of children */
   display: flex; /* Use flex layout */
   flex-direction: column; /* Stack children vertically */
-  color: #72b787;
+  color: #579269;
 }
 
 .product-stock {
   padding-top: 10px; /* Adjusted padding */
   padding-bottom: 30px;
   text-align: center;
-  font-family: "Pacifico", cursive;
-  color: #72b787;
+  font-family: "noto sans", cursive;
+  font-weight: 600;
+  color: #579269;
 }
 
 .product-price {
   text-align: center;
   padding-bottom: 10px;
   font-family: "Pacifico", cursive;
-  color: #72b787;
+  color: #579269;
 }
 
 .info-col {
@@ -53,16 +54,21 @@
 
 .product-btn-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 100%; /* Ensure the buttons span the width of their container */
   margin-top: auto;
   padding-top: 30px;
+  padding-left: 0px;
+  padding-right: 0px;
+  text-wrap: nowrap;
+  height: 100px;
 }
 
 .product-btn-container button {
-  margin-left: 10%;
-  margin-right: 10%;
-  width: 50%;
+  /* margin-left: 10%;
+  margin-right: 10%; */
+  width: 9rem;
+  padding: 0px;
   font-family: "Josefin Sans", sans-serif;
   font-optical-sizing: auto;
   font-weight: 400;
@@ -74,8 +80,8 @@
 
 .product-description {
   min-height: 60%;
-  font-family: "Pacifico", cursive;
-  font-weight: 400;
+  font-family: "noto sans", cursive;
+  font-weight: 600;
   font-style: normal;
 }
 
@@ -85,7 +91,7 @@
   font-family: "Pacifico", system-ui;
   font-weight: 400;
   font-style: normal;
-  color: #72b787;
+  color: #579269;
 }
 
 .prod-rating-cont {
@@ -97,9 +103,10 @@
 }
 
 h4 {
-  font-family: "Pacifico", cursive;
+  font-family: "noto sans", cursive;
+  font-weight: 400;
   text-align: center;
-  color: #72b787;
+  color: #579269;
 }
 
 .review-list h2 {
@@ -121,12 +128,5 @@ h4 {
   .carousel-row {
     display: flex;
     justify-content: center; /* Center the carousel horizontally */
-  }
-}
-
-@media (min-width: 768px) {
-  .review-container {
-    display: flex;
-    justify-content: space-between;
   }
 }

@@ -102,7 +102,7 @@ const OrderDetails = (order) => {
                           <MDBTypography tag="h5" className="bold">
                             {product.product.name}
                           </MDBTypography>
-                          <p className="text-muted">
+                          <p className="text-muted qty-history">
                             Qty: {product.quantity} item
                           </p>
                         </div>
@@ -212,10 +212,10 @@ const OrderDetails = (order) => {
                     </span>
                   </li>
                 </ul>
-                <MDBTypography tag="h5" className="bold">
+                <MDBTypography tag="h5" className="bold shipped-to">
                   Shipped to:
                 </MDBTypography>
-                <span>{address}</span>
+                <span className="shipped-to">{address}</span>
               </MDBCardBody>
               <MDBCardFooter className="p-4">
                 <div className="d-flex justify-content-between">

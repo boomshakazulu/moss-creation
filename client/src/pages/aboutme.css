@@ -1,11 +1,12 @@
 .about-me-container {
   margin: 0px 50px 0px 50px;
   text-align: center;
-  font-family: "Pacifico", cursive;
+  font-family: "nato sans", "Times New Roman", Times, serif;
   font-weight: 400;
   font-style: normal;
   font-size: large;
-  color: #72b787;
+  font-weight: 600;
+  color: #579269;
   margin-bottom: 50px;
 }
 

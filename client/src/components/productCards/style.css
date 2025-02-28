@@ -78,26 +78,27 @@
 }
 
 .card-title {
-  color: #72b787;
+  color: #579269;
   font-family: "Pacifico", system-ui;
   font-weight: 400;
   font-style: normal;
 }
 
 .card-text {
-  color: #72b787;
+  color: #579269;
   font-family: "Pacifico", system-ui;
   font-weight: 400;
   font-style: normal;
 }
 
 .out-of-stock {
-  color: #72b787;
+  color: #579269;
 }
 
 .prod-card-rating {
   display: flex;
   justify-content: center;
+  color: #579269;
 }
 
 /* .product-cards .row-max-width .col {
@@ -129,6 +130,10 @@
 .prod-card-col {
   display: flex;
   justify-content: center;
+}
+
+.prod-card-col button {
+  background-color: #579269;
 }
 
 @media (min-width: 992px) {
