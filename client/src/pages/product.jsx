@@ -13,6 +13,7 @@ import ReviewInput from "../components/reviewInput/index";
 import ReviewList from "../components/reviewList/index.jsx";
 import Pagination from "../components/pagination";
 import "./product.css";
+import TopBanner from "../components/topBanner/index.jsx";
 
 function Product() {
   const { itemId } = useParams();
@@ -135,6 +136,7 @@ function Product() {
 
   return (
     <div className="product-container">
+      <TopBanner />
       <Container className="product-section">
         <h1 className="product-title">{data.product.name}</h1>
         <Row>

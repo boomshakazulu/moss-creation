@@ -1,0 +1,16 @@
+.top-banner-container {
+  background-color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.top-banner-text {
+  font-size: 24px;
+  font-family: "noto sans", "Times New Roman", Times, serif;
+}
+
+@media (max-width: 768px) {
+  .top-banner-text {
+    font-size: 16px;
+  }
+}

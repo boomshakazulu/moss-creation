@@ -5,7 +5,7 @@ import Auth from "../utils/auth.js";
 import Pagination from "../components/pagination/index.jsx";
 import { useQuery } from "@apollo/client";
 
-function AdminOrders() {
+const AdminOrders = () => {
   const { loading, error, data } = useQuery(QUERY_ORDERS);
   const [isFulfilledOpen, setIsFulfilledOpen] = useState(false);
   const [currentPageFulfilled, setCurrentPageFulfilled] = useState(1);
@@ -134,6 +134,6 @@ function AdminOrders() {
       </div>
     </div>
   );
-}
+};
 
 export default AdminOrders;

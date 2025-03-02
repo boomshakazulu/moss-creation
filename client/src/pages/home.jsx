@@ -5,6 +5,7 @@ import ProductCards from "../components/productCards/index.jsx";
 import { QUERY_ACTIVE_PRODUCTS } from "../utils/queries.js";
 import { useQuery } from "@apollo/client";
 import { useStoreContext } from "../utils/GlobalState";
+import TopBanner from "../components/topBanner/index.jsx";
 
 const Home = () => {
   const [state, dispatch] = useStoreContext();
@@ -67,6 +68,9 @@ const Home = () => {
 
   return (
     <div className="product-div">
+      <section>
+        <TopBanner />
+      </section>
       <section>
         <Carousel items={productsWithCarousel} isHomePage />
       </section>
