@@ -1,11 +1,11 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.ionos.com",
+  host: process.env.EMAIL_SMTP,
   port: 587,
   secure: false, // Use `true` for port 465, `false` for all other ports
   auth: {
-    user: "support@mossy-creations.com",
+    user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS_SECRET,
   },
 });
@@ -18,7 +18,7 @@ module.exports = {
     try {
       // send mail with defined transport object
       const info = await transporter.sendMail({
-        from: '"Do Not Reply" <support@mossy-creations.com>', // sender address
+        from: `"Do Not Reply" <${process.env.EMAIL_USER}>`, // sender address
         to: email, // list of receivers
         subject: "Mossy-Creations Password Reset", // Subject line
         html: `
@@ -47,7 +47,7 @@ module.exports = {
     }
     try {
       const info = await transporter.sendMail({
-        from: '"Do Not Reply" <support@mossy-creations.com>', // sender address
+        from: `"Do Not Reply" <${process.env.EMAIL_USER}>`, // sender address
         to: email, // list of receivers
         subject: "Password Reset Successful", // Subject line
         html: `
@@ -91,7 +91,7 @@ module.exports = {
     }
     try {
       const info = await transporter.sendMail({
-        from: '"Do Not Reply" <support@mossy-creations.com>',
+        from: `"Do Not Reply" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Order Tracking Number",
         html: `
@@ -135,7 +135,7 @@ module.exports = {
 
     try {
       const info = await transporter.sendMail({
-        from: '"Do Not Reply" <support@mossy-creations.com>',
+        from: `"Do Not Reply" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Order Confirmation",
         html: `
