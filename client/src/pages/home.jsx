@@ -11,8 +11,6 @@ const Home = () => {
   const [state, dispatch] = useStoreContext();
   const { loading, error, data } = useQuery(QUERY_ACTIVE_PRODUCTS);
 
-  console.log(data);
-
   useEffect(() => {
     if (loading) return;
 
